@@ -1,0 +1,35 @@
+useDynLib(CARBayesST, .registration = TRUE)
+export(
+     ST.CARlinear,
+     ST.CARar,
+     ST.CARanova,
+     ST.CARadaptive,
+     ST.CARlocalised,
+     ST.CARsepspatial
+)
+
+S3method(print, CARBayesST)
+S3method(fitted, CARBayesST)
+S3method(model.matrix, CARBayesST)
+S3method(coef, CARBayesST)
+S3method(residuals, CARBayesST)
+S3method(logLik, CARBayesST)
+import(spam)
+import(MASS)
+import(testthat)
+importFrom(truncnorm, rtruncnorm)
+importFrom(truncdist, rtrunc)
+import(Rcpp)
+import(CARBayesdata)
+import(stats)
+importFrom(coda, mcmc, geweke.diag, effectiveSize)
+importFrom(utils, setTxtProgressBar, txtProgressBar)
+importFrom(spdep, mat2listw, moran.mc, n.comp.nb, nb2listw, nb2mat, poly2nb)
+importFrom(matrixcalc, is.symmetric.matrix)
+importFrom(sp, spplot)
+importFrom(dplyr, summarise)
+
+
+
+
+
