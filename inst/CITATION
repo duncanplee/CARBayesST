@@ -1,0 +1,21 @@
+bibentry(bibtype = "Article",
+  title        = "Spatio-Temporal Areal Unit Modeling in {R} with Conditional Autoregressive Priors Using the {CARBayesST} Package",
+  author       = c(person(given = "Duncan",
+                          family = "Lee",
+                          email = "Duncan.Lee@glasgow.ac.uk"),
+                   person(given = "Alastair",
+                          family = "Rushworth",
+                          email = "alastair.rushworth@strath.ac.uk"),
+                   person(given = "Gary",
+                          family = "Napier",
+                          email = "Gary.Napier@glasgow.ac.uk")),
+  journal      = "Journal of Statistical Software",
+  year         = "2018",
+  volume       = "84",
+  number       = "9",
+  pages        = "1--39",
+  doi          = "10.18637/jss.v084.i09",
+
+  header       = "To cite CARBayesST in publications use:"
+)
+

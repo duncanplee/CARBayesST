@@ -180,4 +180,9 @@ Y <- rpois(n=N.all, lambda=fitted)
 #### Run the model     
 \dontrun{model <- ST.CARadaptive(formula=Y~1, family="poisson", W=W, burnin=10000,
 n.sample=50000)}
+
+
+#### Toy example for checking    
+model <- ST.CARadaptive(formula=Y~1, family="poisson", W=W, burnin=10,
+n.sample=50)
 }

@@ -190,5 +190,10 @@ Y <- rpois(n=N.all, lambda=mean)
 #### Run the model
 \dontrun{model <- ST.CARsepspatial(formula=Y~x, family="poisson", W=W, burnin=10000, 
 n.sample=50000)}
+
+
+#### Toy example for checking
+model <- ST.CARsepspatial(formula=Y~x, family="poisson", W=W, burnin=10, 
+n.sample=50)
 }
         

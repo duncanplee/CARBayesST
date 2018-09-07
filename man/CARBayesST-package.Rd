@@ -23,8 +23,8 @@ grant EP/J017442/1 and the Medical Research Council (MRC) grant MR/L022184/1.
 \tabular{ll}{
 Package: \tab CARBayesST\cr
 Type: \tab Package\cr
-Version: \tab 2.5\cr
-Date: \tab 2017-03-16\cr
+Version: \tab 2.5.2\cr
+Date: \tab 2018-04-17\cr
 License: \tab GPL (>= 2)\cr
 }
 }
@@ -45,6 +45,10 @@ Statistics in Medicine, 19, 2555-2567.
 
 Lee, D and Lawson, C  (2016). Quantifying the spatial inequality and temporal trends in
 maternal smoking rates in Glasgow, Annals of Applied Statistics, 10, 1427-1446.
+
+Lee, D and Rushworth, A and Napier, G (2018). Spatio-Temporal Areal Unit Modeling in 
+R with Conditional Autoregressive Priors Using the CARBayesST Package, 
+Journal of Statistical Software, 84, 9, 1-39.
 
 Napier, G, D. Lee, C. Robertson, A. Lawson, and K. Pollock (2016). A model to estimate the 
 impact of changes in MMR vaccination uptake on inequalities in measles susceptibility in 

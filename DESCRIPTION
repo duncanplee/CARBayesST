@@ -1,16 +1,20 @@
 Package: CARBayesST
 Type: Package
-Title: Spatio-Temporal Generalised Linear Mixed Models for Areal Unit Data
-Version: 2.5
-Date: 2017-03-16
+Title: Spatio-Temporal Generalised Linear Mixed Models for Areal Unit
+        Data
+Version: 2.5.2
+Date: 2018-04-17
 Author: Duncan Lee, Alastair Rushworth and Gary Napier
 Maintainer: Duncan Lee <Duncan.Lee@glasgow.ac.uk>
-Description: Implements a class of spatio-temporal generalised linear mixed models for areal unit data, with inference in a Bayesian setting using Markov chain Monte Carlo (MCMC) simulation. The response variable can be binomial, Gaussian or Poisson, but for some models only the binomial and Poisson data likelihoods are available. The spatio-temporal autocorrelation is modelled by  random effects,  which are assigned conditional autoregressive (CAR) style prior distributions. A number of different random effects structures are available, and full details are given in the vignette accompanying this package and the references in the help files. The creation of this package was supported by the Engineering and Physical Sciences Research Council (EPSRC) grant EP/J017442/1 and the Medical Research Council (MRC) grant MR/L022184/1.
+Description: Implements a class of spatio-temporal generalised linear mixed models for areal unit data, with inference in a Bayesian setting using Markov chain Monte Carlo (MCMC) simulation. The response variable can be binomial, Gaussian or Poisson, but for some models only the binomial and Poisson data likelihoods are available. The spatio-temporal autocorrelation is modelled by  random effects,  which are assigned conditional autoregressive (CAR) style prior distributions. A number of different random effects structures are available, including Bernardinelli et al. (1995) <doi:10.1002/sim.4780142112>, Rushworth et al. (2014) <doi:10.1016/j.sste.2014.05.001> and Lee et al. (2016) <doi:10.1214/16-AOAS941>. Full details are given in the vignette accompanying this package. The creation of this package was supported by the Engineering and Physical Sciences Research Council (EPSRC) grant EP/J017442/1 and the Medical Research Council (MRC) grant MR/L022184/1.
 License: GPL (>= 2)
 Depends: MASS, R (>= 3.0.0), Rcpp (>= 0.11.5)
-Imports: CARBayesdata, coda, dplyr, matrixcalc, sp, spam, spdep, stats, testthat, truncdist, truncnorm, utils
+Imports: CARBayesdata, coda, dplyr, matrixcalc, sp, spam, spdep, stats,
+        testthat, truncdist, truncnorm, utils
 LinkingTo: Rcpp
 LazyLoad: yes
 ByteCompile: yes
 URL: http://github.com/duncanplee/CARBayesST
 BugReports: http://github.com/duncanplee/CARBayesST/issues
+NeedsCompilation: yes
+

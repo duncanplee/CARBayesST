@@ -167,4 +167,9 @@ Y <- rpois(n=N.all, lambda=fitted)
 #### Run the model     
 \dontrun{model <- ST.CARlocalised(formula=Y~1, family="poisson", G=3, W=W, burnin=10000,
 n.sample=50000)}
+
+
+#### Toy example for checking
+model <- ST.CARlocalised(formula=Y~1, family="poisson", G=3, W=W, burnin=10,
+n.sample=50)
 }

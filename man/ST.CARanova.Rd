@@ -203,4 +203,9 @@ Y <- rpois(n=N.all, lambda=mean)
 #### Run the model
 \dontrun{model <- ST.CARanova(formula=Y~x, family="poisson", interaction=TRUE, 
 W=W, burnin=10000, n.sample=50000, fix.rho.S=TRUE, rho.S=1)}
+
+
+#### Toy example for checking
+model <- ST.CARanova(formula=Y~x, family="poisson", interaction=TRUE, 
+W=W, burnin=10, n.sample=50, fix.rho.S=TRUE, rho.S=1)
 }
