@@ -1,4 +1,4 @@
-gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin = 1, prior.mean.beta = NULL, prior.var.beta = NULL, prior.tau2 = NULL, prior.nu2 = NULL, rhofix = NULL, epsilon = 0, verbose = TRUE)
+gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin = 1, prior.mean.beta = NULL, prior.var.beta = NULL, prior.tau2 = NULL, prior.nu2 = NULL, rho = NULL, epsilon = 0, verbose = TRUE)
     { 
     #### Verbose
     a <- common.verbose(verbose)  
@@ -39,7 +39,7 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
   
   #### Check and specify the priors
   if(is.null(prior.mean.beta)) prior.mean.beta <- rep(0, p)
-  if(is.null(prior.var.beta)) prior.var.beta <- rep(1000, p)
+  if(is.null(prior.var.beta)) prior.var.beta <- rep(100000, p)
   if(is.null(prior.tau2)) prior.tau2 <- c(1, 0.01)
   if(is.null(prior.nu2)) prior.nu2 <- c(1, 0.01)
   prior.beta.check(prior.mean.beta, prior.var.beta, p)
@@ -113,9 +113,14 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
   # for the prior ICAR precision for phi.  Associated with these is the triplet form tripList.
   # get the cholesky of Q.space, and its determinant
   # if rho is not fixed, then ridge must be fixed
+  rhofix <- rho
   rho                     <- ifelse(!is.null(rhofix), rhofix, 0.99)
   fixedridge              <- epsilon
   if(rho==1) fixedridge <- 0.0001
+  if(!is.numeric(rho) ) stop("rho is fixed but is not numeric.", call.=FALSE)  
+  if(rho<0 ) stop("rho is outside the range [0, 1].", call.=FALSE)  
+  if(rho>1 ) stop("rho is outside the range [0, 1].", call.=FALSE)    
+  
   tripList                <- vector("list", length = 2)
   tripList[[1]]           <- cbind(1:nrow(W_current), 1:nrow(W_current), rowSums(W_current) + fixedridge)
   tripList[[2]]           <- cbind(rbind(locs, locs[,2:1]), -rep(inv_logit(v), 2))
@@ -174,15 +179,15 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
   # storage of parameters in the MCMC, 
   samples.beta  <- array(NA, c(n.save, p))
   samples.phi   <- array(NA, c(n.save, n.sites * n.time))
-  samples.tau2  <- samples.deviance <- samples.vtau2 <- samples.alpha <- samples.nu2 <- samples.rho <- matrix(0, n.save, 1)
+  samples.tau2  <- samples.vtau2 <- samples.alpha <- samples.nu2 <- samples.rho <- matrix(0, n.save, 1)
   samples.v     <- matrix(0, ncol = n.edges, nrow = c(n.save, n.sites*n.time))
   samples.fit   <- array(NA, c(n.save, n.sites * n.time))  
-  samples.like <- array(NA, c(n.save, n.sites*n.time))  
+  samples.loglike <- array(NA, c(n.save, n.sites*n.time))  
   
   # turn off spam check options to speed things up (a bit)
-  spam.options( "cholsymmetrycheck" = FALSE)
-  spam.options( "cholpivotcheck" = FALSE)
-  spam.options( "safemode" = c(F, F, F))
+  options(spam.cholsymmetrycheck = FALSE)
+  options(spam.cholpivotcheck = FALSE)
+  options(spam.safemode = c(F, F, F))
   
   ## Compute the blocking structure for beta     
   if(blocksize.beta >= p){
@@ -217,7 +222,7 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
   ## Start timer
   n.keep <- floor((n.sample - burnin)/thin)
   if(verbose){
-      cat("Generating", n.keep, "post burnin and thinned (if requested) samples\n", sep = " ")
+      cat("Generating", n.keep, "post burnin and thinned (if requested) samples.\n", sep = " ")
     progressBar            <- txtProgressBar(style = 3)
     percentage.points      <- round((1:100/100)*n.sample)
   } else percentage.points <- round((1:100/100)*n.sample)     
@@ -345,9 +350,7 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
     
     # calculate the deviance
     fitted   <- as.numeric(X.standardised %*% beta_par) + phi + offset
-    deviance.all      <- dnorm(y, mean = fitted, sd = rep(sqrt(nu2), k), log=TRUE)
-    like <- exp(deviance.all)
-    dev          <- -2 * sum(deviance.all)   
+    loglike      <- dnorm(y, mean = fitted, sd = rep(sqrt(nu2), k), log=TRUE)
     
     
     
@@ -357,13 +360,12 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
       samples.phi[increment,]       <- phi
       samples.fit[increment, ]      <- fitted
       samples.tau2[increment,]      <- tau
-      samples.deviance[increment,]  <- dev
       samples.vtau2[increment,]     <- tau_v
       samples.v[increment,]         <- v
       samples.alpha[increment,]     <- alpha
       samples.rho[increment,]       <- rho
       samples.nu2[increment,]       <- nu2
-      samples.like[increment, ] <- like
+      samples.loglike[increment, ] <- loglike
     }
     
     
@@ -411,64 +413,52 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
   }
   
   # end timer
-  if(verbose) cat("\nSummarising results"); close(progressBar)  
+  if(verbose) cat("\nSummarising results."); close(progressBar)  
   
-  ###################################
-  #### Summarise and save the results 
-  ###################################
-  ## Compute the acceptance rates
-  accept.beta  <- 100
-  accept.phi   <- 100
-  accept.rho <- 100 * accept.all[5] / accept.all[6]
-  accept.w     <- 100 * accept.all[7] / accept.all[8]
-  accept.alpha <- 100
+  
+###################################
+#### Summarise and save the results 
+###################################
+## Compute the acceptance rates
+accept.beta  <- 100
+accept.phi   <- 100
+accept.rho <- 100 * accept.all[5] / accept.all[6]
+accept.w     <- 100 * accept.all[7] / accept.all[8]
+accept.alpha <- 100
   if(!is.null(rhofix))
   {
-      accept.final <- c(accept.beta, accept.phi, accept.w)
-      names(accept.final) <- c("beta", "phi", "w")  
+  accept.final <- c(accept.beta, accept.phi, accept.w)
+  names(accept.final) <- c("beta", "phi", "w")  
   }else
   {
-      accept.final <- c(accept.beta, accept.phi, accept.rho,accept.w)
-      names(accept.final) <- c("beta", "phi", "rho", "w")  
+  accept.final <- c(accept.beta, accept.phi, accept.rho,accept.w)
+  names(accept.final) <- c("beta", "phi", "rho", "w")  
   }  
   
-  # ## Compute information criterion (DIC, DIC3, WAIC)
-  median.beta        <- apply(samples.beta, 2, median)
-  regression.mat     <- matrix(X.standardised %*% median.beta, nrow = n.sites, ncol = n.time, byrow=FALSE)   
-  median.phi         <- matrix(apply(samples.phi, 2, median), nrow = n.sites, ncol = n.time)
-  median.nu2         <- median(samples.nu2)
-  offset.mat         <- matrix(offset, nrow = n.sites, ncol = n.time, byrow=FALSE) 
-  fitted.median      <- as.numeric(median.phi + regression.mat + offset.mat)
-  deviance.fitted    <- -2 * sum(dnorm(y, mean = fitted.median, sd = rep(sqrt(median.nu2), k), log = TRUE))
-  p.d <- median(samples.deviance) - deviance.fitted
-  DIC <- 2 * median(samples.deviance) - deviance.fitted     
   
+#### Compute the fitted deviance  
+mean.beta        <- apply(samples.beta, 2, mean)
+regression.mat     <- matrix(X.standardised %*% mean.beta, nrow = n.sites, ncol = n.time, byrow=FALSE)   
+mean.phi         <- matrix(apply(samples.phi, 2, mean), nrow = n.sites, ncol = n.time)
+mean.nu2         <- mean(samples.nu2)
+offset.mat         <- matrix(offset, nrow = n.sites, ncol = n.time, byrow=FALSE) 
+fitted.mean      <- as.numeric(mean.phi + regression.mat + offset.mat)
+deviance.fitted    <- -2 * sum(dnorm(y, mean = fitted.mean, sd = rep(sqrt(mean.nu2), k), log = TRUE))
+ 
   
-  #### Watanabe-Akaike Information Criterion (WAIC)
-  LPPD <- sum(log(apply(samples.like,2,mean)), na.rm=TRUE)
-  p.w <- sum(apply(log(samples.like),2,var), na.rm=TRUE)
-  WAIC <- -2 * (LPPD - p.w)
+#### Model fit criteria
+modelfit <- common.modelfit(samples.loglike, deviance.fitted)
   
-  
-  ## Compute the LMPL
-  CPO <- rep(NA, (n.sites * n.time))
-  for(j in 1:(n.sites * n.time)){
-    CPO[j] <- 1/median((1 / dnorm(y[j], mean=samples.fit[ ,j], sd=sqrt(samples.nu2))))   
-  }
-  LMPL <- sum(log(CPO))    
-
+ 
+#### Create the fitted values and residuals
+fitted.values <- apply(samples.fit, 2, mean)
+response.residuals <- as.numeric(y) - fitted.values
+pearson.residuals <- response.residuals /sqrt(mean.nu2)
+residuals <- data.frame(response=response.residuals, pearson=pearson.residuals)
 
   
-  ## Create the fitted values and residuals
-  fitted.values <- apply(samples.fit, 2, median)
-  response.residuals <- as.numeric(y) - fitted.values
-  pearson.residuals <- response.residuals /sqrt(median.nu2)
-  deviance.residuals <- sign(response.residuals) * sqrt((y-fitted.values)^2/median.nu2)
-  residuals <- data.frame(response=response.residuals, pearson=pearson.residuals, deviance=deviance.residuals)
-  
-  
-  #### transform the parameters back to the origianl covariate scale.
-  samples.beta.orig <- common.betatransform(samples.beta, X.indicator, X.mean, X.sd, p, FALSE)
+#### transform the parameters back to the origianl covariate scale.
+samples.beta.orig <- common.betatransform(samples.beta, X.indicator, X.mean, X.sd, p, FALSE)
   
   
   #### Create a summary object  
@@ -516,12 +506,8 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
   Wmn[locs[ ,c(2,1)]] <- bdryMN  
   
   
-  ## Compile and return the results
-  loglike <- (-0.5 * deviance.fitted)
-  modelfit <- c(DIC, p.d, WAIC, p.w, LMPL, loglike)
-  names(modelfit) <- c("DIC", "p.d", "WAIC", "p.w", "LMPL", "loglikelihood")
-  
-  model.string    <- c("Likelihood model - Gaussian (identity link function)", 
+#### Compile and return the results
+model.string    <- c("Likelihood model - Gaussian (identity link function)", 
                        "\nLatent structure model - Adaptive autoregressive CAR model\n")
   samples.tau2all <- cbind(samples.tau2, samples.vtau2)
   colnames(samples.tau2all) <- c("tau2", "tau2.w")
@@ -543,7 +529,7 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
   if(verbose)
   {
     b<-proc.time()
-    cat(" finished in ", round(b[3]-a[3], 1), "seconds")
+    cat("Finished in ", round(b[3]-a[3], 1), "seconds.\n")
   }else
   {}
   return(results)

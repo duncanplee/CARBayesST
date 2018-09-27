@@ -7,7 +7,7 @@
 }
 \description{
     This function takes a CARBayesST object and returns the vector of fitted
-    values based on posterior medians.
+    values (posterior means).
 }
 
 \usage{

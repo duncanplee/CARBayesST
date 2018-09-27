@@ -1,15 +1,12 @@
-residuals.CARBayesST <- function(object, type="deviance", ...)
+residuals.CARBayesST <- function(object, type="pearson", ...)
 {
-    #### Return one of three types of residuals
+    #### Return one of two types of residuals
     if(type=="response")
     {
         return(object$residuals$response)
     }else if(type=="pearson")
     {
         return(object$residuals$pearson)
-    }else if(type=="deviance")
-    {
-        return(object$residuals$deviance)
     }else
     {
         return("Error. That is not one of the allowable residual types.")   

@@ -1,4 +1,4 @@
-poisson.CARanova <- function(formula, data=NULL, W, interaction=TRUE, burnin, n.sample, thin=1,  prior.mean.beta=NULL, prior.var.beta=NULL, prior.tau2=NULL, fix.rho.S=FALSE, rho.S=NULL, fix.rho.T=FALSE, rho.T=NULL, MALA=TRUE, verbose=TRUE)
+poisson.CARanova <- function(formula, data=NULL, W, interaction=TRUE, burnin, n.sample, thin=1,  prior.mean.beta=NULL, prior.var.beta=NULL, prior.tau2=NULL, rho.S=NULL, rho.T=NULL, MALA=TRUE, verbose=TRUE)
 {
 ##############################################
 #### Format the arguments and check for errors
@@ -18,9 +18,9 @@ X.mean <- frame.results$X.mean
 X.indicator <- frame.results$X.indicator 
 offset <- frame.results$offset
 Y <- frame.results$Y
-Y.miss <- frame.results$Y.miss
 which.miss <- frame.results$which.miss
 n.miss <- frame.results$n.miss  
+Y.DA <- Y  
 
 
 #### Check on MALA argument
@@ -29,37 +29,35 @@ n.miss <- frame.results$n.miss
 
 
 #### Check on the rho arguments
-    if(!is.logical(fix.rho.S)) stop("fix.rho.S is not logical.", call.=FALSE)   
-    if(fix.rho.S & is.null(rho.S)) stop("rho.S is fixed but an initial value was not set.", call.=FALSE)   
-    if(fix.rho.S & !is.numeric(rho.S) ) stop("rho.S is not numeric.", call.=FALSE)  
-    if(!is.logical(fix.rho.T)) stop("fix.rho.T is not logical.", call.=FALSE)   
-    if(fix.rho.T & is.null(rho.T)) stop("rho.T is fixed but an initial value was not set.", call.=FALSE)   
-    if(fix.rho.T & !is.numeric(rho.T) ) stop("rho.T is not numeric.", call.=FALSE)  
-    
-    if(fix.rho.S)
+    if(is.null(rho.S))
+    {
+    rho <- runif(1)
+    fix.rho.S <- FALSE   
+    }else
     {
     rho <- rho.S
-    }else
-    {
-    rho <- runif(1)       
+    fix.rho.S <- TRUE
     }
+    if(!is.numeric(rho)) stop("rho.S is fixed but is not numeric.", call.=FALSE)  
+    if(rho<0 ) stop("rho.S is outside the range [0, 1].", call.=FALSE)  
+    if(rho>1 ) stop("rho.S is outside the range [0, 1].", call.=FALSE)    
 
-    if(fix.rho.T)
+    if(is.null(rho.T))
+    {
+    lambda <- runif(1)
+    fix.rho.T <- FALSE   
+    }else
     {
     lambda <- rho.T
-    }else
-    {
-    lambda <- runif(1)       
-    }   
-
-    if(rho<0 ) stop("rho.S is outside the range [0, 1].", call.=FALSE)  
-    if(rho>1 ) stop("rho.S is outside the range [0, 1].", call.=FALSE)  
+    fix.rho.T <- TRUE
+    }
+    if(!is.numeric(lambda)) stop("rho.T is fixed but is not numeric.", call.=FALSE)  
     if(lambda<0 ) stop("rho.T is outside the range [0, 1].", call.=FALSE)  
     if(lambda>1 ) stop("rho.T is outside the range [0, 1].", call.=FALSE)  
 
 
 #### CAR quantities
-W.quants <- common.Wcheckformat.leroux(W, fix.rho.S, rho)
+W.quants <- common.Wcheckformat.leroux(W)
 K <- W.quants$n
 N <- N.all / K
 W <- W.quants$W
@@ -78,7 +76,7 @@ W.begfin <- W.quants$W.begfin
 
 #### Priors
     if(is.null(prior.mean.beta)) prior.mean.beta <- rep(0, p)
-    if(is.null(prior.var.beta)) prior.var.beta <- rep(1000, p)
+    if(is.null(prior.var.beta)) prior.var.beta <- rep(100000, p)
     if(is.null(prior.tau2)) prior.tau2 <- c(1, 0.01)
 prior.beta.check(prior.mean.beta, prior.var.beta, p)
 prior.var.check(prior.tau2)
@@ -126,6 +124,22 @@ tau2.delta <- var(delta)/10
     {}
 
 
+#### Matrix versions
+offset.mat <- matrix(offset, nrow=K, ncol=N, byrow=FALSE) 
+regression.mat <- matrix(X.standardised %*% beta, nrow=K, ncol=N, byrow=FALSE)   
+phi.mat <- matrix(rep(phi, N), byrow=F, nrow=K)
+delta.mat <- matrix(rep(delta, K), byrow=T, nrow=K)
+
+    if(interaction)
+    {
+    gamma.mat <- matrix(gamma, byrow=F, nrow=K)
+    }else
+    {
+    gamma.mat <- matrix(rep(0, N.all), byrow=F, nrow=K)
+    }
+fitted <- exp(as.numeric(offset.mat + regression.mat + phi.mat  + delta.mat + gamma.mat))
+
+
 
 ###############################    
 #### Set up the MCMC quantities    
@@ -138,8 +152,7 @@ samples.delta <- array(NA, c(n.keep, N))
     if(!fix.rho.S) samples.rho <- array(NA, c(n.keep, 1))
     if(!fix.rho.T) samples.lambda <- array(NA, c(n.keep, 1))
 samples.fitted <- array(NA, c(n.keep, N.all))
-samples.like <- array(NA, c(n.keep, N.all))
-samples.deviance <- array(NA, c(n.keep, 1))
+samples.loglike <- array(NA, c(n.keep, N.all))
     if(n.miss>0) samples.Y <- array(NA, c(n.keep, n.miss))
     if(interaction)
     {
@@ -241,26 +254,6 @@ temp <- 1
 ##########################################
 #### Specify quantities that do not change
 ##########################################
-offset.mat <- matrix(offset, nrow=K, ncol=N, byrow=FALSE) 
-regression.mat <- matrix(X.standardised %*% beta, nrow=K, ncol=N, byrow=FALSE)   
-Y.mat <- matrix(Y, nrow=K, ncol=N, byrow=FALSE)
-Y.mat.trans <- t(Y.mat)
-Y.mat.miss <- matrix(Y.miss, nrow=K, ncol=N, byrow=FALSE)
-Y.mat.trans.miss <- t(Y.mat.miss)
-which.miss.mat <- matrix(which.miss, nrow=K, ncol=N, byrow=FALSE)
-which.miss.mat.trans <- t(which.miss.mat)
-phi.mat <- matrix(rep(phi, N), byrow=F, nrow=K)
-delta.mat <- matrix(rep(delta, K), byrow=T, nrow=K)
-  
-    if(interaction)
-    {
-    gamma.mat <- matrix(gamma, byrow=F, nrow=K)
-    }else
-    {
-    gamma.mat <- matrix(rep(0, N.all), byrow=F, nrow=K)
-    }
-
-
 #### Check for islands
 W.list<- mat2listw(W)
 W.nb <- W.list$neighbours
@@ -278,7 +271,7 @@ n.islands <- max(W.islands$nc)
 #### Start timer
      if(verbose)
      {
-     cat("Generating", n.keep, "post burnin and thinned (if requested) samples\n", sep = " ")
+     cat("Generating", n.keep, "post burnin and thinned (if requested) samples.\n", sep = " ")
      progressBar <- txtProgressBar(style = 3)
      percentage.points<-round((1:100/100)*n.sample)
      }else
@@ -290,16 +283,28 @@ n.islands <- max(W.islands$nc)
 #### Create the MCMC samples
     for(j in 1:n.sample)
     {
+    ####################################
+    ## Sample from Y - data augmentation
+    ####################################
+        if(n.miss>0)
+        {
+        Y.DA[which.miss==0] <- rpois(n=n.miss, lambda=fitted[which.miss==0])    
+        }else
+        {}
+    Y.DA.mat <- matrix(Y.DA, nrow=K, ncol=N, byrow=FALSE)
+        
+
+    
     ###################
     ## Sample from beta
     ###################
     offset.temp <- offset + as.numeric(phi.mat) + as.numeric(delta.mat) + as.numeric(gamma.mat)   
         if(p>2)
         {
-        temp <- poissonbetaupdateMALA(X.standardised, N.all, p, beta, offset.temp, Y.miss, prior.mean.beta, prior.var.beta, which.miss, n.beta.block, proposal.sd.beta, list.block)
+        temp <- poissonbetaupdateMALA(X.standardised, N.all, p, beta, offset.temp, Y.DA, prior.mean.beta, prior.var.beta, n.beta.block, proposal.sd.beta, list.block)
         }else
         {
-        temp <- poissonbetaupdateRW(X.standardised, N.all, p, beta, offset.temp, Y.miss, prior.mean.beta, prior.var.beta, which.miss, proposal.sd.beta)
+        temp <- poissonbetaupdateRW(X.standardised, N.all, p, beta, offset.temp, Y.DA, prior.mean.beta, prior.var.beta, proposal.sd.beta)
         }
     beta <- temp[[1]]
     accept[1] <- accept[1] + temp[[2]]
@@ -314,10 +319,10 @@ n.islands <- max(W.islands$nc)
     phi.offset <- offset.mat + regression.mat + delta.mat + gamma.mat
         if(MALA)
         {
-        temp1 <- poissoncarupdateMALA(W.triplet, W.begfin, W.triplet.sum, K, phi, tau2.phi, Y.mat.miss, proposal.sd.phi, rho, phi.offset, N, rep(1,N), which.miss.mat)
+        temp1 <- poissoncarupdateMALA(W.triplet, W.begfin, W.triplet.sum, K, phi, tau2.phi, Y.DA.mat, proposal.sd.phi, rho, phi.offset, N, rep(1,N))
         }else
         {
-        temp1 <- poissoncarupdateRW(W.triplet, W.begfin, W.triplet.sum, K, phi, tau2.phi, Y.mat.miss, proposal.sd.phi, rho, phi.offset, N, rep(1,N), which.miss.mat)
+        temp1 <- poissoncarupdateRW(W.triplet, W.begfin, W.triplet.sum, K, phi, tau2.phi, Y.DA.mat, proposal.sd.phi, rho, phi.offset, N, rep(1,N))
         }
     phi <- temp1[[1]]
         if(rho<1)
@@ -339,10 +344,10 @@ n.islands <- max(W.islands$nc)
     delta.offset <- t(offset.mat + regression.mat + phi.mat + gamma.mat)
         if(MALA)
         {
-        temp2 <- poissoncarupdateMALA(D.triplet, D.begfin, D.triplet.sum, N, delta, tau2.delta, Y.mat.trans.miss, proposal.sd.delta, lambda, delta.offset, K, rep(1,K), which.miss.mat.trans)
+        temp2 <- poissoncarupdateMALA(D.triplet, D.begfin, D.triplet.sum, N, delta, tau2.delta, t(Y.DA.mat), proposal.sd.delta, lambda, delta.offset, K, rep(1,K))
         }else
         {
-        temp2 <- poissoncarupdateRW(D.triplet, D.begfin, D.triplet.sum, N, delta, tau2.delta, Y.mat.trans.miss, proposal.sd.delta, lambda, delta.offset, K, rep(1,K), which.miss.mat.trans)
+        temp2 <- poissoncarupdateRW(D.triplet, D.begfin, D.triplet.sum, N, delta, tau2.delta, t(Y.DA.mat), proposal.sd.delta, lambda, delta.offset, K, rep(1,K))
         }
     delta <- temp2[[1]]
     delta <- delta - mean(delta)
@@ -361,10 +366,10 @@ n.islands <- max(W.islands$nc)
         gamma.offset.vec <- as.numeric(gamma.offset)
             if(MALA)
             {
-            temp5 <- poissonindepupdateMALA(N.all, gamma, tau2.gamma, Y.miss, proposal.sd.gamma, gamma.offset.vec, which.miss)
+            temp5 <- poissonindepupdateMALA(N.all, gamma, tau2.gamma, Y.DA, proposal.sd.gamma, gamma.offset.vec)
             }else
             {
-            temp5 <- poissonindepupdateRW(N.all, gamma, tau2.gamma, Y.miss, proposal.sd.gamma, gamma.offset.vec, which.miss)
+            temp5 <- poissonindepupdateRW(N.all, gamma, tau2.gamma, Y.DA, proposal.sd.gamma, gamma.offset.vec)
             }
         gamma <- temp5[[1]]
         gamma <- gamma - mean(gamma)
@@ -461,11 +466,8 @@ n.islands <- max(W.islands$nc)
     #########################
     lp <- as.numeric(offset.mat + regression.mat + phi.mat  + delta.mat + gamma.mat)
     fitted <- exp(lp)
-    deviance.all <- dpois(x=as.numeric(Y), lambda=fitted, log=TRUE)
-    like <- exp(deviance.all)
-    deviance <- -2 * sum(deviance.all, na.rm=TRUE)    
+    loglike <- dpois(x=as.numeric(Y), lambda=fitted, log=TRUE)
 
-    
     
     
     ###################
@@ -479,10 +481,9 @@ n.islands <- max(W.islands$nc)
         samples.delta[ele, ] <- delta
             if(!fix.rho.S) samples.rho[ele, ] <- rho
             if(!fix.rho.T) samples.lambda[ele, ] <- lambda
-        samples.deviance[ele, ] <- deviance
         samples.fitted[ele, ] <- fitted
-        samples.like[ele, ] <- like
-            if(n.miss>0) samples.Y[ele, ] <- rpois(n=n.miss, lambda=fitted[which.miss==0])
+        samples.loglike[ele, ] <- loglike
+            if(n.miss>0) samples.Y[ele, ] <- Y.DA[which.miss==0]
             if(interaction)
             {
             samples.gamma[ele, ] <- gamma
@@ -535,7 +536,7 @@ n.islands <- max(W.islands$nc)
 #### end timer
      if(verbose)
      {
-     cat("\nSummarising results")
+     cat("\nSummarising results.")
      close(progressBar)
      }else
      {}
@@ -577,51 +578,37 @@ accept.delta <- 100 * accept.all[5] / accept.all[6]
     }
 
 
-#### Deviance information criterion (DIC)
-median.phi <- apply(samples.phi, 2, median)
-median.delta <- apply(samples.delta, 2, median)  
-median.phi.mat <- matrix(rep(median.phi, N), byrow=F, nrow=K)
-median.delta.mat <- matrix(rep(median.delta, K), byrow=T, nrow=K)
-median.beta <- apply(samples.beta,2,median)
-regression.mat <- matrix(X.standardised %*% median.beta, nrow=K, ncol=N, byrow=FALSE)   
+#### Compute the fitted deviance
+mean.phi <- apply(samples.phi, 2, mean)
+mean.delta <- apply(samples.delta, 2, mean)  
+mean.phi.mat <- matrix(rep(mean.phi, N), byrow=F, nrow=K)
+mean.delta.mat <- matrix(rep(mean.delta, K), byrow=T, nrow=K)
+mean.beta <- apply(samples.beta,2,median)
+regression.mat <- matrix(X.standardised %*% mean.beta, nrow=K, ncol=N, byrow=FALSE)   
     if(interaction)
     {
-    median.gamma <- apply(samples.gamma, 2,median)
-    median.gamma.mat <-  matrix(median.gamma, byrow=F, nrow=K)   
-    fitted.median <- as.numeric(exp(offset.mat + regression.mat + median.phi.mat + median.delta.mat + median.gamma.mat))
+    mean.gamma <- apply(samples.gamma, 2,mean)
+    mean.gamma.mat <-  matrix(mean.gamma, byrow=F, nrow=K)   
+    fitted.mean <- as.numeric(exp(offset.mat + regression.mat + mean.phi.mat + mean.delta.mat + mean.gamma.mat))
     }else
     {
-    fitted.median <- as.numeric(exp(offset.mat + regression.mat + median.phi.mat + median.delta.mat))    
+    fitted.mean <- as.numeric(exp(offset.mat + regression.mat + mean.phi.mat + mean.delta.mat))    
     }
 
-deviance.fitted <- -2 * sum(dpois(x=as.numeric(Y), lambda=fitted.median, log=TRUE), na.rm=TRUE)
-p.d <- median(samples.deviance) - deviance.fitted
-DIC <- 2 * median(samples.deviance) - deviance.fitted  
-     
-  
-#### Watanabe-Akaike Information Criterion (WAIC)
-LPPD <- sum(log(apply(samples.like,2,mean)), na.rm=TRUE)
-p.w <- sum(apply(log(samples.like),2,var), na.rm=TRUE)
-WAIC <- -2 * (LPPD - p.w)
+deviance.fitted <- -2 * sum(dpois(x=as.numeric(Y), lambda=fitted.mean, log=TRUE), na.rm=TRUE)
 
 
-## Compute the LMPL
-CPO <- rep(NA, N.all)
-    for(j in 1:N.all)
-    {
-    CPO[j] <- 1/median((1 / dpois(x=Y[j], lambda=samples.fitted[ ,j])))    
-    }
-LMPL <- sum(log(CPO), na.rm=TRUE)  
-       
-  
-## Create the fitted values and residuals
-fitted.values <- apply(samples.fitted, 2, median)
+#### Model fit criteria
+modelfit <- common.modelfit(samples.loglike, deviance.fitted)
+
+
+#### Create the fitted values and residuals
+fitted.values <- apply(samples.fitted, 2, mean)
 response.residuals <- as.numeric(Y) - fitted.values
 pearson.residuals <- response.residuals /sqrt(fitted.values)
-deviance.residuals <- sign(response.residuals) * sqrt(2 * (Y * log(Y/fitted.values) + fitted.values - Y))
-residuals <- data.frame(response=response.residuals, pearson=pearson.residuals, deviance=deviance.residuals)
-
-  
+residuals <- data.frame(response=response.residuals, pearson=pearson.residuals)
+ 
+ 
 #### Transform the parameters back to the origianl covariate scale.
 samples.beta.orig <- common.betatransform(samples.beta, X.indicator, X.mean, X.sd, p, FALSE)
 
@@ -699,11 +686,6 @@ summary.results[ , 4:7] <- round(summary.results[ , 4:7], 1)
 
 
 #### Compile and return the results
-loglike <- (-0.5 * deviance.fitted)
-modelfit <- c(DIC, p.d, WAIC, p.w, LMPL, loglike)
-names(modelfit) <- c("DIC", "p.d", "WAIC", "p.w", "LMPL", "loglikelihood")
-
-
 #### Harmonise samples in case of them not being generated
     if(fix.rho.S & fix.rho.T)
     {
@@ -744,7 +726,7 @@ class(results) <- "CARBayesST"
      if(verbose)
      {
      b<-proc.time()
-     cat(" finished in ", round(b[3]-a[3], 1), "seconds")
+     cat("Finished in ", round(b[3]-a[3], 1), "seconds.\n")
      }else
      {}
   return(results)

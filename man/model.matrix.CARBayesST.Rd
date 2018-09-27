@@ -3,7 +3,7 @@
 
 
 \title{
-    Extract the Model (design) matrix from a model.
+    Extract the model (design) matrix from a model.
 }
 \description{
     This function takes a CARBayesST object and returns the design matrix.

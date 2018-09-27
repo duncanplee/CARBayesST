@@ -43,7 +43,7 @@ n.miss <- N.all - sum(which.miss)
    
  
 #### CAR quantities
-W.quants <- common.Wcheckformat.leroux(W, FALSE, 1)
+W.quants <- common.Wcheckformat.leroux(W)
 K <- W.quants$n
 N <- N.all / K
 W <- W.quants$W
@@ -72,7 +72,7 @@ W.begfin <- W.quants$W.begfin
     if(!is.null(X))
     {
         if(is.null(prior.mean.beta)) prior.mean.beta <- rep(0, p)
-        if(is.null(prior.var.beta)) prior.var.beta <- rep(1000, p)
+        if(is.null(prior.var.beta)) prior.var.beta <- rep(100000, p)
     prior.beta.check(prior.mean.beta, prior.var.beta, p)
     }else
     {}
@@ -145,8 +145,7 @@ samples.tau2 <- array(NA, c(n.keep, 1))
 samples.gamma <- array(NA, c(n.keep, 1))
 samples.phi <- array(NA, c(n.keep, N.all))
 samples.fitted <- array(NA, c(n.keep, N.all))
-samples.deviance <- array(NA, c(n.keep, 1))
-samples.like <- array(NA, c(n.keep, N.all))
+samples.loglike <- array(NA, c(n.keep, N.all))
 
 
 #### Specify the Metropolis quantities
@@ -188,7 +187,7 @@ regression.mat <- matrix(regression.vec, nrow=K, ncol=N, byrow=FALSE)
 #### Start timer
     if(verbose)
     {
-    cat("Generating", n.keep, "post burnin and thinned (if requested) samples\n", sep = " ")
+    cat("Generating", n.keep, "post burnin and thinned (if requested) samples.\n", sep = " ")
     progressBar <- txtProgressBar(style = 3)
     percentage.points<-round((1:100/100)*n.sample)
     }else
@@ -210,10 +209,10 @@ regression.mat <- matrix(regression.vec, nrow=K, ncol=N, byrow=FALSE)
         offset.temp <- offset + as.numeric(mu) + as.numeric(phi.mat)   
             if(p>2)
             {
-            temp <- poissonbetaupdateMALA(X.standardised, N.all, p, beta, offset.temp, Y, prior.mean.beta, prior.var.beta, which.miss, n.beta.block, proposal.sd.beta, list.block)
+            temp <- poissonbetaupdateMALA(X.standardised, N.all, p, beta, offset.temp, Y, prior.mean.beta, prior.var.beta, n.beta.block, proposal.sd.beta, list.block)
             }else
             {
-            temp <- poissonbetaupdateRW(X.standardised, N.all, p, beta, offset.temp, Y, prior.mean.beta, prior.var.beta, which.miss, proposal.sd.beta)
+            temp <- poissonbetaupdateRW(X.standardised, N.all, p, beta, offset.temp, Y, prior.mean.beta, prior.var.beta, proposal.sd.beta)
             }
         beta <- temp[[1]]
         accept[7] <- accept[7] + temp[[2]]
@@ -299,10 +298,10 @@ regression.mat <- matrix(regression.vec, nrow=K, ncol=N, byrow=FALSE)
     phi.offset <- mu + offset.mat + regression.mat
         if(MALA)
         {
-        temp1 <- poissonarcarupdateMALA(W.triplet, W.begfin, W.triplet.sum,  K, N, phi.mat, tau2, gamma, 1, Y.mat, proposal.sd.phi, phi.offset, W.triplet.sum, which.miss.mat)      
+        temp1 <- poissonarcarupdateMALA(W.triplet, W.begfin, W.triplet.sum,  K, N, phi.mat, tau2, gamma, 1, Y.mat, proposal.sd.phi, phi.offset, W.triplet.sum)      
         }else
         {
-        temp1 <- poissonarcarupdateRW(W.triplet, W.begfin, W.triplet.sum,  K, N, phi.mat, tau2, gamma, 1, Y.mat, proposal.sd.phi, phi.offset, W.triplet.sum, which.miss.mat)      
+        temp1 <- poissonarcarupdateRW(W.triplet, W.begfin, W.triplet.sum,  K, N, phi.mat, tau2, gamma, 1, Y.mat, proposal.sd.phi, phi.offset, W.triplet.sum)      
         }
     phi.temp <- temp1[[1]]
     phi <- as.numeric(phi.temp)
@@ -340,10 +339,7 @@ regression.mat <- matrix(regression.vec, nrow=K, ncol=N, byrow=FALSE)
     #########################
     lp <- as.numeric(mu + offset.mat + regression.mat + phi.mat)  
     fitted <- exp(lp)
-    deviance.all <- dpois(x=as.numeric(Y), lambda=fitted, log=TRUE)
-    like <- exp(deviance.all)
-    deviance <- -2 * sum(deviance.all, na.rm=TRUE)  
-        
+    loglike <- dpois(x=as.numeric(Y), lambda=fitted, log=TRUE)
  
         
     ###################
@@ -358,9 +354,8 @@ regression.mat <- matrix(regression.vec, nrow=K, ncol=N, byrow=FALSE)
         samples.phi[ele, ] <- as.numeric(phi.mat)
         samples.tau2[ele, ] <- tau2
         samples.gamma[ele, ] <- gamma
-        samples.deviance[ele, ] <- deviance
         samples.fitted[ele, ] <- fitted
-        samples.like[ele, ] <- like
+        samples.loglike[ele, ] <- loglike
             if(!is.null(X)) samples.beta[ele, ] <- beta        
         }else
         {}
@@ -413,7 +408,7 @@ regression.mat <- matrix(regression.vec, nrow=K, ncol=N, byrow=FALSE)
 #### end timer
     if(verbose)
     {
-    cat("\nSummarising results")
+    cat("\nSummarising results.")
     close(progressBar)
     }else
     {}
@@ -440,46 +435,32 @@ accept.gamma <- 100
     }
     
     
-#### Deviance information criterion (DIC)
-median.Z <- round(apply(samples.Z,2,median), 0)       
-median.lambda <- apply(samples.lambda, 2, median)
-median.mu <- matrix(median.lambda[median.Z], nrow=K, ncol=N, byrow=FALSE)
+#### Compute the fitted deviance
+mean.Z <- round(apply(samples.Z,2,mean), 0)       
+mean.lambda <- apply(samples.lambda, 2, mean)
+mean.mu <- matrix(mean.lambda[mean.Z], nrow=K, ncol=N, byrow=FALSE)
     if(!is.null(X))
     {
-    median.beta <- apply(samples.beta,2,median)
-    regression.mat <- matrix(X.standardised %*% median.beta, nrow=K, ncol=N, byrow=FALSE)     
+    mean.beta <- apply(samples.beta,2,mean)
+    regression.mat <- matrix(X.standardised %*% mean.beta, nrow=K, ncol=N, byrow=FALSE)     
     }else
     {}
-median.phi <- matrix(apply(samples.phi, 2, median), nrow=K, byrow=FALSE)
-fitted.median <- as.numeric(exp(median.mu + offset.mat + regression.mat + median.phi))
-deviance.fitted <- -2 * sum(dpois(x=as.numeric(Y), lambda=fitted.median, log=TRUE))
-p.d <- median(samples.deviance) - deviance.fitted
-DIC <- 2 * median(samples.deviance) - deviance.fitted     
+mean.phi <- matrix(apply(samples.phi, 2, mean), nrow=K, byrow=FALSE)
+fitted.mean <- as.numeric(exp(mean.mu + offset.mat + regression.mat + mean.phi))
+deviance.fitted <- -2 * sum(dpois(x=as.numeric(Y), lambda=fitted.mean, log=TRUE))
 
     
-#### Watanabe-Akaike Information Criterion (WAIC)
-LPPD <- sum(log(apply(samples.like,2,mean)), na.rm=TRUE)
-p.w <- sum(apply(log(samples.like),2,var), na.rm=TRUE)
-WAIC <- -2 * (LPPD - p.w)
-  
-  
-#### Compute the LMPL
-CPO <- rep(NA, N.all)
-    for(j in 1:N.all)
-    {
-    CPO[j] <- 1/median((1 / dpois(x=Y[j], lambda=samples.fitted[ ,j])))    
-    }
-LMPL <- sum(log(CPO))  
-    
-    
+#### Model fit criteria
+modelfit <- common.modelfit(samples.loglike, deviance.fitted)
+
+
 #### Create the fitted values and residuals
-fitted.values <- apply(samples.fitted, 2, median)
+fitted.values <- apply(samples.fitted, 2, mean)
 response.residuals <- as.numeric(Y) - fitted.values
 pearson.residuals <- response.residuals /sqrt(fitted.values)
-deviance.residuals <- sign(response.residuals) * sqrt(2 * (Y * log(Y/fitted.values) + fitted.values - Y))
-residuals <- data.frame(response=response.residuals, pearson=pearson.residuals, deviance=deviance.residuals)
-    
-    
+residuals <- data.frame(response=response.residuals, pearson=pearson.residuals)    
+   
+ 
 #### Transform the parameters back to the original covariate scale
     if(!is.null(X))
     {    
@@ -523,17 +504,12 @@ colnames(summary.results) <- c("Median", "2.5%", "97.5%", "n.sample", "% accept"
     
     
 #### Compile and return the results
-loglike <- (-0.5 * deviance.fitted)
-modelfit <- c(DIC, p.d, WAIC, p.w, LMPL, loglike)
-names(modelfit) <- c("DIC", "p.d", "WAIC", "p.w", "LMPL", "loglikelihood")
-
-
 #### Harmonise samples in case of them not being generated
     if(is.null(X)) samples.beta.orig = NA
        
 samples <- list(beta=mcmc(samples.beta.orig), lambda=mcmc(samples.lambda),  Z=mcmc(samples.Z), delta=mcmc(samples.delta), phi = mcmc(samples.phi), tau2=mcmc(samples.tau2), rho.T=mcmc(samples.gamma), fitted=mcmc(samples.fitted))
 model.string <- c("Likelihood model - Poisson (log link function)", "\nLatent structure model - Localised autoregressive CAR model\n")
-results <- list(summary.results=summary.results, samples=samples, fitted.values=fitted.values, residuals=residuals, modelfit=modelfit, accept=accept.final, localised.structure=median.Z, formula=formula, model=model.string,  X=X)
+results <- list(summary.results=summary.results, samples=samples, fitted.values=fitted.values, residuals=residuals, modelfit=modelfit, accept=accept.final, localised.structure=mean.Z, formula=formula, model=model.string,  X=X)
 class(results) <- "CARBayesST"
 
 
@@ -541,7 +517,7 @@ class(results) <- "CARBayesST"
     if(verbose)
     {
     b<-proc.time()
-    cat(" finished in ", round(b[3]-a[3], 1), "seconds")
+    cat("Finished in ", round(b[3]-a[3], 1), "seconds.\n")
     }else
     {}
 return(results)

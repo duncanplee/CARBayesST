@@ -4,6 +4,7 @@ export(
      ST.CARar,
      ST.CARanova,
      ST.CARadaptive,
+     ST.CARclustrends,
      ST.CARlocalised,
      ST.CARsepspatial
 )
@@ -18,11 +19,15 @@ import(spam)
 import(MASS)
 import(testthat)
 importFrom(truncnorm, rtruncnorm)
-importFrom(truncdist, rtrunc)
 import(Rcpp)
+importFrom(truncdist, rtrunc)
 import(CARBayesdata)
 import(stats)
-importFrom(coda, mcmc, geweke.diag, effectiveSize)
+import(leaflet)
+import(rgdal)
+importFrom(gtools, rdirichlet, ddirichlet)
+importFrom(matrixStats, rowMaxs)
+importFrom(coda, mcmc, geweke.diag, effectiveSize, HPDinterval)
 importFrom(utils, setTxtProgressBar, txtProgressBar)
 importFrom(spdep, mat2listw, moran.mc, n.comp.nb, nb2listw, nb2mat, poly2nb)
 importFrom(matrixcalc, is.symmetric.matrix)

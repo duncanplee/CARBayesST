@@ -2,14 +2,14 @@ Package: CARBayesST
 Type: Package
 Title: Spatio-Temporal Generalised Linear Mixed Models for Areal Unit
         Data
-Version: 2.5.2
-Date: 2018-04-17
+Version: 3.0
+Date: 2018-09-28
 Author: Duncan Lee, Alastair Rushworth and Gary Napier
 Maintainer: Duncan Lee <Duncan.Lee@glasgow.ac.uk>
-Description: Implements a class of spatio-temporal generalised linear mixed models for areal unit data, with inference in a Bayesian setting using Markov chain Monte Carlo (MCMC) simulation. The response variable can be binomial, Gaussian or Poisson, but for some models only the binomial and Poisson data likelihoods are available. The spatio-temporal autocorrelation is modelled by  random effects,  which are assigned conditional autoregressive (CAR) style prior distributions. A number of different random effects structures are available, including Bernardinelli et al. (1995) <doi:10.1002/sim.4780142112>, Rushworth et al. (2014) <doi:10.1016/j.sste.2014.05.001> and Lee et al. (2016) <doi:10.1214/16-AOAS941>. Full details are given in the vignette accompanying this package. The creation of this package was supported by the Engineering and Physical Sciences Research Council (EPSRC) grant EP/J017442/1 and the Medical Research Council (MRC) grant MR/L022184/1.
+Description: Implements a class of spatio-temporal generalised linear mixed models for areal unit data, with inference in a Bayesian setting using Markov chain Monte Carlo (MCMC) simulation. The response variable can be binomial, Gaussian, or Poisson, but for some models only the binomial and Poisson data likelihoods are available. The spatio-temporal autocorrelation is modelled by  random effects, which are assigned conditional autoregressive (CAR) style prior distributions. A number of different random effects structures are available, including Bernardinelli et al. (1995) <doi:10.1002/sim.4780142112>, Rushworth et al. (2014) <doi:10.1016/j.sste.2014.05.001> and Lee et al. (2016) <doi:10.1214/16-AOAS941>. Full details are given in the vignette accompanying this package. The creation of this package was supported by the Engineering and Physical Sciences Research Council (EPSRC) grant EP/J017442/1 and the Medical Research Council (MRC) grant MR/L022184/1.
 License: GPL (>= 2)
 Depends: MASS, R (>= 3.0.0), Rcpp (>= 0.11.5)
-Imports: CARBayesdata, coda, dplyr, matrixcalc, sp, spam, spdep, stats,
+Imports: CARBayesdata, coda, dplyr, gtools, leaflet, matrixcalc, matrixStats, rgdal, sp, spam, spdep, stats,
         testthat, truncdist, truncnorm, utils
 LinkingTo: Rcpp
 LazyLoad: yes

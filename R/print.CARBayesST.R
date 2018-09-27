@@ -1,6 +1,6 @@
 print.CARBayesST <- function(x,...)
 {
-     if(class(x$localised.structure)=="list")
+     if(class(x$localised.structure)=="list" & nrow(x$localised.structure[[2]])==ncol(x$localised.structure[[2]]))
      {
      #### Print out the model fitted
      cat("\n#################\n")
@@ -24,10 +24,25 @@ print.CARBayesST <- function(x,...)
      tab[1, ] <- c(sum(temp)/2, (length(temp)- sum(temp))/2)
      colnames(tab) <- c("stepchange", "no stepchange")
      print(tab)
-     #print(sum(temp))
-     #cat(" which is ")
-     #print(round(100 * mean(temp),2))
-     #cat("%\n")
+     }else if(class(x$localised.structure)=="list")
+     {
+     #### Print out the model fitted
+     cat("\n#################\n")
+     cat("#### Model fitted\n")
+     cat("#################\n")
+     cat(x$model)
+     cat("Regression equation - ")
+     print(x$formula)
+         
+     #### Print out the results
+     cat("\n############\n")
+     cat("#### Results\n")
+     cat("############\n")
+     cat("Posterior quantities for selected parameters and DIC\n\n")
+     print(x$summary.results)
+     cat("\nDIC = ", x$modelfit[1], "     ", "p.d = ", x$modelfit[2], "     ", "LMPL = ", x$modelfit[5], "\n")
+     cat("\nThe allocation of areas to temporal trends was")
+     print(table(x$localised.structure[[1]]))
      }else if(class(x$localised.structure)=="numeric")
      {
      #### Print out the model fitted

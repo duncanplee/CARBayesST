@@ -7,7 +7,7 @@
 }
 \description{
     This function takes a CARBayesST object and returns the estimated loglikelihood
-     based on posterior medians.
+     (posterior means).
 }
 
 \usage{

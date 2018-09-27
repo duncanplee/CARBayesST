@@ -8,23 +8,24 @@ Spatio-Temporal Generalised Linear Mixed Models For Areal Unit Data
 }
 
 \description{
-Implements a class of spatio-temporal generalised linear mixed models for areal unit data, 
-with inference in a Bayesian setting using Markov chain Monte Carlo (MCMC) simulation. The 
-response variable can be binomial, Gaussian or Poisson, but for some models only the 
-binomial and Poisson data likelihoods are available. The spatio-temporal autocorrelation 
-is modelled by  random effects,  which are assigned conditional autoregressive (CAR) style prior 
-distributions. A number of different random effects structures are available, and full details 
-are given in the vignette accompanying this package and the references below. The creation of 
-this package was supported by the Engineering and Physical Sciences Research Council (EPSRC) 
-grant EP/J017442/1 and the Medical Research Council (MRC) grant MR/L022184/1.
+Implements a class of spatio-temporal generalised linear mixed models for areal 
+unit data, with inference in a Bayesian setting using Markov chain Monte Carlo 
+(MCMC) simulation. The response variable can be binomial, Gaussian or Poisson,
+but for some models only the binomial and Poisson data likelihoods are available. 
+The spatio-temporal autocorrelation is modelled by random effects,  which are 
+assigned conditional autoregressive (CAR) style prior distributions. A number of 
+different random effects structures are available, and full details are given in 
+the vignette accompanying this package and the references below. The creation of 
+this package was supported by the Engineering and Physical Sciences Research Council 
+(EPSRC) grant EP/J017442/1 and the Medical Research Council (MRC) grant MR/L022184/1.
 }
 
 \details{
 \tabular{ll}{
 Package: \tab CARBayesST\cr
 Type: \tab Package\cr
-Version: \tab 2.5.2\cr
-Date: \tab 2018-04-17\cr
+Version: \tab 3.0\cr
+Date: \tab 2018-09-28\cr
 License: \tab GPL (>= 2)\cr
 }
 }
@@ -53,10 +54,6 @@ Journal of Statistical Software, 84, 9, 1-39.
 Napier, G, D. Lee, C. Robertson, A. Lawson, and K. Pollock (2016). A model to estimate the 
 impact of changes in MMR vaccination uptake on inequalities in measles susceptibility in 
 Scotland, Statistical Methods in Medical Research, 25, 1185-1200.
-        
-Roberts, G and Rosenthal, J (1998). Optimal scaling of discrete approximations to
-the Langevin diffusions, Journal of the Royal Statistical Society Series B 60, 
-255-268.
 
 Rushworth, A., D. Lee, and R. Mitchell (2014). A spatio-temporal model for estimating the 
 long-term effects of air pollution on respiratory hospital admissions in Greater London. 

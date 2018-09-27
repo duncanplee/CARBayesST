@@ -104,16 +104,14 @@ This is a vignette for the \proglang{R} package \pkg{CARBayesST} version 3.0, an
  }
 
 
+\usepackage{Sweave}
 \begin{document}
-\SweaveOpts{concordance=TRUE}
+\input{CARBayesST-concordance}
 
 %%%%%%%%%%%%%%
 %%%% Section 1
 %%%%%%%%%%%%%%
 
-<<echo=FALSE>>=
-options(prompt = "R>  ")
-@
 
 
 \section{Introduction}
@@ -439,78 +437,94 @@ This section is split into 3 parts. The first illustrates how to use the softwar
 \subsection{Generating data and fitting a model}\label{section4.1}
 Consider a spatial region comprising $K=400$ areal units on a regular $20\times 20$ grid and $N=20$ consecutive time periods. Such a grid can be constructed from the code
 
-<<>>=
-n.space <- 20
-N <- 20
-x.easting <- 1:n.space
-x.northing <- 1:n.space
-Grid <- expand.grid(x.easting, x.northing)
-K <- nrow(Grid)
-N.all <- N * K
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  n.space <- 20
+R>  N <- 20
+R>  x.easting <- 1:n.space
+R>  x.northing <- 1:n.space
+R>  Grid <- expand.grid(x.easting, x.northing)
+R>  K <- nrow(Grid)
+R>  N.all <- N * K
+\end{Sinput}
+\end{Schunk}
 
 A binary $400\times 400$ spatial neighbourhood matrix $\mathbf{W}$ can be constructed for this region based on spatial adjacency (rook, in chess) using the code
 
-<<>>=
-distance <- as.matrix(dist(Grid))
-W <- array(0, c(K,K))
-W[distance==1] <- 1
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  distance <- as.matrix(dist(Grid))
+R>  W <- array(0, c(K,K))
+R>  W[distance==1] <- 1
+\end{Sinput}
+\end{Schunk}
 
 
 
 Similarly, a binary $20\times 20$ temporal neighbourhood matrix $\mathbf{D}$ can be constructed using the code
 
-<<>>=
-distance <- as.matrix(dist(1:N))
-D <-array(0, c(N,N))
-D[distance==1] <-1
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  distance <- as.matrix(dist(1:N))
+R>  D <-array(0, c(N,N))
+R>  D[distance==1] <-1
+\end{Sinput}
+\end{Schunk}
 
 From $\mathbf{W}$ the precision matrix can be computed for the multivariate Gaussian representation of the spatial random effects $\bd{\phi}$ from  (\ref{Lerouxjoint}) as follows:
 
-<<>>=
-Q.W <- 0.8 * (diag(apply(W, 2, sum)) - W) + 0.2 * diag(rep(1,K))
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  Q.W <- 0.8 * (diag(apply(W, 2, sum)) - W) + 0.2 * diag(rep(1,K))
+\end{Sinput}
+\end{Schunk}
 
 where $\rho_S=0.8$. This matrix can then be inverted and a sample of random effects $\bd{\phi}$ generated (assuming $\tau^2_S=0.01$) using the code
 
-<<>>=
-Q.W.inv <- solve(Q.W)
-library("MASS")
-phi <- mvrnorm(n = 1, mu = rep(0, K), Sigma = (0.01 * Q.W.inv))
-phi <- phi - mean(phi)
-phi.long <- rep(phi, N)
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  Q.W.inv <- solve(Q.W)
+R>  library("MASS")
+R>  phi <- mvrnorm(n = 1, mu = rep(0, K), Sigma = (0.01 * Q.W.inv))
+R>  phi <- phi - mean(phi)
+R>  phi.long <- rep(phi, N)
+\end{Sinput}
+\end{Schunk}
 
 where the random effects have been mean centered in line 4. Here the last line repeats the spatial random effects $N$ times, as the \code{ST.CARanova()} model assumes that there is a single set of spatial random effects for all time periods. The temporal random effects under the \code{ST.CARanova()} model have the same functional form but depend on $\mathbf{D}$ rather than $\mathbf{W}$, and thus a realisation can be generated analogously using the code
 
 
-<<>>=
-Q.D <- 0.8 * (diag(apply(D, 2, sum)) - D) + 0.2 * diag(rep(1, N))
-Q.D.inv <- solve(Q.D)
-delta <- mvrnorm(n = 1, mu = rep(0, N), Sigma = (0.01 * Q.D.inv))
-delta <- delta - mean(delta)
-delta.long <- kronecker(delta, rep(1, K))
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  Q.D <- 0.8 * (diag(apply(D, 2, sum)) - D) + 0.2 * diag(rep(1, N))
+R>  Q.D.inv <- solve(Q.D)
+R>  delta <- mvrnorm(n = 1, mu = rep(0, N), Sigma = (0.01 * Q.D.inv))
+R>  delta <- delta - mean(delta)
+R>  delta.long <- kronecker(delta, rep(1, K))
+\end{Sinput}
+\end{Schunk}
 
 Again, the final line repeats the temporal random effects for each spatial unit. Next, we generate space-time interactions and a covariate \code{x}, both of which are generated independently from Gaussian distributions.
 
-<<>>=
-x <- rnorm(n = N.all, mean = 0, sd = 1)
-gamma <- rnorm(n = N.all, mean = 0, sd = sqrt(0.01))
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  x <- rnorm(n = N.all, mean = 0, sd = 1)
+R>  gamma <- rnorm(n = N.all, mean = 0, sd = sqrt(0.01))
+\end{Sinput}
+\end{Schunk}
 
 Finally, we set the intercept term $\beta_1=0$, the regression coefficient $\beta_2=0.1$, and the number of trials for the binomial likelihood in each area and time period being $n_{kt}=50$. Then we generate the response variable via the code below. Here \code{LP} denotes the linear predictor, which contains an intercept term, a covariate and three sets of random effects (spatial, temporal, and interactions).
 
-<<>>=
-beta1 <- 0
-beta2 <- 0.1
-n <- rep(50, N.all)
-LP <- beta1 + beta2 * x + phi.long + delta.long + gamma
-theta.true <- exp(LP) / (1 + exp(LP))
-Y <- rbinom(n = N.all, size = n, prob = theta.true)
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  beta1 <- 0
+R>  beta2 <- 0.1
+R>  n <- rep(50, N.all)
+R>  LP <- beta1 + beta2 * x + phi.long + delta.long + gamma
+R>  theta.true <- exp(LP) / (1 + exp(LP))
+R>  Y <- rbinom(n = N.all, size = n, prob = theta.true)
+\end{Sinput}
+\end{Schunk}
 
 
 The \code{ST.CARanova()} model can then be applied to these data using the following code.
@@ -647,32 +661,47 @@ These data are available in the \pkg{CARBayesdata} package in the object \code{p
 
 
 
-<<>>=
-library("CARBayesdata")
-library("sp")
-data("GGHB.IG")
-data("pollutionhealthdata")
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  library("CARBayesdata")
+R>  library("sp")
+R>  data("GGHB.IG")
+R>  data("pollutionhealthdata")
+\end{Sinput}
+\end{Schunk}
 
 
 The structure of \code{pollutionhealthdata} is shown below
 
-<<>>=
-head(pollutionhealthdata)
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  head(pollutionhealthdata)
+\end{Sinput}
+\begin{Soutput}
+         IG year observed  expected     pm10  jsa price
+1 S02000260 2007       97  98.24602 14.02699 2.25 1.150
+2 S02000261 2007       15  45.26085 13.30402 0.60 1.640
+3 S02000262 2007       49  92.36517 13.30402 0.95 1.750
+4 S02000263 2007       44  72.55324 14.00985 0.35 2.385
+5 S02000264 2007       68 125.41904 14.08074 0.80 1.645
+6 S02000265 2007       24  55.04868 14.08884 1.25 1.760
+\end{Soutput}
+\end{Schunk}
 
 The first column labelled \code{IG} is the set of unique identifiers for each IG, while \code{observed} and \code{expected} are respectively the observed (e.g., $Y_{kt}$) and expected (e.g., $E_{kt}$) numbers of hospital admissions due to respiratory disease. An exploratory measure of disease risk is the standardised morbidity ratio (SMR), which for the $k$th IG and $t$th year is computed as SMR$_{kt}=Y_{kt}/E_{kt}$. However, due to the natural log link function in the Poisson model, the covariates are related in the model to the natural log of the SMR. Therefore the code below adds the SMR and the natural log of the SMR to the data set and produces a \code{pairs()} plot showing the relationship between the variables.
 
 
-<<>>=
-pollutionhealthdata$SMR <- pollutionhealthdata$observed / 
-    pollutionhealthdata$expected
-pollutionhealthdata$logSMR <- log(pollutionhealthdata$SMR)
-par(pty="s", cex.axis=1.5, cex.lab=1.5)
-pairs(pollutionhealthdata[ ,c(9, 5:7)], pch=19, cex=0.5, lower.panel=NULL, 
-      panel=panel.smooth,
-      labels=c("ln(SMR)", "PM10", "JSA", "Price (*100,000)"))
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  pollutionhealthdata$SMR <- pollutionhealthdata$observed / 
++     pollutionhealthdata$expected
+R>  pollutionhealthdata$logSMR <- log(pollutionhealthdata$SMR)
+R>  par(pty="s", cex.axis=1.5, cex.lab=1.5)
+R>  pairs(pollutionhealthdata[ ,c(9, 5:7)], pch=19, cex=0.5, lower.panel=NULL, 
++       panel=panel.smooth,
++       labels=c("ln(SMR)", "PM10", "JSA", "Price (*100,000)"))
+\end{Sinput}
+\end{Schunk}
 
 
 
@@ -686,36 +715,42 @@ pairs(pollutionhealthdata[ ,c(9, 5:7)], pch=19, cex=0.5, lower.panel=NULL,
 The pairs plot shown in Figure \ref{pollution_scatterplot} shows respectively positive and negative relationships between the natural log of SMR and the two deprivation covariates \code{jsa} and \code{price}, in both cases suggesting that increasing levels of poverty are related to an increased risk of respiratory hospitalisation. There also appears to be a weak positive relationship between log(SMR) and PM$_{10}$, while the only relationship that exists between the covariates  is a negative non-linear one between \code{jsa} and \code{price}. Next, it is of interest to visualise the average spatial pattern in the SMR over all five years, and the data can be appropriately aggregated using the \code{summarise()} function from the \pkg{dplyr} package using the code below. The aggregation is done by the second line, while the final line adds the aggregated averages to the \code{GGHB.IG} \code{SpatialPolygonsDataFrame} object.
 
 
-<<>>=
-library("dplyr")
-SMR.av <- summarise(group_by(pollutionhealthdata,IG), SMR.mean = 
-    mean(SMR))
-GGHB.IG@data$SMR <- SMR.av$SMR.mean
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  library("dplyr")
+R>  SMR.av <- summarise(group_by(pollutionhealthdata,IG), SMR.mean = 
++     mean(SMR))
+R>  GGHB.IG@data$SMR <- SMR.av$SMR.mean
+\end{Sinput}
+\end{Schunk}
 
 A spatial map of the aggregated \code{SMR} variable can be overlaid on a OpenStreetMap using the functionality of the \pkg{leaflet} package. However, first the \code{GGHB.IG} object needs to have its coordinate reference system changed to longitude and latitude as this is what the \pkg{leaflet} package requires, which can be done using the following \proglang{R} code.
 
 
 
-<<>>=
-library(rgdal)
-GGHB.IG <- spTransform(GGHB.IG, CRS("+proj=longlat +datum=WGS84 +no_defs"))
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  library(rgdal)
+R>  GGHB.IG <- spTransform(GGHB.IG, CRS("+proj=longlat +datum=WGS84 +no_defs"))
+\end{Sinput}
+\end{Schunk}
 
 Then a map of \code{SMR} can be drawn using the following code.
 
-<<>>=
-library(leaflet)
-colours <- colorNumeric(palette = "BuPu", domain = GGHB.IG@data$SMR)
-map1 <- leaflet(data=GGHB.IG) %>% 
-    addTiles() %>% 
-    addPolygons(fillColor = ~colours(SMR), color="red", weight=1, 
-                fillOpacity = 0.7) %>%
-    addLegend(pal = colours, values = GGHB.IG@data$SMR, opacity = 1, 
-                title="SMR") %>%
-    addScaleBar(position="bottomleft")
-map1
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  library(leaflet)
+R>  colours <- colorNumeric(palette = "BuPu", domain = GGHB.IG@data$SMR)
+R>  map1 <- leaflet(data=GGHB.IG) %>% 
++     addTiles() %>% 
++     addPolygons(fillColor = ~colours(SMR), color="red", weight=1, 
++                 fillOpacity = 0.7) %>%
++     addLegend(pal = colours, values = GGHB.IG@data$SMR, opacity = 1, 
++                 title="SMR") %>%
++     addScaleBar(position="bottomleft")
+R>  map1
+\end{Sinput}
+\end{Schunk}
 
 
 
@@ -729,12 +764,14 @@ map1
 
 The map is shown in Figure \ref{smr_map}, where the light blue shaded areas are low risk (SMR$<$1) while the purple areas exhibit elevated risks (SMR$>$1). The map shows that the main high-risk areas are in the east-end of Glasgow in the east of the study region, and the Greenock area in the far west of the region on the lower bank of the river Clyde. The analysis that follows requires us to compute the neighbourhood matrix $\mathbf{W}$ and a \code{listw} object variant of the same spatial information, the latter being used in a hypothesis test for spatial autocorrelation. Both of these quantities can be computed from the  \code{SpatialPolygonsDataFrame} object using functionality from the \pkg{spdep} package, and code to achieve this is  shown below.
 
-<<>>=
-library("spdep")
-W.nb <- poly2nb(GGHB.IG, row.names = SMR.av$IG)
-W.list <- nb2listw(W.nb, style = "B")
-W <- nb2mat(W.nb, style = "B")
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  library("spdep")
+R>  W.nb <- poly2nb(GGHB.IG, row.names = SMR.av$IG)
+R>  W.list <- nb2listw(W.nb, style = "B")
+R>  W <- nb2mat(W.nb, style = "B")
+\end{Sinput}
+\end{Schunk}
 
 Here \code{W} is a binary $K\times K$ neighbourhood matrix computed based on sharing a common border, and \code{W.list} is the 
 \code{listw} object variant of this spatial information.
@@ -743,20 +780,46 @@ Here \code{W} is a binary $K\times K$ neighbourhood matrix computed based on sha
 \subsection{Assessing the presence of spatial autocorrelation}
 The spatio-temporal models in \pkg{CARBayesST} allow for spatio-temporal autocorrelation via random effects, which capture the remaining autocorrelation in the disease data after the effects of the known covariates have been accounted for. Therefore, we assess the presence of spatial autocorrelation in our data set by first computing the residuals from a simple overdispersed Poisson log-linear model that incorporates the covariate effects. This model is fitted using the code:
 
-<<>>=
-formula <- observed ~ offset(log(expected)) + jsa + price + pm10
-model1 <- glm(formula = formula, family = "quasipoisson", 
-    data = pollutionhealthdata)
-resid.glm <- residuals(model1)
-summary(model1)$coefficients
-summary(model1)$dispersion
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  formula <- observed ~ offset(log(expected)) + jsa + price + pm10
+R>  model1 <- glm(formula = formula, family = "quasipoisson", 
++     data = pollutionhealthdata)
+R>  resid.glm <- residuals(model1)
+R>  summary(model1)$coefficients
+\end{Sinput}
+\begin{Soutput}
+               Estimate  Std. Error   t value     Pr(>|t|)
+(Intercept) -0.59752496 0.054333524 -10.99735 5.287385e-27
+jsa          0.06041994 0.003231475  18.69732 1.467196e-69
+price       -0.28293191 0.018292049 -15.46748 8.225472e-50
+pm10         0.04174701 0.003282156  12.71938 4.344434e-35
+\end{Soutput}
+\begin{Sinput}
+R>  summary(model1)$dispersion
+\end{Sinput}
+\begin{Soutput}
+[1] 4.399561
+\end{Soutput}
+\end{Schunk}
 
 The results show significant effects of all three covariates on disease risk, as well as substantial overdispersion with respect to the Poisson equal mean and variance assumption (over dispersion parameter equal to around $4.40$). To quantify the presence of spatial autocorrelation in the residuals from this model we can compute Moran's I statistic (\citealp{moran1950}) and conduct a permutation test for each year of data separately. The permutation test has the null hypothesis of no spatial autocorrelation and an alternative hypothesis of positive spatial autocorrelation, and is conducted using the \code{moran.mc()} function from the \pkg{spdep} package. The test can be implemented for the first year of residuals (2007) using the code below.
 
-<<>>=
-moran.mc(x = resid.glm[1:271], listw = W.list, nsim = 10000)
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  moran.mc(x = resid.glm[1:271], listw = W.list, nsim = 10000)
+\end{Sinput}
+\begin{Soutput}
+	Monte-Carlo simulation of Moran I
+
+data:  resid.glm[1:271] 
+weights: W.list  
+number of simulations + 1: 10001 
+
+statistic = 0.10358, observed rank = 9977, p-value = 0.0024
+alternative hypothesis: greater
+\end{Soutput}
+\end{Schunk}
 
 The estimated Moran's I statistic is 0.10358 and the p-value is less than 0.05, suggesting strong evidence of unexplained spatial autocorrelation in the residuals from 2007 after accounting for the covariate effects. Similar results were obtained for the other years and are not shown for brevity. We note that residual temporal autocorrelation could be assessed similarly for each IG, for example by computing the lag-1 autocorrelation coefficient, but with only 5 time points the resulting estimates would not be reliable. These results show that the assumption of independence is not valid for these data, and that spatio-temporal autocorrelation should be allowed for when estimating the covariate effects. 
 
@@ -880,22 +943,26 @@ These data are available in the \pkg{CARBayesdata} package in the object \code{s
 
 
 
-<<>>=
-library("CARBayesdata")
-library("sp")
-data("GGHB.IG")
-data("salesdata")
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  library("CARBayesdata")
+R>  library("sp")
+R>  data("GGHB.IG")
+R>  data("salesdata")
+\end{Sinput}
+\end{Schunk}
 
 
 The \code{data.frame} \code{salesdata} contain 4 columns, the intermediate geography code (\code{IG}), the year the data relate to (\code{year}), the number of property sales (\code{sales}, $Y_{kt}$) and the total number of properties (\code{stock}, $n_{kt}$). We visualise the temporal trend in these data using the code below, where the first line creates the raw rate of property sales as a proportion of the total number of properties.
 
-<<>>=
-salesdata$salesprop <- salesdata$sales / salesdata$stock
-boxplot(salesdata$salesprop ~ salesdata$year, range = 0, xlab = "Year", 
-    ylab = "Property sales rate", 
-    col = "darkseagreen", border = "navy")
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  salesdata$salesprop <- salesdata$sales / salesdata$stock
+R>  boxplot(salesdata$salesprop ~ salesdata$year, range = 0, xlab = "Year", 
++     ylab = "Property sales rate", 
++     col = "darkseagreen", border = "navy")
+\end{Sinput}
+\end{Schunk}
 
 
 \begin{figure}
@@ -907,30 +974,33 @@ boxplot(salesdata$salesprop ~ salesdata$year, range = 0, xlab = "Year",
 
 This produces the boxplot shown in Figure \ref{salesboxplot}, where the global financial crisis began in 2007. The plot shows a clear step-change in property sales between 2007 and 2008, as sales were increasing up to and including 2007, before markedly decreasing in subsequent years. Sales in the last year of 2013 show slight evidence of increasing relative to the previous 4 years, possibly suggesting the beginning of an upturn in the market. Also there appears to be a change in the level of spatial variation from year to year, with larger amounts of spatial variation observed before the global financial crisis. The spatial pattern in the average (over time) rate of property sales as a proportion of the total number of properties is computed using the code below.
 
-<<>>=
-library("dplyr")
-salesprop.av <- summarise(group_by(salesdata, IG), 
-    salesprop.mean = mean(salesprop))
-GGHB.IG@data$sales <- salesprop.av$salesprop.mean
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  library("dplyr")
+R>  salesprop.av <- summarise(group_by(salesdata, IG), 
++     salesprop.mean = mean(salesprop))
+R>  GGHB.IG@data$sales <- salesprop.av$salesprop.mean
+\end{Sinput}
+\end{Schunk}
 
 This variable can be mapped using the code below, and the result is displayed in Figure \ref{salesmap}.
 
-<<>>=
-library(rgdal)
-GGHB.IG <- spTransform(GGHB.IG, CRS("+proj=longlat +datum=WGS84 +no_defs"))
-
-library(leaflet)
-colours <- colorNumeric(palette = "BuPu", domain = GGHB.IG@data$sales)
-map1 <- leaflet(data=GGHB.IG) %>% 
-    addTiles() %>% 
-    addPolygons(fillColor = ~colours(sales), color="red", weight=1, 
-                fillOpacity = 0.7) %>%
-    addLegend(pal = colours, values = GGHB.IG@data$sales, opacity = 1, 
-                title="Sales") %>%
-    addScaleBar(position="bottomleft")
-map1
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  library(rgdal)
+R>  GGHB.IG <- spTransform(GGHB.IG, CRS("+proj=longlat +datum=WGS84 +no_defs"))
+R>  library(leaflet)
+R>  colours <- colorNumeric(palette = "BuPu", domain = GGHB.IG@data$sales)
+R>  map1 <- leaflet(data=GGHB.IG) %>% 
++     addTiles() %>% 
++     addPolygons(fillColor = ~colours(sales), color="red", weight=1, 
++                 fillOpacity = 0.7) %>%
++     addLegend(pal = colours, values = GGHB.IG@data$sales, opacity = 1, 
++                 title="Sales") %>%
++     addScaleBar(position="bottomleft")
+R>  map1
+\end{Sinput}
+\end{Schunk}
 
 
 
@@ -947,11 +1017,13 @@ The map shows a largely similar pattern to that seen for respiratory disease ris
 The extent to which the region-wide average level of sales and its spatial variation and spatial structure changes over time can be assessed by applying the model proposed by \cite{napier2016} to the data, which can be implemented using the \code{ST.CARsepspatial()} function. Before fitting this model we need to create the neighbourhood matrix using the following code:
 
 
-<<>>=
-library("spdep")
-W.nb <- poly2nb(GGHB.IG, row.names = salesprop.av$salesprop.mean)
-W <- nb2mat(W.nb, style = "B")
-@
+\begin{Schunk}
+\begin{Sinput}
+R>  library("spdep")
+R>  W.nb <- poly2nb(GGHB.IG, row.names = salesprop.av$salesprop.mean)
+R>  W <- nb2mat(W.nb, style = "B")
+\end{Sinput}
+\end{Schunk}
 
 Then the model can be fitted using the code below, where inference is again based on 20,000 post burn-in and thinned MCMC samples.  
 
