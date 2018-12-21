@@ -24,8 +24,8 @@ this package was supported by the Engineering and Physical Sciences Research Cou
 \tabular{ll}{
 Package: \tab CARBayesST\cr
 Type: \tab Package\cr
-Version: \tab 3.0\cr
-Date: \tab 2018-09-28\cr
+Version: \tab 3.0.1\cr
+Date: \tab 2019-01-03\cr
 License: \tab GPL (>= 2)\cr
 }
 }

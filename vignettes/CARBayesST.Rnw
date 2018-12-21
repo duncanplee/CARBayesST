@@ -38,7 +38,7 @@
 
 %% almost as usual
 \author{Duncan Lee\\University of Glasgow \And Alastair Rushworth\\University of Strathclyde \And Gary Napier\\University of Glasgow}
-\title{\pkg{CARBayesST} version 3.0: Spatio-Temporal Areal Unit Modelling in \proglang{R} with Conditional Autoregressive Priors}
+\title{\pkg{CARBayesST} version 3.0.1: Spatio-Temporal Areal Unit Modelling in \proglang{R} with Conditional Autoregressive Priors}
 
 %% for pretty printing and a nice hypersummary also set:
 \Plainauthor{Duncan Lee, Alastair Rushworth, Gary Napier} %% comma-separated
@@ -48,13 +48,15 @@
 
 %% an abstract and keywords
 \Abstract{
-This is a vignette for the \proglang{R} package \pkg{CARBayesST} version 3.0, and is an updated version of a paper in the Journal of Statistical Software in 2018 Volume 84 Issue 9 by the same author. The package concerns the modelling of spatial data relating to non-overlapping areal units, and a large suite of modelling tools have been developed for analysing these data. Many utilise conditional autoregressive (CAR) priors to capture the spatial autocorrelation inherent in these data, and software such as \pkg{CARBayes} and \pkg{R-INLA} have been developed to make these models easily accessible to others. Such spatial data are typically available for multiple time periods, and the development of methodology for capturing temporally changing spatial dynamics is the focus of much current research. A sizeable proportion of this literature has focused on extending CAR priors to the spatio-temporal domain, and this article presents the \proglang{R} package \pkg{CARBayesST}, which is the first dedicated software  for spatio-temporal areal unit modelling with conditional autoregressive priors. The software can fit a range of models focused on different aspects of space-time modelling, including estimation of overall space and time trends, and the identification of clusters of areal units that exhibit elevated values. This vignette outlines the class of models that the software can implement, before applying them to simulated and two real examples, the latter in the fields of epidemiology and housing market analysis. Version 3.0 has a  number of changes including: 
+This is a vignette for the \proglang{R} package \pkg{CARBayesST} version 3.0.1, and is an updated version of a paper in the Journal of Statistical Software in 2018 Volume 84 Issue 9 by the same author. The package concerns the modelling of spatial data relating to non-overlapping areal units, and a large suite of modelling tools have been developed for analysing these data. Many utilise conditional autoregressive (CAR) priors to capture the spatial autocorrelation inherent in these data, and software such as \pkg{CARBayes} and \pkg{R-INLA} have been developed to make these models easily accessible to others. Such spatial data are typically available for multiple time periods, and the development of methodology for capturing temporally changing spatial dynamics is the focus of much current research. A sizeable proportion of this literature has focused on extending CAR priors to the spatio-temporal domain, and this article presents the \proglang{R} package \pkg{CARBayesST}, which is the first dedicated software  for spatio-temporal areal unit modelling with conditional autoregressive priors. The software can fit a range of models focused on different aspects of space-time modelling, including estimation of overall space and time trends, and the identification of clusters of areal units that exhibit elevated values. This vignette outlines the class of models that the software can implement, before applying them to simulated and two real examples, the latter in the fields of epidemiology and housing market analysis. Version 3.0 has a  number of changes including: 
 
 \begin{enumerate}
 \item The use of data augmentation to account for missing values in the respone variable.
 \item A new model for clustering areal units by their temporal trends.
 \item An updated vignette using the \pkg{leaflet} package for mapping.
 \end{enumerate}
+
+Then version 3.0.1 has fixed a bug with the print function.
 }
 \Keywords{Bayesian inference, conditional autoregressive priors, \proglang{R} package, spatio-temporal areal unit modelling}
 \Plainkeywords{Bayesian inference, conditional autoregressive priors, R package, spatio-temporal areal unit modelling}
