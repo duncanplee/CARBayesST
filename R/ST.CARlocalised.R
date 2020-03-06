@@ -1,4 +1,4 @@
-ST.CARlocalised <- function(formula, family, data=NULL,  G, trials=NULL, W, burnin, n.sample, thin=1, prior.mean.beta=NULL, prior.var.beta=NULL, prior.delta=NULL, prior.tau2=NULL, MALA=TRUE, verbose=TRUE)    
+ST.CARlocalised <- function(formula, family, data=NULL,  G, trials=NULL, W, burnin, n.sample, thin=1, prior.mean.beta=NULL, prior.var.beta=NULL, prior.delta=NULL, prior.tau2=NULL, MALA=FALSE, verbose=TRUE)    
 {
     ## This is a wrapper function for the following three functions.
     ## binomial.CARlocalised

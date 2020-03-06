@@ -1,4 +1,4 @@
-ST.CARsepspatial <- function(formula, family, data=NULL, trials=NULL, W, burnin, n.sample, thin=1, prior.mean.beta=NULL, prior.var.beta=NULL, prior.tau2=NULL, rho.S=NULL, rho.T=NULL, MALA=TRUE, verbose=TRUE)
+ST.CARsepspatial <- function(formula, family, data=NULL, trials=NULL, W, burnin, n.sample, thin=1, prior.mean.beta=NULL, prior.var.beta=NULL, prior.tau2=NULL, rho.S=NULL, rho.T=NULL, MALA=FALSE, verbose=TRUE)
 {
   ## This is a wrapper function for the following two functions.
   ## binomial.CARepspatial
