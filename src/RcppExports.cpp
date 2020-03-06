@@ -59,8 +59,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // poissonbetaupdateRW
-List poissonbetaupdateRW(NumericMatrix X, const int nsites, const int p, NumericVector beta, NumericVector offset, NumericVector y, NumericVector prior_meanbeta, NumericVector prior_varbeta, double beta_tune);
-RcppExport SEXP _CARBayesST_poissonbetaupdateRW(SEXP XSEXP, SEXP nsitesSEXP, SEXP pSEXP, SEXP betaSEXP, SEXP offsetSEXP, SEXP ySEXP, SEXP prior_meanbetaSEXP, SEXP prior_varbetaSEXP, SEXP beta_tuneSEXP) {
+List poissonbetaupdateRW(NumericMatrix X, const int nsites, const int p, NumericVector beta, NumericVector offset, NumericVector y, NumericVector prior_meanbeta, NumericVector prior_varbeta, const int nblock, double beta_tune, List block_list);
+RcppExport SEXP _CARBayesST_poissonbetaupdateRW(SEXP XSEXP, SEXP nsitesSEXP, SEXP pSEXP, SEXP betaSEXP, SEXP offsetSEXP, SEXP ySEXP, SEXP prior_meanbetaSEXP, SEXP prior_varbetaSEXP, SEXP nblockSEXP, SEXP beta_tuneSEXP, SEXP block_listSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -72,8 +72,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type y(ySEXP);
     Rcpp::traits::input_parameter< NumericVector >::type prior_meanbeta(prior_meanbetaSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type prior_varbeta(prior_varbetaSEXP);
+    Rcpp::traits::input_parameter< const int >::type nblock(nblockSEXP);
     Rcpp::traits::input_parameter< double >::type beta_tune(beta_tuneSEXP);
-    rcpp_result_gen = Rcpp::wrap(poissonbetaupdateRW(X, nsites, p, beta, offset, y, prior_meanbeta, prior_varbeta, beta_tune));
+    Rcpp::traits::input_parameter< List >::type block_list(block_listSEXP);
+    rcpp_result_gen = Rcpp::wrap(poissonbetaupdateRW(X, nsites, p, beta, offset, y, prior_meanbeta, prior_varbeta, nblock, beta_tune, block_list));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -257,8 +259,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // binomialbetaupdateRW
-List binomialbetaupdateRW(NumericMatrix X, const int nsites, const int p, NumericVector beta, NumericVector offset, NumericVector y, NumericVector failures, NumericVector prior_meanbeta, NumericVector prior_varbeta, double beta_tune);
-RcppExport SEXP _CARBayesST_binomialbetaupdateRW(SEXP XSEXP, SEXP nsitesSEXP, SEXP pSEXP, SEXP betaSEXP, SEXP offsetSEXP, SEXP ySEXP, SEXP failuresSEXP, SEXP prior_meanbetaSEXP, SEXP prior_varbetaSEXP, SEXP beta_tuneSEXP) {
+List binomialbetaupdateRW(NumericMatrix X, const int nsites, const int p, NumericVector beta, NumericVector offset, NumericVector y, NumericVector failures, NumericVector prior_meanbeta, NumericVector prior_varbeta, const int nblock, double beta_tune, List block_list);
+RcppExport SEXP _CARBayesST_binomialbetaupdateRW(SEXP XSEXP, SEXP nsitesSEXP, SEXP pSEXP, SEXP betaSEXP, SEXP offsetSEXP, SEXP ySEXP, SEXP failuresSEXP, SEXP prior_meanbetaSEXP, SEXP prior_varbetaSEXP, SEXP nblockSEXP, SEXP beta_tuneSEXP, SEXP block_listSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -271,8 +273,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type failures(failuresSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type prior_meanbeta(prior_meanbetaSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type prior_varbeta(prior_varbetaSEXP);
+    Rcpp::traits::input_parameter< const int >::type nblock(nblockSEXP);
     Rcpp::traits::input_parameter< double >::type beta_tune(beta_tuneSEXP);
-    rcpp_result_gen = Rcpp::wrap(binomialbetaupdateRW(X, nsites, p, beta, offset, y, failures, prior_meanbeta, prior_varbeta, beta_tune));
+    Rcpp::traits::input_parameter< List >::type block_list(block_listSEXP);
+    rcpp_result_gen = Rcpp::wrap(binomialbetaupdateRW(X, nsites, p, beta, offset, y, failures, prior_meanbeta, prior_varbeta, nblock, beta_tune, block_list));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1469,7 +1473,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_CARBayesST_linpredcompute", (DL_FUNC) &_CARBayesST_linpredcompute, 5},
     {"_CARBayesST_quadform", (DL_FUNC) &_CARBayesST_quadform, 7},
     {"_CARBayesST_poissonbetaupdateMALA", (DL_FUNC) &_CARBayesST_poissonbetaupdateMALA, 11},
-    {"_CARBayesST_poissonbetaupdateRW", (DL_FUNC) &_CARBayesST_poissonbetaupdateRW, 9},
+    {"_CARBayesST_poissonbetaupdateRW", (DL_FUNC) &_CARBayesST_poissonbetaupdateRW, 11},
     {"_CARBayesST_poissoncarupdateMALA", (DL_FUNC) &_CARBayesST_poissoncarupdateMALA, 12},
     {"_CARBayesST_poissoncarupdateRW", (DL_FUNC) &_CARBayesST_poissoncarupdateRW, 12},
     {"_CARBayesST_poissonindepupdateMALA", (DL_FUNC) &_CARBayesST_poissonindepupdateMALA, 6},
@@ -1479,7 +1483,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_CARBayesST_zipindepupdateMALA", (DL_FUNC) &_CARBayesST_zipindepupdateMALA, 7},
     {"_CARBayesST_zipindepupdateRW", (DL_FUNC) &_CARBayesST_zipindepupdateRW, 7},
     {"_CARBayesST_binomialbetaupdateMALA", (DL_FUNC) &_CARBayesST_binomialbetaupdateMALA, 13},
-    {"_CARBayesST_binomialbetaupdateRW", (DL_FUNC) &_CARBayesST_binomialbetaupdateRW, 10},
+    {"_CARBayesST_binomialbetaupdateRW", (DL_FUNC) &_CARBayesST_binomialbetaupdateRW, 12},
     {"_CARBayesST_binomialindepupdateMALA", (DL_FUNC) &_CARBayesST_binomialindepupdateMALA, 8},
     {"_CARBayesST_binomialindepupdateRW", (DL_FUNC) &_CARBayesST_binomialindepupdateRW, 7},
     {"_CARBayesST_binomialcarupdateMALA", (DL_FUNC) &_CARBayesST_binomialcarupdateMALA, 14},

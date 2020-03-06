@@ -854,15 +854,15 @@ binomial.CARclustrends <- function(formula, data=NULL, trials, W, burnin, n.samp
   mode.prob <- exp(offset.temp) / (1 + exp(offset.temp))
   fitted.mode <- trials * mode.prob
   deviance.fitted <- -2 * sum(dbinom(x=Y, size=trials, prob=mode.prob, log=TRUE))
-  p.d <- median(samples.deviance[,,chain.sel]) - deviance.fitted
-  DIC <- 2 * median(samples.deviance[,,chain.sel]) - deviance.fitted     
+  p.d <- mean(samples.deviance[,,chain.sel]) - deviance.fitted
+  DIC <- 2 * mean(samples.deviance[,,chain.sel]) - deviance.fitted     
   #------------------------------------------------------------------------------------------------------------------------------------------------------
   # Compute the LMPL
   #------------------------------------------------------------------------------------------------------------------------------------------------------
   CPO <- rep(NA, N.all)
   for(j in 1:N.all)
   {
-    CPO[j] <- 1/median((1 / dbinom(x=Y[j], size=trials[j], prob=(samples.fitted[,j,chain.sel] / trials[j]))))  
+    CPO[j] <- 1/mean((1 / dbinom(x=Y[j], size=trials[j], prob=(samples.fitted[,j,chain.sel] / trials[j]))))  
   }
   LMPL <- sum(log(CPO))  
   #------------------------------------------------------------------------------------------------------------------------------------------------------

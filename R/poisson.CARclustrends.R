@@ -845,17 +845,17 @@ poisson.CARclustrends <- function(formula, data=NULL, W, burnin, n.sample, thin=
   wmat.extend[,track.add,] <- mode.w[,New.trend.pos,]
   trends.part <- apply(wmat.extend * (gamma.mat * tp.mat.trends),c(1,3),sum)
   offset.temp <- as.numeric(offset.mat[,chain.sel] + reg.mat + trends.part + phi.mat)
-  fit.median <- exp(offset.temp)
-  deviance.fitted <- -2 * sum(dpois(x=Y, lambda=fit.median, log=TRUE))
-  p.d <- median(samples.deviance[,,chain.sel]) - deviance.fitted
-  DIC <- 2 * median(samples.deviance[,,chain.sel]) - deviance.fitted     
+  fit.mean <- exp(offset.temp)
+  deviance.fitted <- -2 * sum(dpois(x=Y, lambda=fit.mean, log=TRUE))
+  p.d <- mean(samples.deviance[,,chain.sel]) - deviance.fitted
+  DIC <- 2 * mean(samples.deviance[,,chain.sel]) - deviance.fitted     
   #-------------------------------------------------------------------------------------------------------------------------------------------------------
   # Compute the LMPL
   #-------------------------------------------------------------------------------------------------------------------------------------------------------
   CPO <- rep(NA, N.all)
   for(j in 1:N.all)
   {
-    CPO[j] <- 1/median((1 / dpois(x = Y[j], lambda = samples.fitted[,j,chain.sel])))  
+    CPO[j] <- 1/mean((1 / dpois(x = Y[j], lambda = samples.fitted[,j,chain.sel])))  
   }
   LMPL <- sum(log(CPO))  
   

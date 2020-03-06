@@ -12,8 +12,8 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
   
   # convert the supplied adjacency matrix into a spam matrix, if required.
   if(!is.symmetric.matrix(W)) stop("W is not symmetric.", call.=FALSE)
-  if(class(W) == "matrix") W <- as.spam(W)
-  if(!class(W) %in% c("matrix", "spam")) stop("W must be an object with class \"matrix\" or \"spam\"", call.=FALSE)  
+  #if(class(W) == "matrix") W <- as.spam(W)
+  #if(!class(W) %in% c("matrix", "spam")) stop("W must be an object with class \"matrix\" or \"spam\"", call.=FALSE)  
 
   logit     <- function(p) log(p/(1-p))
   inv_logit <- function(v) 1/(1+exp(-v))
@@ -24,7 +24,7 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
   frame <- try(suppressWarnings(model.frame(formula, data = data, na.action=na.pass)), silent=TRUE)
   if(class(frame)=="try-error") stop("the formula inputted contains an error, e.g the variables may be different lengths.", call.=FALSE)
   X <- try(suppressWarnings(model.matrix(object=attr(frame, "terms"), data=frame)), silent=TRUE)
-  if(class(X)=="try-error") stop("the covariate matrix contains inappropriate values.", call.=FALSE)
+  #if(class(X)=="try-error") stop("the covariate matrix contains inappropriate values.", call.=FALSE)
   if(sum(is.na(X))>0) stop("the covariate matrix contains missing 'NA' values.", call.=FALSE)
   # get summaries of the model matrix
   p       <- ncol(X)
@@ -49,7 +49,7 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
   
   # identify and error check the offset term, if it exists.
   offset <- try(model.offset(frame), silent=TRUE)
-  if(class(offset)=="try-error")   stop("the offset is not numeric.", call.=FALSE)
+  #if(class(offset)=="try-error")   stop("the offset is not numeric.", call.=FALSE)
   if(is.null(offset))              offset <- rep(0,(n.time * n.sites))
   if(sum(is.na(offset))>0)         stop("the offset has missing 'NA' values.", call.=FALSE)
   if(!is.numeric(offset))          stop("the offset variable has non-numeric values.", call.=FALSE) 
@@ -331,7 +331,9 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
     chol.Q.space.prop      <- update(chol.Q.space, x = Q.space.prop) 
     detSpace               <- 2*determinant(chol.Q.space.prop, logarithm = T)$modulus
     Q.space.det.prop       <- n.sites*detTime + n.time*detSpace
-    acceptance             <- exp(0.5*(Q.space.det.prop - Q.space.det.old) + (1/(2*tau))*(phiQphi_phiQphiNew))
+    hastings <- log(dtruncnorm(x=rho, a=0, b=1, mean=proposal.rho, sd=rho.tune)) - log(dtruncnorm(x=proposal.rho, a=0, b=1, mean=rho, sd=rho.tune)) 
+    acceptance             <- exp(0.5*(Q.space.det.prop - Q.space.det.old) + (1/(2*tau))*(phiQphi_phiQphiNew) + hastings)
+    
     accept[6]              <- accept[6] + 1
     if(runif(1)  <= acceptance){
       accept[5]        <- accept[5] + 1

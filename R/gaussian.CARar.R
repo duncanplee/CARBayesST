@@ -267,7 +267,8 @@ n.islands <- max(W.islands$nc)
         det.Q.W.proposal <- 0.5 * sum(log((proposal.rho * Wstar.val + (1-proposal.rho))))
         logprob.current <- N * det.Q.W - temp3 / tau2
         logprob.proposal <- N * det.Q.W.proposal - temp4 / tau2
-        prob <- exp(logprob.proposal - logprob.current)
+        hastings <- log(dtruncnorm(x=rho, a=0, b=1, mean=proposal.rho, sd=proposal.sd.rho)) - log(dtruncnorm(x=proposal.rho, a=0, b=1, mean=rho, sd=proposal.sd.rho)) 
+        prob <- exp(logprob.proposal - logprob.current + hastings)
             if(prob > runif(1))
             {
             rho <- proposal.rho

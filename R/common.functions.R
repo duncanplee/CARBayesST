@@ -187,7 +187,7 @@ common.frame <- function(formula, data, family)
     #### Design matrix
     ## Create the matrix
     X <- try(suppressWarnings(model.matrix(object=attr(frame, "terms"), data=frame)), silent=TRUE)
-    if(class(X)=="try-error") stop("the covariate matrix contains inappropriate values.", call.=FALSE)
+    #if(class(X)=="try-error") stop("the covariate matrix contains inappropriate values.", call.=FALSE)
     if(sum(is.na(X))>0) stop("the covariate matrix contains missing 'NA' values.", call.=FALSE)
     
     n <- nrow(X)
@@ -229,7 +229,7 @@ common.frame <- function(formula, data, family)
     
     #### Offset variable
     offset <- try(model.offset(frame), silent=TRUE)
-    if(class(offset)=="try-error")   stop("the offset is not numeric.", call.=FALSE)
+    #if(class(offset)=="try-error")   stop("the offset is not numeric.", call.=FALSE)
     if(is.null(offset))  offset <- rep(0,n)
     if(sum(is.na(offset))>0) stop("the offset has missing 'NA' values.", call.=FALSE)
     if(!is.numeric(offset)) stop("the offset variable has non-numeric values.", call.=FALSE)
@@ -303,7 +303,7 @@ common.frame.localised <- function(formula, data, family)
     
     #### Offset variable
     offset <- try(model.offset(frame), silent=TRUE)
-    if(class(offset)=="try-error")   stop("the offset is not numeric.", call.=FALSE)
+    #if(class(offset)=="try-error")   stop("the offset is not numeric.", call.=FALSE)
     if(is.null(offset))  offset <- rep(0,n)
     if(sum(is.na(offset))>0) stop("the offset has missing 'NA' values.", call.=FALSE)
     if(!is.numeric(offset)) stop("the offset variable has non-numeric values.", call.=FALSE)
@@ -311,7 +311,7 @@ common.frame.localised <- function(formula, data, family)
     
     #### Design matrix - Create and then adapt to remove the intercept term
     X <- try(suppressWarnings(model.matrix(object=attr(frame, "terms"), data=frame)), silent=TRUE)
-    if(class(X)=="try-error") stop("the covariate matrix contains inappropriate values.", call.=FALSE)
+    #if(class(X)=="try-error") stop("the covariate matrix contains inappropriate values.", call.=FALSE)
     if(sum(is.na(X))>0) stop("the covariate matrix contains missing 'NA' values.", call.=FALSE)
     ptemp <- ncol(X)
     

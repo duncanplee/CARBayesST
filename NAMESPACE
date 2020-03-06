@@ -25,16 +25,17 @@ import(CARBayesdata)
 import(stats)
 import(leaflet)
 import(rgdal)
+import(ggplot2)
 importFrom(gtools, rdirichlet, ddirichlet)
 importFrom(matrixStats, rowMaxs)
-importFrom(coda, mcmc, geweke.diag, effectiveSize, HPDinterval)
+importFrom(coda, mcmc, geweke.diag, effectiveSize, HPDinterval, mcmc.list, gelman.diag)
 importFrom(utils, setTxtProgressBar, txtProgressBar)
 importFrom(spdep, mat2listw, moran.mc, n.comp.nb, nb2listw, nb2mat, poly2nb)
 importFrom(matrixcalc, is.symmetric.matrix)
 importFrom(sp, spplot)
-importFrom(dplyr, summarise)
-
-
+importFrom(dplyr, summarise, mutate, group_by)
+importFrom(GGally, ggpairs)
+importFrom(gridExtra, grid.arrange)
 
 
 

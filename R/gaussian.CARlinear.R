@@ -313,7 +313,8 @@ data.precision.beta <- t(X.standardised) %*% X.standardised
         det.Q.proposal <- 0.5 * sum(log((proposal.rho * Wstar.val + (1-proposal.rho))))              
         logprob.current <- det.Q.rho - temp2.phi / tau2.phi
         logprob.proposal <- det.Q.proposal - temp3 / tau2.phi
-        prob <- exp(logprob.proposal - logprob.current)
+        hastings <- log(dtruncnorm(x=rho, a=0, b=1, mean=proposal.rho, sd=proposal.sd.rho)) - log(dtruncnorm(x=proposal.rho, a=0, b=1, mean=rho, sd=proposal.sd.rho)) 
+        prob <- exp(logprob.proposal - logprob.current + hastings)
         
         #### Accept or reject the proposal
             if(prob > runif(1))
@@ -339,7 +340,8 @@ data.precision.beta <- t(X.standardised) %*% X.standardised
         det.Q.proposal <- 0.5 * sum(log((proposal.lambda * Wstar.val + (1-proposal.lambda))))              
         logprob.current <- det.Q.lambda - temp2.delta / tau2.delta
         logprob.proposal <- det.Q.proposal - temp3 / tau2.delta
-        prob <- exp(logprob.proposal - logprob.current)
+        hastings <- log(dtruncnorm(x=lambda, a=0, b=1, mean=proposal.lambda, sd=proposal.sd.lambda)) - log(dtruncnorm(x=proposal.lambda, a=0, b=1, mean=lambda, sd=proposal.sd.lambda)) 
+        prob <- exp(logprob.proposal - logprob.current + hastings)
         
         #### Accept or reject the proposal
             if(prob > runif(1))

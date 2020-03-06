@@ -97,8 +97,8 @@ required when rho = 1, and the prior precision is improper.  Defaults to 0.
 }
 \item{MALA}{
 Logical, should the function use Metropolis adjusted Langevin algorithm (MALA)
-updates (TRUE, default) or simple random walk (FALSE) updates for the random 
-effects. Not applicable if family="gaussian".   
+updates (TRUE) or simple random walk (FALSE, default) updates for the random 
+effects and the regression parameters. Not applicable if family="gaussian".   
 }
 \item{verbose}{
 Logical, should the function update the user on its progress.  
@@ -124,7 +124,8 @@ each w_ij element estimated in the model for adjacent areal units, while W99
 contains binary indicator variables for whether Prob(w_ij < 0.5|data)>0.99. 
 For both matrices, elements corresponding to non-adjacent pairs of areas have 
 NA values.}
-\item{formula }{The formula for the covariate and offset parts of the model.}
+\item{formula }{The formula (as a text string) for the response, covariate and 
+offset parts of the model.}
 \item{model }{A text string describing the model fit.}
 \item{X }{The design matrix of covariates.}
 }

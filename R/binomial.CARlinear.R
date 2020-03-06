@@ -1,4 +1,4 @@
-binomial.CARlinear <- function(formula, data=NULL, trials, W, burnin, n.sample, thin=1,  prior.mean.beta=NULL, prior.var.beta=NULL, prior.mean.alpha=NULL, prior.var.alpha=NULL, prior.tau2=NULL, rho.slo=NULL, rho.int=NULL,  MALA=TRUE, verbose=TRUE)
+binomial.CARlinear <- function(formula, data=NULL, trials, W, burnin, n.sample, thin=1,  prior.mean.beta=NULL, prior.var.beta=NULL, prior.mean.alpha=NULL, prior.var.alpha=NULL, prior.tau2=NULL, rho.slo=NULL, rho.int=NULL,  MALA=FALSE, verbose=TRUE)
 {
 ##############################################
 #### Format the arguments and check for errors
@@ -246,12 +246,12 @@ n.islands <- max(W.islands$nc)
     ## Sample from beta
     ####################
     offset.temp <- offset + as.numeric(phi.mat) + as.numeric(delta.time.mat) + as.numeric(alpha * time.mat)      
-        if(p>2)
+        if(MALA)
         {
         temp <- binomialbetaupdateMALA(X.standardised, N.all, p, beta, offset.temp, Y.DA, failures.DA, trials, prior.mean.beta, prior.var.beta, n.beta.block, proposal.sd.beta, list.block)
         }else
         {
-        temp <- binomialbetaupdateRW(X.standardised, N.all, p, beta, offset.temp, Y.DA, failures.DA, prior.mean.beta, prior.var.beta, proposal.sd.beta)
+        temp <- binomialbetaupdateRW(X.standardised, N.all, p, beta, offset.temp, Y.DA, failures.DA, prior.mean.beta, prior.var.beta, n.beta.block, proposal.sd.beta, list.block)
         }
     beta <- temp[[1]]
     accept[1] <- accept[1] + temp[[2]]
@@ -361,7 +361,8 @@ n.islands <- max(W.islands$nc)
         det.Q.proposal <- 0.5 * sum(log((proposal.rho * Wstar.val + (1-proposal.rho))))              
         logprob.current <- det.Q.rho - temp2.phi / tau2.phi
         logprob.proposal <- det.Q.proposal - temp3 / tau2.phi
-        prob <- exp(logprob.proposal - logprob.current)
+        hastings <- log(dtruncnorm(x=rho, a=0, b=1, mean=proposal.rho, sd=proposal.sd.rho)) - log(dtruncnorm(x=proposal.rho, a=0, b=1, mean=rho, sd=proposal.sd.rho)) 
+        prob <- exp(logprob.proposal - logprob.current + hastings)
         
         #### Accept or reject the proposal
         if(prob > runif(1))
@@ -388,7 +389,8 @@ n.islands <- max(W.islands$nc)
         det.Q.proposal <- 0.5 * sum(log((proposal.lambda * Wstar.val + (1-proposal.lambda))))              
         logprob.current <- det.Q.lambda - temp2.delta / tau2.delta
         logprob.proposal <- det.Q.proposal - temp3 / tau2.delta
-        prob <- exp(logprob.proposal - logprob.current)
+        hastings <- log(dtruncnorm(x=lambda, a=0, b=1, mean=proposal.lambda, sd=proposal.sd.lambda)) - log(dtruncnorm(x=proposal.lambda, a=0, b=1, mean=lambda, sd=proposal.sd.lambda)) 
+        prob <- exp(logprob.proposal - logprob.current + hastings)
         
         #### Accept or reject the proposal
         if(prob > runif(1))

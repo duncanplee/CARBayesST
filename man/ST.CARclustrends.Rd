@@ -140,7 +140,8 @@ which is a vector the same length and in the same order as the number of areas.
 The kth element specifies which trend area k has been allocated to based on the 
 posterior mode. The second element is "trend.probs", which is a matrix containing 
 the probabilities associated with each trend for each areal unit.}
-\item{formula }{The formula for the covariate and offset parts of the model.}
+\item{formula }{The formula (as a text string) for the response, covariate and 
+offset parts of the model.}
 \item{model }{A text string describing the model fit.}
 \item{X }{The design matrix of covariates.}
 }

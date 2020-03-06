@@ -1,4 +1,4 @@
-poisson.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin = 1, prior.mean.beta = NULL, prior.var.beta = NULL, prior.tau2 = NULL, rho = NULL, epsilon = 0, MALA=TRUE, verbose = TRUE)
+poisson.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin = 1, prior.mean.beta = NULL, prior.var.beta = NULL, prior.tau2 = NULL, rho = NULL, epsilon = 0, MALA=FALSE, verbose = TRUE)
 { 
 #### Verbose
 a <- common.verbose(verbose)  
@@ -13,8 +13,8 @@ a <- common.verbose(verbose)
   
   # convert the supplied adjacency matrix into a spam matrix, if required.
   if(!is.symmetric.matrix(W)) stop("W is not symmetric.", call.=FALSE)
-  if(class(W) == "matrix") W <- as.spam(W)
-  if(!class(W) %in% c("matrix", "spam")) stop("W must be an object with class \"matrix\" or \"spam\"", call.=FALSE)  
+  #if(class(W) == "matrix") W <- as.spam(W)
+  #if(!class(W) %in% c("matrix", "spam")) stop("W must be an object with class \"matrix\" or \"spam\"", call.=FALSE)  
 
   
   logit     <- function(p) log(p/(1-p))
@@ -30,7 +30,7 @@ a <- common.verbose(verbose)
   frame <- try(suppressWarnings(model.frame(formula, data = data, na.action=na.pass)), silent=TRUE)
   if(class(frame)=="try-error") stop("the formula inputted contains an error, e.g the variables may be different lengths.", call.=FALSE)
   X <- try(suppressWarnings(model.matrix(object=attr(frame, "terms"), data=frame)), silent=TRUE)
-  if(class(X)=="try-error") stop("the covariate matrix contains inappropriate values.", call.=FALSE)
+  #if(class(X)=="try-error") stop("the covariate matrix contains inappropriate values.", call.=FALSE)
   if(sum(is.na(X))>0) stop("the covariate matrix contains missing 'NA' values.", call.=FALSE)
   
   # get summaries of the model matrix
@@ -52,7 +52,7 @@ a <- common.verbose(verbose)
   
   # identify and error check the offset term, if it exists.
   offset <- try(model.offset(frame), silent=TRUE)
-  if(class(offset)=="try-error")   stop("the offset is not numeric.", call.=FALSE)
+  #if(class(offset)=="try-error")   stop("the offset is not numeric.", call.=FALSE)
   if(is.null(offset))              offset <- rep(0,(n.time * n.sites))
   if(sum(is.na(offset))>0)         stop("the offset has missing 'NA' values.", call.=FALSE)
   if(!is.numeric(offset))          stop("the offset variable has non-numeric values.", call.=FALSE) 
@@ -306,32 +306,13 @@ a <- common.verbose(verbose)
     }
     
     # update BETA
-    #proposal      <- beta_par + (sqrt(proposal.sd.beta)* t(chol.proposal.corr.beta)) %*% rnorm(p)   
-    #proposal.beta <- beta_par
-    #offset.temp   <- offset + as.numeric(phi)       
-    #for(r in 1:n.beta.block){
-    #  proposal.beta[beta.beg[r]:beta.fin[r]] <- proposal[beta.beg[r]:beta.fin[r]]
-    #  prob <- poissonbetaupdate(X=X.standardised, nsites=k, p=p, beta=beta_par, proposal=proposal.beta, 
-    #                            offset=offset.temp, y=y, prior_meanbeta=prior.mean.beta, prior_varbeta=prior.var.beta, which.miss)
-    #  if(prob > runif(1)){
-    #    beta_par[beta.beg[r]:beta.fin[r]] <- proposal.beta[beta.beg[r]:beta.fin[r]]
-    #    accept[1] <- accept[1] + 1  
-    #  } else {
-    #    proposal.beta[beta.beg[r]:beta.fin[r]] <- beta_par[beta.beg[r]:beta.fin[r]]
-    #  }
-    #}
-    #accept[2] <- accept[2] + n.beta.block    
-    #XB        <- X.standardised %*% beta_par
-    
-    
-    
     offset.temp   <- offset + as.numeric(phi)         
-        if(p>2)
+        if(MALA)
         {
         temp <- poissonbetaupdateMALA(X.standardised, k, p, beta_par, offset.temp, y, prior.mean.beta, prior.var.beta, n.beta.block, proposal.sd.beta, list.block)
         }else
         {
-        temp <- poissonbetaupdateRW(X.standardised, k, p, beta_par, offset.temp, y, prior.mean.beta, prior.var.beta, proposal.sd.beta)
+        temp <- poissonbetaupdateRW(X.standardised, k, p, beta_par, offset.temp, y, prior.mean.beta, prior.var.beta, n.beta.block, proposal.sd.beta, list.block)
         }
     beta_par <- temp[[1]]
     accept[1] <- accept[1] + temp[[2]]
@@ -374,7 +355,9 @@ a <- common.verbose(verbose)
     chol.Q.space.prop      <- update(chol.Q.space, x = Q.space.prop) 
     detSpace               <- 2*determinant(chol.Q.space.prop, logarithm = T)$modulus
     Q.space.det.prop       <- n.sites*detTime + n.time*detSpace
-    acceptance             <- exp(0.5*(Q.space.det.prop - Q.space.det.old) + (1/(2*tau))*(phiQphi_phiQphiNew))
+    hastings <- log(dtruncnorm(x=rho, a=0, b=1, mean=proposal.rho, sd=rho.tune)) - log(dtruncnorm(x=proposal.rho, a=0, b=1, mean=rho, sd=rho.tune)) 
+    acceptance             <- exp(0.5*(Q.space.det.prop - Q.space.det.old) + (1/(2*tau))*(phiQphi_phiQphiNew) + hastings)
+    
     accept[6]              <- accept[6] + 1
     if(runif(1)  <= acceptance){
       accept[5]        <- accept[5] + 1

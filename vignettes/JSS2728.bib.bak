@@ -380,9 +380,11 @@ url="http://dx.doi.org/10.1007/978-1-4612-1284-3_4",
 author = {Napier, Gary and Lee, Duncan and Robertson, Chris and Lawson, Andrew},
 title = {A Bayesian space–time model for clustering areal units based on their disease trends},
 journal = {Biostatistics},
-volume = {20},
-pages = {681-697},
-year = {2019},
+volume = {},
+number = {to appear},
+pages = {kxy024},
+year = {2018},
+doi = {10.1093/biostatistics/kxy024},
 }
 
 

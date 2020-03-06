@@ -1,4 +1,4 @@
-binomial.CARlocalised <- function(formula, data=NULL, G, trials,  W, burnin, n.sample, thin=1,  prior.mean.beta=NULL, prior.var.beta=NULL, prior.delta=NULL, prior.tau2=NULL, MALA=TRUE, verbose=TRUE)
+binomial.CARlocalised <- function(formula, data=NULL, G, trials,  W, burnin, n.sample, thin=1,  prior.mean.beta=NULL, prior.var.beta=NULL, prior.delta=NULL, prior.tau2=NULL, MALA=FALSE, verbose=TRUE)
 {
 ##############################################
 #### Format the arguments and check for errors
@@ -219,12 +219,12 @@ trials.mat <- matrix(trials, nrow=K, ncol=N, byrow=FALSE)
         if(!is.null(X))
         {
         offset.temp <- offset + as.numeric(mu) + as.numeric(phi.mat)   
-            if(p>2)
+            if(MALA)
             {
             temp <- binomialbetaupdateMALA(X.standardised, N.all, p, beta, offset.temp, Y, failures, trials, prior.mean.beta, prior.var.beta, n.beta.block, proposal.sd.beta, list.block)
             }else
             {
-            temp <- binomialbetaupdateRW(X.standardised, N.all, p, beta, offset.temp, Y, failures, prior.mean.beta, prior.var.beta, proposal.sd.beta)
+            temp <- binomialbetaupdateRW(X.standardised, N.all, p, beta, offset.temp, Y, failures, prior.mean.beta, prior.var.beta, n.beta.block, proposal.sd.beta, list.block)
             }
         beta <- temp[[1]]
         accept[7] <- accept[7] + temp[[2]]
@@ -294,8 +294,9 @@ trials.mat <- matrix(trials, nrow=K, ncol=N, byrow=FALSE)
     Z.temp <- matrix(rep(as.numeric(Z.mat[ ,-N]),G), ncol=G, byrow=FALSE)
     Z.temp2 <- (delta.update - Z.temp)^2 + (delta.update - Gstar)^2
     current.fc <- current.fc1 - sum(log(apply(exp(-delta * Z.temp2),1,sum)))
-    proposal.fc <- proposal.fc1 - sum(log(apply(exp(-proposal.delta * Z.temp2),1,sum)))        
-    prob <- exp(proposal.fc - current.fc)       
+    proposal.fc <- proposal.fc1 - sum(log(apply(exp(-proposal.delta * Z.temp2),1,sum)))
+    hastings <- log(dtruncnorm(x=delta, a=1, b=prior.delta, mean=proposal.delta, sd=proposal.sd.delta)) - log(dtruncnorm(x=proposal.delta, a=1, b=prior.delta, mean=delta, sd=proposal.sd.delta)) 
+    prob <- exp(proposal.fc - current.fc + hastings)       
         if(prob > runif(1))
         {
         delta <- proposal.delta

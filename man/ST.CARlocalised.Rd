@@ -90,8 +90,8 @@ prior for tau2. Defaults to c(1, 0.01).
 }
 \item{MALA}{
 Logical, should the function use Metropolis adjusted Langevin algorithm (MALA)
-updates (TRUE, default) or simple random walk (FALSE) updates for the random 
-effects. Not applicable if family="gaussian".   
+updates (TRUE) or simple random walk (FALSE, default) updates for the random 
+effects and the regression parameters. Not applicable if family="gaussian".    
 }
 \item{verbose}{
 Logical, should the function update the user on its progress.  
@@ -114,7 +114,8 @@ the loglikelihood.}
 \item{accept }{The acceptance probabilities for the parameters.}
 \item{localised.structure }{A vector giving the posterior mean of which intercept 
 component (cluster) each data point is in.}
-\item{formula }{The formula for the covariate and offset parts of the model.}
+\item{formula }{The formula (as a text string) for the response, covariate and 
+offset parts of the model.}
 \item{model }{A text string describing the model fit.}
 \item{X }{The design matrix of covariates.}
 }

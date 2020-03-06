@@ -1,4 +1,4 @@
-binomial.CARsepspatial <- function(formula, data=NULL, trials, W, burnin, n.sample, thin=1,  prior.mean.beta=NULL, prior.var.beta=NULL, prior.tau2=NULL, rho.S=NULL, rho.T=NULL, MALA=TRUE, verbose=TRUE)
+binomial.CARsepspatial <- function(formula, data=NULL, trials, W, burnin, n.sample, thin=1,  prior.mean.beta=NULL, prior.var.beta=NULL, prior.tau2=NULL, rho.S=NULL, rho.T=NULL, MALA=FALSE, verbose=TRUE)
 {
   ##############################################
   #### Format the arguments and check for errors
@@ -236,12 +236,12 @@ binomial.CARsepspatial <- function(formula, data=NULL, trials, W, burnin, n.samp
     ## Sample from beta
     ###################
     offset.temp <- as.numeric(offset.mat + phi.mat + delta.mat)    
-    if(p>2)
+    if(MALA)
     {
       temp <- binomialbetaupdateMALA(X.standardised, N.all, p, beta, offset.temp, Y, failures, trials, prior.mean.beta, prior.var.beta, n.beta.block, proposal.sd.beta, list.block)
     }else
     {
-      temp <- binomialbetaupdateRW(X.standardised, N.all, p, beta, offset.temp, Y, failures, prior.mean.beta, prior.var.beta, proposal.sd.beta)
+      temp <- binomialbetaupdateRW(X.standardised, N.all, p, beta, offset.temp, Y, failures, prior.mean.beta, prior.var.beta, n.beta.block, proposal.sd.beta, list.block)
     }
     beta <- temp[[1]]
     accept[1] <- accept[1] + temp[[2]]
@@ -316,7 +316,8 @@ binomial.CARsepspatial <- function(formula, data=NULL, trials, W, burnin, n.samp
       det.Q.W.proposal <- 0.5 * sum(log((proposal.rho * Wstar.val + (1-proposal.rho))))
       logprob.current <- N * det.Q.W - temp3
       logprob.proposal <- N * det.Q.W.proposal - temp4
-      prob <- exp(logprob.proposal - logprob.current)
+      hastings <- log(dtruncnorm(x=rho, a=0, b=1, mean=proposal.rho, sd=proposal.sd.rho)) - log(dtruncnorm(x=proposal.rho, a=0, b=1, mean=rho, sd=proposal.sd.rho)) 
+      prob <- exp(logprob.proposal - logprob.current + hastings)
       if(prob > runif(1))
       {
         rho <- proposal.rho
@@ -339,7 +340,8 @@ binomial.CARsepspatial <- function(formula, data=NULL, trials, W, burnin, n.samp
       det.Q.proposal <- 0.5 * sum(log((proposal.lambda * Dstar.val + (1-proposal.lambda))))              
       logprob.current <- det.Q.D - temp2.delta / sig2
       logprob.proposal <- det.Q.proposal - temp3 / sig2
-      prob <- exp(logprob.proposal - logprob.current)
+      hastings <- log(dtruncnorm(x=lambda, a=0, b=1, mean=proposal.lambda, sd=proposal.sd.lambda)) - log(dtruncnorm(x=proposal.lambda, a=0, b=1, mean=lambda, sd=proposal.sd.lambda)) 
+      prob <- exp(logprob.proposal - logprob.current + hastings)
       
       #### Accept or reject the proposal
       if(prob > runif(1))
