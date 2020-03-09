@@ -235,7 +235,7 @@ n.islands <- max(W.islands$nc)
         temp <- binomialbetaupdateMALA(X.standardised, N.all, p, beta, offset.temp, Y.DA, failures.DA, trials, prior.mean.beta, prior.var.beta, n.beta.block, proposal.sd.beta, list.block)
         }else
         {
-        temp <- binomialbetaupdateRW2(X.standardised, N.all, p, beta, offset.temp, Y.DA, failures.DA, prior.mean.beta, prior.var.beta, n.beta.block, proposal.sd.beta, list.block)
+        temp <- binomialbetaupdateRW(X.standardised, N.all, p, beta, offset.temp, Y.DA, failures.DA, prior.mean.beta, prior.var.beta, n.beta.block, proposal.sd.beta, list.block)
         }
     beta <- temp[[1]]
     accept[1] <- accept[1] + temp[[2]]

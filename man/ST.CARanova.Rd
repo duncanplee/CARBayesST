@@ -26,7 +26,7 @@ Bayesian setting using Markov chain Monte Carlo (MCMC) simulation.
 \usage{
 ST.CARanova(formula, family, data=NULL,  trials=NULL, W, interaction=TRUE, burnin, 
 n.sample, thin=1, prior.mean.beta=NULL, prior.var.beta=NULL, prior.nu2=NULL, 
-prior.tau2=NULL, rho.S=NULL, rho.T=NULL, MALA=TRUE, verbose=TRUE)
+prior.tau2=NULL, rho.S=NULL, rho.T=NULL, MALA=FALSE, verbose=TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

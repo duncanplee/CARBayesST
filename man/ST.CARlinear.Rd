@@ -24,7 +24,7 @@ simulation.
 ST.CARlinear(formula, family, data=NULL,  trials=NULL, W, burnin, n.sample, thin=1, 
 prior.mean.beta=NULL, prior.var.beta=NULL, prior.mean.alpha=NULL, 
 prior.var.alpha=NULL, prior.nu2=NULL, prior.tau2=NULL, rho.slo=NULL, rho.int=NULL, 
-MALA=TRUE, verbose=TRUE)
+MALA=FALSE, verbose=TRUE)
 }
 
 

@@ -72,8 +72,7 @@ test_outputs <- function(fn){
   expect_is(logLik(z), "numeric")
   expect_is(model.matrix(z), "matrix")
   expect_is(residuals(z, type = "response"), "numeric")
-  # expect_is(residuals(z, type = "pearson"), "numeric")
-  expect_is(residuals(z, type = "deviance"), "numeric")
+  expect_is(residuals(z, type = "pearson"), "numeric")
 }
 
 

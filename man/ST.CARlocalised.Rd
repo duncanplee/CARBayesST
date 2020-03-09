@@ -26,7 +26,7 @@ Markov chain Monte Carlo (MCMC) simulation.
 \usage{
 ST.CARlocalised(formula, family, data=NULL,  G, trials=NULL, W, burnin, n.sample, 
 thin=1, prior.mean.beta=NULL, prior.var.beta=NULL, prior.delta=NULL, 
-prior.tau2=NULL, MALA=TRUE, verbose=TRUE)
+prior.tau2=NULL, MALA=FALSE, verbose=TRUE)
 }
 
 

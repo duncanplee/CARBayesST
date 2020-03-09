@@ -26,7 +26,7 @@ Carlo (MCMC) simulation.
 \usage{
 ST.CARar(formula, family, data=NULL,  trials=NULL, W, burnin, n.sample, thin=1, 
 prior.mean.beta=NULL, prior.var.beta=NULL, prior.nu2=NULL, prior.tau2=NULL,
-rho.S=NULL, rho.T=NULL, MALA=TRUE, verbose=TRUE)
+rho.S=NULL, rho.T=NULL, MALA=FALSE, verbose=TRUE)
 }
 
 
