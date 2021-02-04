@@ -165,8 +165,8 @@ a <- common.verbose(verbose)
   tau_phi_shape <- (n.sites*n.time/2) + prior.tau2[1]
   # general MCMC housekeeping
   n.save        <- ifelse(thin == 1, (n.sample - burnin), (n.sample - burnin) / thin)
-  accept.all    <- rep(0, 8)
-  accept        <- accept.all
+  accept    <- rep(0, 8)
+
   # storage of parameters in the MCMC, 
   samples.beta  <- array(NA, c(n.save, p))
   samples.phi   <- array(NA, c(n.save, n.sites * n.time))
@@ -391,9 +391,8 @@ a <- common.verbose(verbose)
       samples.loglike[increment, ] <- loglike
     }
     
-    
     # adjust the acceptance rate if required
-    if(j %% 100 == 0){
+    if(j %% 100 == 0 & j < burnin){
         accept.beta <- 100 * accept[1] / accept[2]
         accept.phi <- 100 * accept[3] / accept[4]
         accept.w <- 100 * accept[7] / accept[8]
@@ -448,7 +447,6 @@ a <- common.verbose(verbose)
         }else
         {
         }  
-        accept.all         <- accept.all + accept
         accept             <- accept*0
     }else
     {}
@@ -466,10 +464,10 @@ a <- common.verbose(verbose)
 #### Summarise and save the results 
 ###################################
 ## Compute the acceptance rates
-accept.beta  <- 100 * accept.all[1] / accept.all[2]
-accept.phi   <- 100 * accept.all[3] / accept.all[4]
-accept.rho <- 100 * accept.all[5] / accept.all[6]
-accept.w     <- 100 * accept.all[7] / accept.all[8]
+accept.beta  <- 100 * accept[1] / accept[2]
+accept.phi   <- 100 * accept[3] / accept[4]
+accept.rho <- 100 * accept[5] / accept[6]
+accept.w     <- 100 * accept[7] / accept[8]
 accept.alpha <- 100
   if(!is.null(rhofix))
   {

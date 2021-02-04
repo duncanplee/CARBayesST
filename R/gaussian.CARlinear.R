@@ -139,8 +139,7 @@ samples.loglike <- array(NA, c(n.keep, N.all))
 
     
 #### Specify the Metropolis quantities
-accept.all <- rep(0,4)
-accept <- accept.all
+accept <- rep(0,4)
 proposal.sd.rho <- 0.02
 proposal.sd.lambda <- 0.02
 nu2.shape <- prior.nu2[1] + N*K/2    
@@ -390,12 +389,10 @@ data.precision.beta <- t(X.standardised) %*% X.standardised
     ########################################
     ## Self tune the acceptance probabilties
     ########################################
-    k <- j/100
-        if(ceiling(k)==floor(k))
+        if(ceiling(j/100)==floor(j/100) & j < burnin)
         {
             if(!fix.rho.int) proposal.sd.rho <- common.accceptrates2(accept[1:2], proposal.sd.rho, 40, 50, 0.5)
             if(!fix.rho.slo) proposal.sd.lambda <- common.accceptrates2(accept[3:4], proposal.sd.lambda, 40, 50, 0.5)
-        accept.all <- accept.all + accept
         accept <- rep(0,4)            
         }else
         {}
@@ -428,14 +425,14 @@ data.precision.beta <- t(X.standardised) %*% X.standardised
 #### Compute the acceptance rates
     if(!fix.rho.int)
     {
-    accept.rho <- 100 * accept.all[1] / accept.all[2]
+    accept.rho <- 100 * accept[1] / accept[2]
     }else
     {
     accept.rho <- NA    
     }
     if(!fix.rho.slo)
     {
-    accept.lambda <- 100 * accept.all[3] / accept.all[4]
+    accept.lambda <- 100 * accept[3] / accept[4]
     }else
     {
     accept.lambda <- NA    

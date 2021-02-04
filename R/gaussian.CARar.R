@@ -117,8 +117,7 @@ samples.loglike <- array(NA, c(n.keep, N.all))
 
     
 #### Specify the Metropolis quantities
-accept.all <- rep(0,2)
-accept <- accept.all
+accept <- rep(0,2)
 proposal.sd.rho <- 0.05
 tau2.shape <- prior.tau2[1] + N.all/2
 nu2.shape <- prior.nu2[1] + N.all/2        
@@ -313,11 +312,9 @@ n.islands <- max(W.islands$nc)
     ########################################
     ## Self tune the acceptance probabilties
     ########################################
-    k <- j/100
-        if(ceiling(k)==floor(k))
+        if(ceiling(j/100)==floor(j/100) & j < burnin)
         {
             if(!fix.rho.S) proposal.sd.rho <- common.accceptrates2(accept[1:2], proposal.sd.rho, 40, 50, 0.5)
-        accept.all <- accept.all + accept
         accept <- rep(0,2)
         }else
         {}
@@ -350,7 +347,7 @@ n.islands <- max(W.islands$nc)
 #### Compute the acceptance rates
     if(!fix.rho.S)
     {
-    accept.rho <- 100 * accept.all[1] / accept.all[2]
+    accept.rho <- 100 * accept[1] / accept[2]
     }else
     {
     accept.rho <- NA    

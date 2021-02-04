@@ -24,8 +24,8 @@ this package was supported by the Engineering and Physical Sciences Research Cou
 \tabular{ll}{
 Package: \tab CARBayesST\cr
 Type: \tab Package\cr
-Version: \tab 3.1\cr
-Date: \tab 2020-03-09\cr
+Version: \tab 3.1.1\cr
+Date: \tab 2021-04-02\cr
 License: \tab GPL (>= 2)\cr
 }
 }
@@ -54,6 +54,10 @@ Journal of Statistical Software, 84, 9, 1-39.
 Napier, G, D. Lee, C. Robertson, A. Lawson, and K. Pollock (2016). A model to estimate the 
 impact of changes in MMR vaccination uptake on inequalities in measles susceptibility in 
 Scotland, Statistical Methods in Medical Research, 25, 1185-1200.
+
+Napier, G., Lee, D., Robertson, C., and Lawson, A. (2019). A Bayesian space-time 
+model for clustering areal units based on their disease trends, Biostatistics,
+20, 681-697.
 
 Rushworth, A., D. Lee, and R. Mitchell (2014). A spatio-temporal model for estimating the 
 long-term effects of air pollution on respiratory hospital admissions in Greater London. 

@@ -157,9 +157,9 @@ areas: A new mixed model for spatial dependence, Chapter Statistical Models in
 Epidemiology, the Environment and Clinical Trials, Halloran, M and Berry, D (eds),
 pp. 135-178. Springer-Verlag, New York.
 
-Napier, G., Lee, D., Robertson, C., and Lawson, A. (2018). A Bayesian space-time 
+Napier, G., Lee, D., Robertson, C., and Lawson, A. (2019). A Bayesian space-time 
 model for clustering areal units based on their disease trends, Biostatistics,
-to appear, 10.1093/biostatistics/kxy024.
+20, 681-697.
 }
         
 \author{

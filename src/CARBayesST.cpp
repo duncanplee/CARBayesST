@@ -278,7 +278,7 @@ List poissonbetaupdateRW(NumericMatrix X, const int nsites, const int p, Numeric
     // Propose a value
     for(int g=0; g<len; g++)
     {
-    beta_new[idx[g]] = rnorm(1, beta_old[g], beta_tune)[0];
+    beta_new[idx[g]] = rnorm(1, beta_old[idx[g]], beta_tune)[0];
     }
     
 
@@ -972,7 +972,7 @@ List binomialbetaupdateRW(NumericMatrix X, const int nsites, const int p, Numeri
     // Propose a value
     for(int g=0; g<len; g++)
     {
-    beta_new[idx[g]] = rnorm(1, beta_old[g], beta_tune)[0];
+    beta_new[idx[g]] = rnorm(1, beta_old[idx[g]], beta_tune)[0];
     }
     
 
