@@ -37,19 +37,19 @@
 
 
 %% almost as usual
-\author{Duncan Lee, Alastair Rushworth and Gary Napier
+\author{Duncan Lee, Alastair Rushworth, Gary Napier and William Pettersson
 \\University of Glasgow}
-\title{\pkg{CARBayesST} version 3.1.1: Spatio-Temporal Areal Unit Modelling in \proglang{R} with Conditional Autoregressive Priors}
+\title{\pkg{CARBayesST} version 3.2: Spatio-Temporal Areal Unit Modelling in \proglang{R} with Conditional Autoregressive Priors}
 
 %% for pretty printing and a nice hypersummary also set:
-\Plainauthor{Duncan Lee, Alastair Rushworth, Gary Napier} %% comma-separated
-\Plaintitle{CARBayesST version 3.1.1: Spatio-Temporal Areal Unit Modelling in R with Conditional Autoregressive Priors} %% without formatting
+\Plainauthor{Duncan Lee, Alastair Rushworth, Gary Napier, William Pettersson} %% comma-separated
+\Plaintitle{CARBayesST version 3.2: Spatio-Temporal Areal Unit Modelling in R with Conditional Autoregressive Priors} %% without formatting
 \Shorttitle{\pkg{CARBayesST}: Spatio-Temporal Areal Unit Modelling} %% a short 
 
 
 %% an abstract and keywords
 \Abstract{
-This is a vignette for the \proglang{R} package \pkg{CARBayesST} version 3.1.1, and is an updated version of a paper in the Journal of Statistical Software in 2018 Volume 84 Issue 9 by the same authors. The package has been developed to model spatio-temporal data relating to a set of non-overlapping areal units that are observed over multiple time periods. These data typically contain spatio-temporal autocorrelation, and this package provides a suite of models for capturing this autocorrelation via random effects that are assigned spatio-temporal extensions of conditional autoregressive (CAR) priors within a hierarchical Bayesian model. \pkg{CARBayesST} is the first dedicated \proglang{R} package for modelling these data in a Bayesian setting using Markov chain Monte carlo (MCMC) simulation. The software can fit a range of models that estimate different aspects of the data, including the estimation of average spatial and temporal trends, and the identification of clusters of areal units that exhibit elevated values. This vignette outlines the class of models that the software can implement, before applying them to exemplar case studies.
+This is a vignette for the \proglang{R} package \pkg{CARBayesST} version 3.2, and is an updated version of a paper in the Journal of Statistical Software in 2018 Volume 84 Issue 9 by the same authors. The package has been developed to model spatio-temporal data relating to a set of non-overlapping areal units that are observed over multiple time periods. These data typically contain spatio-temporal autocorrelation, and this package provides a suite of models for capturing this autocorrelation via random effects that are assigned spatio-temporal extensions of conditional autoregressive (CAR) priors within a hierarchical Bayesian model. \pkg{CARBayesST} is the first dedicated \proglang{R} package for modelling these data in a Bayesian setting using Markov chain Monte carlo (MCMC) simulation. The software can fit a range of models that estimate different aspects of the data, including the estimation of average spatial and temporal trends, and the identification of clusters of areal units that exhibit elevated values. This vignette outlines the class of models that the software can implement, before applying them to exemplar case studies.
 
 }
 \Keywords{Bayesian inference, conditional autoregressive priors, spatio-temporal areal unit modelling}
@@ -402,8 +402,8 @@ Additionally, the \pkg{CARBayes} functions \code{summarise.samples()} and \code{
 
 
 
-The remainder of this vignette illustrates the \pkg{CARBayesST} software via two worked examples.
-
+\subsection{Estimating the neighbourhood matrix}
+The package also contains functionality (\code{W.estimate()}) to estimate an appropriate neighbourhood matrix $\mathbf{W}_E$ for the data being modelled, rather than relying on a purely geographical $\mathbf{W}$ constructed, for example, by the border sharing rule. Using a neighbourhood matrix estimated for the data at hand  will likely lead to improved estimation of covariate effects and fitted values / risks. It will also allow you to identify boundaries in the random effects surface that separate 2 geographically adjacent areas that have very different values. The matrix is estimated using a graph-based optimisation algorithm, and full details can be found in \cite{lee2020improved}. In short, the algorithm uses a vector of spatial data observations and a  binary baseline neighbourhood matrix $\mathbf{W}$, the latter being constructed using the border sharing rule. The estimated neighbourhood matrix is then constructed by removing neighbour relations (i.e. setting $w_{E_{ij}}= w_{E_{ji}} = 0$) if they are not appropriate for the data. Note, new edges not in the initial $\mathbf{W}$ matrix cannot be added when creating $\mathbf{W}_E$.
 
 
 
@@ -504,7 +504,7 @@ map1
 
 \begin{figure}
 \centering 
-\scalebox{0.8}{\includegraphics{SMRmap.png}}
+\scalebox{0.8}{\includegraphics{SMRmap.pdf}}
 \caption{Map showing the average SMR over all five years from 2007 to 2011.\label{smr_map}}
 \end{figure} 
 
@@ -749,7 +749,7 @@ map1
 
 \begin{figure}
 \centering 
-\scalebox{0.8}{\includegraphics{salesmap.png}}
+\scalebox{0.8}{\includegraphics{salesmap.pdf}}
 \caption{Map showing the average (between 2003 to 2013) raw rate of property sales as a proportion of the total number of properties.\label{salesmap}}
 \end{figure} 
 

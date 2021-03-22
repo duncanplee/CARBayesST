@@ -301,3 +301,7 @@ binomialcouplingAllupdate <- function(nsites, K, p, w, offset, beta, gamma, lamb
     .Call(`_CARBayesST_binomialcouplingAllupdate`, nsites, K, p, w, offset, beta, gamma, lambda, phi, rho, tau2, Wtripletsum, Wtriplet, Wbegfin, y, failures, prior_meanbeta, prior_varbeta, prior_meantrends, prior_vartrends, prior_lambda, prior_tau2, swap, temps, begin, Ntrends, TrendSel)
 }
 
+optimise_graph <- function(adj, data, add = FALSE, remove = TRUE, remove_first = FALSE) {
+    .Call(`_CARBayesST_optimise_graph`, adj, data, add, remove, remove_first)
+}
+

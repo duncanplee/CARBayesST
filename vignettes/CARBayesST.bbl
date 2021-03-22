@@ -1,4 +1,4 @@
-\begin{thebibliography}{41}
+\begin{thebibliography}{42}
 \newcommand{\enquote}[1]{``#1''}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
@@ -108,6 +108,12 @@ Lee D, Lawson A (2016).
 \newblock \enquote{Quantifying the Spatial Inequality and Temporal Trends in
   Maternal Smoking Rates in {G}lasgow.}
 \newblock \emph{Annals of {A}pplied {S}tatistics}, \textbf{10}, 1427--1446.
+
+\bibitem[{Lee and Meeks(2020)}]{lee2020improved}
+Lee D, Meeks K (2020).
+\newblock \enquote{Improved inference for areal unit count data using
+  graph-based optimisation.}
+\newblock \eprint{2010.10893}.
 
 \bibitem[{Lee \emph{et~al.}(2015)Lee, Minton, and Pryce}]{lee2015}
 Lee D, Minton J, Pryce G (2015).

@@ -6,7 +6,8 @@ export(
      ST.CARadaptive,
      ST.CARclustrends,
      ST.CARlocalised,
-     ST.CARsepspatial
+     ST.CARsepspatial,
+     W.estimate
 )
 
 S3method(print, CARBayesST)

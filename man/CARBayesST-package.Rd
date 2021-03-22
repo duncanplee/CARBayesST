@@ -24,14 +24,14 @@ this package was supported by the Engineering and Physical Sciences Research Cou
 \tabular{ll}{
 Package: \tab CARBayesST\cr
 Type: \tab Package\cr
-Version: \tab 3.1.1\cr
-Date: \tab 2021-04-02\cr
+Version: \tab 3.2\cr
+Date: \tab 2021-03-24\cr
 License: \tab GPL (>= 2)\cr
 }
 }
 
 \author{
-Author: Duncan Lee, Alastair Rushworth and Gary Napier
+Author: Duncan Lee, Alastair Rushworth, Gary Napier and William Pettersson 
 
 Maintainer: Duncan Lee <Duncan.Lee@glasgow.ac.uk>
 }
@@ -50,6 +50,9 @@ maternal smoking rates in Glasgow, Annals of Applied Statistics, 10, 1427-1446.
 Lee, D and Rushworth, A and Napier, G (2018). Spatio-Temporal Areal Unit Modeling in 
 R with Conditional Autoregressive Priors Using the CARBayesST Package, 
 Journal of Statistical Software, 84, 9, 1-39.
+
+Lee, D and Meeks, K (2020). Improved inference for areal unit count data using graph-based 
+optimisation. arXiv:2010.10893.
 
 Napier, G, D. Lee, C. Robertson, A. Lawson, and K. Pollock (2016). A model to estimate the 
 impact of changes in MMR vaccination uptake on inequalities in measles susceptibility in 
