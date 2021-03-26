@@ -325,21 +325,10 @@ binomial.CARadaptive <- function(formula, data = NULL, trials, W, burnin, n.samp
     # update PHI using one at a time M-H sampling
     nneighbours   <- diag.spam(Q.space)
     W_current     <- diag(nneighbours) - as.matrix(Q.space)
-    
-        if(MALA)
-        {
-        phi_update    <- SPTICARphiBinomialMALA(W = W_current, nsites = n.sites, ntimes = n.time, phi = phi, 
-                                                    nneighbours = nneighbours, tau = tau, y = y,
-                                                    phiVarb_tune = phi_tune, trials = trials,
-                                                    alpha = alpha, XB = XB + offset)     
-        }else
-        {
-            phi_update    <- SPTICARphiBinomial(W = W_current, nsites = n.sites, ntimes = n.time, phi = phi, 
+    phi_update    <- SPTICARphiBinomial(W = W_current, nsites = n.sites, ntimes = n.time, phi = phi, 
                                                 nneighbours = nneighbours, tau = tau, y = y,
                                                 phiVarb_tune = phi_tune, trials = trials,
                                                 alpha = alpha, XB = XB + offset)    
-        }
-    
     phi       <- phi_update[[2]]
     phi       <- phi - mean(phi)
     accept[3] <- accept[3] + phi_update[[1]][2]
@@ -560,7 +549,7 @@ samples.beta.orig <- common.betatransform(samples.beta, X.indicator, X.mean, X.s
    
 #### Compile and return the results
 model.string    <- c("Likelihood model - Binomial (logit link function)", 
-                       "\nLatent structure model - Adaptive autoregressive CAR model\n")
+                       "\nLatent structure model - Adaptive autoregressive order 1 CAR model\n")
   samples.tau2all <- cbind(samples.tau2, samples.vtau2)
   colnames(samples.tau2all) <- c("tau2", "tau2.w")
   if(is.null(rhofix))

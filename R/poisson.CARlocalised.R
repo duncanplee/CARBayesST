@@ -296,13 +296,7 @@ regression.mat <- matrix(regression.vec, nrow=K, ncol=N, byrow=FALSE)
     #### Sample from phi
     ####################
     phi.offset <- mu + offset.mat + regression.mat
-        if(MALA)
-        {
-        temp1 <- poissonarcarupdateMALA(W.triplet, W.begfin, W.triplet.sum,  K, N, phi.mat, tau2, gamma, 1, Y.mat, proposal.sd.phi, phi.offset, W.triplet.sum)      
-        }else
-        {
-        temp1 <- poissonarcarupdateRW(W.triplet, W.begfin, W.triplet.sum,  K, N, phi.mat, tau2, gamma, 1, Y.mat, proposal.sd.phi, phi.offset, W.triplet.sum)      
-        }
+    temp1 <- poissonar1carupdateRW(W.triplet, W.begfin, W.triplet.sum,  K, N, phi.mat, tau2, gamma, 1, Y.mat, proposal.sd.phi, phi.offset, W.triplet.sum)      
     phi.temp <- temp1[[1]]
     phi <- as.numeric(phi.temp)
         for(i in 1:G)
@@ -505,7 +499,7 @@ colnames(summary.results) <- c("Median", "2.5%", "97.5%", "n.sample", "% accept"
     if(is.null(X)) samples.beta.orig = NA
        
 samples <- list(beta=mcmc(samples.beta.orig), lambda=mcmc(samples.lambda),  Z=mcmc(samples.Z), delta=mcmc(samples.delta), phi = mcmc(samples.phi), tau2=mcmc(samples.tau2), rho.T=mcmc(samples.gamma), fitted=mcmc(samples.fitted))
-model.string <- c("Likelihood model - Poisson (log link function)", "\nLatent structure model - Localised autoregressive CAR model\n")
+model.string <- c("Likelihood model - Poisson (log link function)", "\nLatent structure model - Localised autoregressive order 1 CAR model\n")
 results <- list(summary.results=summary.results, samples=samples, fitted.values=fitted.values, residuals=residuals, modelfit=modelfit, accept=accept.final, localised.structure=mean.Z, formula=formula, model=model.string,  X=X)
 class(results) <- "CARBayesST"
 

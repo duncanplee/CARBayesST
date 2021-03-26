@@ -99,15 +99,15 @@ Areal unit data are a type of spatial data where the observations relate to a se
 \hspace{1cm} However, a common challenge when modelling these data is spatio-temporal autocorrelation, whereby observations from geographically close areal units and temporally close time periods tend to have more similar values than units and time periods that are further apart. Temporal autocorrelation occurs because the data relate to largely the same populations in consecutive time periods, while spatial autocorrelation can arise due to unmeasured confounding, neighbourhood effects and grouping effects. A Bayesian inferential approach is typically taken to modelling these data, where the spatio-temporal autocorrelation is modelled via sets of autocorrelated random effects. Conditional autoregressive (CAR, \citealp{besag1991}) priors and spatio-temporal extensions thereof  are typically assigned to these random effects to capture this autocorrelation.  A range of different models have been proposed to date, and the most appropriate model depends on the goals of the analysis.
 
 
-\hspace{1cm} An array of freely available software can now implement purely spatial areal unit models, including \proglang{BUGS} (\citealp{lunn2009}) and the \proglang{R} packages  \pkg{CARBayes} (\citealp{lee2013}) and \pkg{R-INLA} (\citealp{rue2009}).  However, specialist software for spatio-temporal modelling with conditional autoregressive priors  using MCMC simulation was not previously not available, which has  motivated the development of \pkg{CARBayesST} (\citealp{lee2018}). Section \ref{section2} summarises the models that can be implemented, while Section \ref{section3} provides an overview of the software and its functionality. Sections \ref{section4} and \ref{section5} present two worked examples illustrating how to use the software for epidemiological and housing market research, while Section \ref{section6} concludes with a summary of planned future developments.
+\hspace{1cm} An array of freely available software can now implement purely spatial areal unit models, including \proglang{BUGS} (\citealp{lunn2009}) and the \proglang{R} packages  \pkg{CARBayes} (\citealp{lee2013}) and \pkg{R-INLA} (\citealp{rue2009}).  However, specialist software for spatio-temporal modelling with conditional autoregressive priors  using MCMC simulation was not previously not available, which has  motivated the development of \pkg{CARBayesST} (\citealp{lee2018}). Section \ref{section2} summarises the models that can be implemented for univariate spatio-temporal data, while Section \ref{section3} summarises the models available for multivariate spatio-temporal data. Section \ref{section4} provides an overview of the software and its functionality. Sections \ref{section5} and \ref{section6} present two worked examples illustrating how to use the software for epidemiological and housing market research, while Section \ref{section7} concludes with a summary of planned future developments.
 
 
 
 %%%%%%%%%%%%%%
 %%%% Section 2
 %%%%%%%%%%%%%%
-\section{Spatio-temporal models for areal unit data}\label{section2}
-This section outlines the class of models that \pkg{CARBayesST} can implement, and in all cases inference is in a Bayesian setting using Markov chain Monte Carlo (MCMC) simulation. The first part of this section outlines the general hierarchical model that can be fitted, while the second describes the range of space-time random effects structures that are available.
+\section{Spatio-temporal models for univariate areal unit data}\label{section2}
+This section outlines the class of univariate models that \pkg{CARBayesST} can implement, and in all cases inference is in a Bayesian setting using Markov chain Monte Carlo (MCMC) simulation. The first part of this section outlines the general hierarchical model that can be fitted, while the second describes the range of space-time random effects structures that are available.
 
 
 \subsection{General Bayesian hierarchical model}
@@ -207,7 +207,11 @@ where $\bd{\phi}_{-k,t}=(\phi_{1,t},\ldots,\phi_{k-1,t}, \phi_{k+1,t},\ldots,\ph
 
 
 \code{ST.CARar()}\\
-The model is that proposed by \cite{rushworth2014}, and represents the spatio-temporal structure with a multivariate first order autoregressive process with a spatially autocorrelated precision matrix. This model is appropriate if one wishes to estimate the  evolution of the spatial fitted value surface over time. The model specification is given below.
+There are two versions of this model, which are based on either a first (AR(1)) or a second (AR(2)) order temporal autoregressive process. The first order model is that proposed by \cite{rushworth2014}, and represents the spatio-temporal structure with a multivariate first order autoregressive process with a spatially autocorrelated precision matrix. The second model extends this by using a multivariate second order autoregressive process with a spatially autocorrelated precision matrix. These models are appropriate if one wishes to estimate the  evolution of the spatial fitted value surface over time. The model specifications in both cases are given below.\vspace{0.5cm}
+
+
+\textbf{AR(1) model}
+
 
 \begin{eqnarray}
 \psi_{kt}&=&\phi_{kt},\label{carar}\\
@@ -217,17 +221,31 @@ The model is that proposed by \cite{rushworth2014}, and represents the spatio-te
 \rho_S,\rho_T&\sim&\mbox{Uniform}(0,1).\nonumber
 \end{eqnarray}
 
-In this model $\bd{\phi}_{t}=(\phi_{1t},\ldots,\phi_{Kt})$ is the vector of random effects for time period $t$, which  evolve over time via a multivariate first order autoregressive process with temporal autoregressive parameter $\rho_T$. Thus temporal autocorrelation is induced via the mean $\rho_T\bd{\phi}_{t-1}$, while spatial autocorrelation is induced by the variance $\tau^{2} \mathbf{Q}(\mathbf{W},\rho_S)^{-1}$. The corresponding precision matrix $\mathbf{Q}(\mathbf{W},\rho_S)$ was proposed by \cite{leroux2000} and corresponds to the CAR models used in the other models above. The algebraic form of this matrix is given by
+
+\textbf{AR(2) model}
+
+
+\begin{eqnarray}
+\psi_{kt}&=&\phi_{kt},\label{carar}\\
+\bd{\phi}_t|\bd{\phi}_{t-1}, \bd{\phi}_{t-2} & \sim & \mbox{N}\left(\rho_{T_1}\bd{\phi}_{t-1}+\rho_{T_2}\bd{\phi}_{t-2}, \tau^{2} \mathbf{Q}(\mathbf{W},\rho_S)^{-1}\right)\hspace{1cm} t=3,\ldots,N,\nonumber\\
+\bd{\phi}_1, \bd{\phi}_2 & \sim & \mbox{N}\left(\mathbf{0}, \tau^{2} \mathbf{Q}(\mathbf{W},\rho_S)^{-1}\right),\nonumber\\
+\tau^2&\sim&\mbox{Inverse-Gamma}(a,b),\nonumber\\
+\rho_S&\sim&\mbox{Uniform}(0,1),\nonumber\\
+f(\rho_{T_1}, \rho_{T_2}) &\propto&1.\nonumber
+\end{eqnarray}
+
+
+Here $\bd{\phi}_{t}=(\phi_{1t},\ldots,\phi_{Kt})$ is the vector of random effects for time period $t$, which  evolve over time via a multivariate first or second order autoregressive process with temporal autoregressive parameter $\rho_T$ (AR(1) model) or $(\rho_{T_1}, \rho_{T_2})$ (AR(2) model). The choice between these two options is made by the argument \code{AR=1}  or \code{AR=2} within the function. Thus temporal autocorrelation is induced via the mean  while spatial autocorrelation is induced by the variance $\tau^{2} \mathbf{Q}(\mathbf{W},\rho_S)^{-1}$. The corresponding precision matrix $\mathbf{Q}(\mathbf{W},\rho_S)$ was proposed by \cite{leroux2000} and corresponds to the CAR models used in the other models above. The algebraic form of this matrix is given by
 
 \begin{equation}
 \mathbf{Q}(\mathbf{W},\rho_S)=\rho_S[\mbox{diag}(\mathbf{W}\mathbf{1}) - \mathbf{W}] + (1-\rho_S)\mathbf{I},\label{Lerouxjoint}
 \end{equation}
 
-where $\mathbf{1}$ is the $K\times 1$ vector of ones while $\mathbf{I}$ is the $K\times K$ identity matrix. In common with all other models the random effects are zero-mean centred, while flat and conjugate priors are specified for $(\rho_S, \rho_T)$ and $\tau^2$ respectively, with $(a=1, b=0.01)$ being the default values for the latter. The  dependence parameters $(\rho_{S}, \rho_{T})$ can be fixed at values in the unit interval $[0,1]$ rather than being estimated in the model. Finally, missing (\code{NA}) values are allowed in the response data $\mathbf{Y}$ for this model.\vspace{1cm}
+where $\mathbf{1}$ is the $K\times 1$ vector of ones while $\mathbf{I}$ is the $K\times K$ identity matrix. In common with all other models the random effects are zero-mean centred, while flat and conjugate priors are specified for $(\rho_S, \rho_T, \rho_{T_1}, \rho_{T_2})$ and $\tau^2$ respectively, with $(a=1, b=0.01)$ being the default values for the latter. The  dependence parameters $(\rho_{S}, \rho_{T})$ can be fixed at values in the unit interval $[0,1]$ rather than being estimated in the model, while $(\rho_{T_1}, \rho_{T_2})$ can also be fixed if required. Finally, missing (\code{NA}) values are allowed in the response data $\mathbf{Y}$ for this model.\vspace{1cm}
 
 
 \code{ST.CARadaptive()}\\
-The model is that proposed by \cite{rushworth2016}, and is an extension of \code{ST.CARar()} proposed by \cite{rushworth2014} to allow for spatially adaptive smoothing. It is appropriate if one believes that the residual spatial autocorrelation in the response after accounting for the covariates is consistent over time but has a localised structure. That is, it is strong in some parts of the study region but weak in others. The model has the same autoregressive random effects structure as  \code{ST.CARar()}, namely:
+The model is that proposed by \cite{rushworth2016}, and is an extension of \code{ST.CARar()} proposed by \cite{rushworth2014} to allow for spatially adaptive smoothing. It is appropriate if one believes that the residual spatial autocorrelation in the response after accounting for the covariates is consistent over time but has a localised structure. That is, it is strong in some parts of the study region but weak in others. The model has the same autoregressive random effects structure as the first order  \code{ST.CARar()} model, namely:
 
 \begin{eqnarray}
 \psi_{kt}&=&\phi_{kt},\label{caradaptive1}\\
@@ -263,7 +281,7 @@ The model was proposed by \cite{lee2016}, and augments the smooth spatio-tempora
 \rho_T&\sim&\mbox{Uniform}(0,1),\nonumber
 \end{eqnarray}
 
-where the `$^{-}$' in $\mathbf{Q}(\mathbf{W})^{-}$ denotes a generalised inverse. The random effects $\bd{\phi}=(\bd{\phi}_{1},\ldots,\bd{\phi}_{T})$ are modelled by a simplification of the \code{ST.CARar()} model with $\rho_S=1$, which corresponds to the intrinsic CAR model proposed by \cite{besag1991}. Note, for this model the inverse $\mathbf{Q}(\mathbf{W})^{-1}$ does not exist as the precision matrix is singular. This simplification is made so that the random effects $\bd{\phi}$ capture the globally smooth spatio-temporal autocorrelation in the data, allowing the other component $\lambda_{Z_{kt}}$ to capture localised clustering and step-changes. This second component is a piecewise constant clustering or intercept process $\lambda_{Z_{kt}}$. Spatially and  temporally adjacent data points $(Y_{kt}, Y_{js})$ will be similar if they have the same intercept, that is if $\lambda_{Z_{kt}}=\lambda_{Z_{js}}$, but exhibit a step-change if they are have different intercepts, that is if $\lambda_{Z_{kt}}\neq\lambda_{Z_{js}}$. The piecewise constant intercept or clustering process  comprises at most $G$ distinct levels, making this component a piecewise constant intercept term. The $G$ levels are ordered via the prior specification:
+where the `$^{-}$' in $\mathbf{Q}(\mathbf{W})^{-}$ denotes a generalised inverse. The random effects $\bd{\phi}=(\bd{\phi}_{1},\ldots,\bd{\phi}_{T})$ are modelled by a simplification of the \code{ST.CARar()} model with a first order autoregressive process where $\rho_S=1$, which corresponds to the intrinsic CAR model proposed by \cite{besag1991}. Note, for this model the inverse $\mathbf{Q}(\mathbf{W})^{-1}$ does not exist as the precision matrix is singular. This simplification is made so that the random effects $\bd{\phi}$ capture the globally smooth spatio-temporal autocorrelation in the data, allowing the other component $\lambda_{Z_{kt}}$ to capture localised clustering and step-changes. This second component is a piecewise constant clustering or intercept process $\lambda_{Z_{kt}}$. Spatially and  temporally adjacent data points $(Y_{kt}, Y_{js})$ will be similar if they have the same intercept, that is if $\lambda_{Z_{kt}}=\lambda_{Z_{js}}$, but exhibit a step-change if they are have different intercepts, that is if $\lambda_{Z_{kt}}\neq\lambda_{Z_{js}}$. The piecewise constant intercept or clustering process  comprises at most $G$ distinct levels, making this component a piecewise constant intercept term. The $G$ levels are ordered via the prior specification:
 
 \begin{eqnarray}
 \lambda_{j}&\sim&\mbox{Uniform}(\lambda_{j-1},\lambda_{j+1})~~~~\mbox{for }j=1,\dots,G,\label{carcluster2}
@@ -324,9 +342,7 @@ where $\bd{\phi}_{-k}=(\phi_1,\ldots,\phi_{k-1}, \phi_{k+1},\ldots,\phi_K)$. Thi
 
 
 \subsection{Inference}
-All models in this package are fitted in a Bayesian setting using Markov chain Monte Carlo simulation. All parameters whose full conditional distributions have a closed form distribution are Gibbs sampled, which includes the regression parameters $(\bd{\beta})$ and the random effects (e.g., $\bd{\phi}$ etc) in the Gaussian data models, as well as the variance parameters (e.g., $\tau^2$ etc) in all models. The remaining parameters are updated using Metropolis or Metropolis-Hastings steps, and the random effects in the binomial and Poisson data models can be updated via the simple Gaussian random walk Metropolis algorithm or the Metropolis Adjusted Langevin Algorithm (MALA, \citealp{roberts1998}). The default is to use simple random walk updates, but the user can choose MALA by specifying \code{MALA=TRUE} in the function call. 
-
-\hspace{1cm} The regression parameters are updated in blocks of size 10 utilising MALA updates, although if only a single covariate is incorporated in the model or only an intercept term, then simple random walks are used as they were found to perform better. The remaining parameters utilise simple Gaussian random walk Metropolis updates. The simple random walk Metropolis updates are automatically tuned in the algorithms to have acceptances rates of between 40\% - 50\% for scalar parameter updates and between 20\% - 40\% for vector parameters. The MALA updates are also automatically tuned in the software to have acceptance rates between 40\% - 50\%. The overall functions that implement the MCMC algorithms are written in \proglang{R}, while the computationally intensive updating steps are written as computationally efficient  \proglang{C++} routines using the \proglang{R} package \pkg{Rcpp} (\citealp{eddelbuettel2011}). Additionally, the sparsity of the neighbourhood matrices $\mathbf{W}$ and $\mathbf{D}$ are utilised via their triplet forms when updating the random effects  within the algorithms, which increases the computational efficiency of the software.
+All models in this package are fitted in a Bayesian setting using Markov chain Monte Carlo simulation. All parameters whose full conditional distributions have a closed form distribution are Gibbs sampled, which includes the regression parameters $(\bd{\beta})$ and the random effects (e.g., $\bd{\phi}$ etc) in the Gaussian data models, as well as the variance parameters (e.g., $\tau^2$ etc) in all models. The remaining parameters are updated using Metropolis or Metropolis-Hastings steps, and the random effects in the binomial and Poisson data models are updated via the simple Gaussian random walk Metropolis algorithm. The regression parameters in the Poisson and binomial data models are updated in blocks of size 5 using either the simple Gaussian random walk Metropolis algorithm or the Metropolis Adjusted Langevin Algorithm (MALA, \citealp{roberts1998}). The default is to use simple random walk updates, but the user can choose MALA by specifying \code{MALA=TRUE} in the function call. The overall functions that implement the MCMC algorithms are written in \proglang{R}, while the computationally intensive updating steps are written as computationally efficient  \proglang{C++} routines using the \proglang{R} package \pkg{Rcpp} (\citealp{eddelbuettel2011}). Additionally, the sparsity of the neighbourhood matrices $\mathbf{W}$ and $\mathbf{D}$ are utilised via their triplet forms when updating the random effects  within the algorithms, which increases the computational efficiency of the software.
 
 \hspace{1cm} One of the challenges of fitting Bayesian models using any software is determining when the Markov chains have converged, and as a result how many samples to discard as the burn-in period and then how many more to generate on which to base inference. Convergence can be assessed using many metrics, the simplest of which is by eye, by viewing trace-plots of the parameters that should be stationary and show random fluctuations around a single mean level. In addition, \pkg{CARBayesST} presents the convergence  diagnostic proposed by \cite{geweke1992} for sample parameters when applying the \code{print()} function to a fitted model object, which uses the \code{geweke.diag()} function from the \pkg{coda} package. This statistic is in the form of a Z-score, and values between (-1.96, 1.96) are suggestive of convergence. A full discussion of how many samples to generate, burn-in lengths and whether or not to thin the Markov chains are beyond the scope of this vignette, and further details can be found in general texts on Bayesian modelling such as \cite{gelman2013}.
 
@@ -334,14 +350,21 @@ All models in this package are fitted in a Bayesian setting using Markov chain M
 %%%%%%%%%%%%%%
 %%%% Section 3
 %%%%%%%%%%%%%%
-\section{Loading and using the software}\label{section3}
+\section{Spatio-temporal models for multivariate areal unit data}\label{section3}
+
+
+
+%%%%%%%%%%%%%%
+%%%% Section 4
+%%%%%%%%%%%%%%
+\section{Loading and using the software}\label{section4}
 
 \subsection{Loading the software}
 \pkg{CARBayesST} can be downloaded from the Comprehensive R Archive Network (CRAN, \url{http://cran.r-project.org/}) for Windows, Linux and macOS platforms.  The package requires \proglang{R} ($\geq$ 3.0.0) and depends on packages \pkg{MASS} (\citealp{mass2002}) and \pkg{Rcpp} ($\geq$ 0.11.5). Additionally, it imports functionality from the \pkg{CARBayesdata} (\citealp{carbayesdata}),  \pkg{coda} (\citealp{coda2006}), \pkg{dplyr} (\citealp{dplyr2015}), \pkg{gtools} (\citealp{gtools}), \pkg{leaflet} (\citealp{leaflet}),  \pkg{matrixcalc} (\citealp{matrixcalc2012}), \pkg{sp} (\citealp{bivand2013}), \pkg{spam} (\citealp{spam2010}), \pkg{spdep}, \pkg{stats}, \pkg{testthat} (\citealp{testthat}), \pkg{truncdist} (\citealp{truncdist2012}), \pkg{truncnorm} (\citealp{truncnorm2014}) and \pkg{utils} packages. Once installed it can be loaded using the command \code{library("CARBayesST")}. The packages listed above are automatically loaded for use in \pkg{CARBayesST} by the above call, but a complete spatial analysis beginning with reading in and visualising the data, creating the neighbourhood matrix $\mathbf{W}$, and plotting the results requires a number of other packages.
 
 
 \subsection{Using the software}
-The software can fit  seven models, and the main arguments common to all the models are as follows.
+The software can fit  eight classes of model, and the main arguments common to all the models are as follows.
 
 \begin{itemize}
 \item \code{formula} - A formula for the covariate part of the model using the syntax of the \code{lm()} function. Offsets can be included here using the \code{offset()} function. The response and each covariate should be vectors of length $(KN)\times 1$, where $K$ is the number of spatial units and $N$ is the number of time periods. Each vector should be ordered so that the first $K$ data points are the set of all $K$ spatial locations at time $1$, the next $K$ are the set of spatial locations for time $2$ and so on. 
@@ -381,9 +404,9 @@ Additionally, the \pkg{CARBayes} functions \code{summarise.samples()} and \code{
 
 \item \code{samples} - A list containing the MCMC samples from the model, where each element in the list is a matrix. The names of these matrix objects correspond to the parameters defined in Section \ref{section2} of this vignette, and each column contains the set of samples for a single parameter.  For example, for \code{ST.CARlinear()} the (\code{tau2, rho}) elements of the list have columns ordered as $(\tau^2_{int}, \tau^2_{slo})$ and $(\rho^2_{int}, \rho^2_{slo})$ respectively. Similarly, for  \code{ST.CARanova()} the (\code{tau2, rho}) elements of the list have columns ordered as $(\tau^2_{S}, \tau^2_{T}, \tau^2_{I})$ (the latter only if \code{interaction=TRUE}) and $(\rho^2_{S}, \rho^2_{T})$ respectively. Finally, each model returns samples from the posterior distribution of the fitted values for each data point (\code{fitted}), and the missing values in the response variable (\code{Y}).
 
-\item \code{fitted.values} - A vector of fitted values based on posterior means for each area and time period in the same order as the data $\mathbf{Y}$.
+\item \code{fitted.values} - For the univariate models a vector of fitted values based on posterior means for each area and time period in the same order as the data $\mathbf{Y}$. For the multivariate models a matrix of fitted values where each column relates to a single outcome. 
 
-\item \code{residuals} - A matrix of 2 types of residuals in the same order as the response. The 2 columns of this matrix correspond to ``response" (raw), and ``pearson", residuals.
+\item \code{residuals} - For the univariate models a matrix of 2 types of residuals in the same order as the response. The 2 columns of this matrix correspond to ``response" (raw), and ``pearson", residuals. For the multivariate models a list of matrices corresponding to  ``response" (raw), and ``pearson", residuals. For each matrix each column relates to a single outcome. 
 
 \item \code{modelfit} - Model fit criteria including the Deviance Information Criterion (DIC, \citealp{spiegelhalter2002}) and its corresponding estimated effective number of parameters (p.d), the Watanabe-Akaike Information Criterion (WAIC, \citealp{watanabe2010}) and its corresponding estimated number of effective parameters (p.w), the Log Marginal Predictive Likelihood (LMPL, \citealp{congdon2005}) and the loglikelihood. The best fitting model is one that minimises the DIC and WAIC but maximises the LMPL. If the response data contains missing data, the DIC is computed based on only the observed data (see \cite{celeux2006}).
 
@@ -406,9 +429,9 @@ The package also contains functionality (\code{W.estimate()}) to estimate an app
 
 
 %%%%%%%%%%%%%%
-%%%% Section 4
+%%%% Section 5
 %%%%%%%%%%%%%%
-\section{Example 1 - Quantifying the effect of air pollution on health}\label{section4}
+\section{Example 1 - Quantifying the effect of air pollution on health}\label{section5}
 This example is an ecological regression problem, whose aim is to estimate the effect that air pollution concentrations have on respiratory disease risk. 
 
 
@@ -583,7 +606,7 @@ data:  resid.glm[1:271]
 weights: W.list  
 number of simulations + 1: 10001 
 
-statistic = 0.10358, observed rank = 9975, p-value = 0.0026
+statistic = 0.10358, observed rank = 9974, p-value = 0.0027
 alternative hypothesis: greater
 \end{Soutput}
 \end{Schunk}
@@ -592,20 +615,20 @@ The estimated Moran's I statistic is 0.10358 and the p-value is less than 0.05, 
 
 
 \subsection[Spatio-temporal modelling with CARBayesST]{Spatio-temporal modelling with \pkg{CARBayesST}}
-We allow for this residual autocorrelation by applying the \code{ST.CARar()} model to the data, details of which are given in Section \ref{section2}. The model can be fitted with the following one-line function call, and we note that all data vectors (response, offset and covariates) have to be ordered so that the first $K$ data points relate to all spatial units at time 1, the next $K$ data points to all spatial units at time 2 and so on. Here we fit the model 3 times which gives results from 3 independent Markov chains.
+We allow for this residual autocorrelation by applying the \code{ST.CARar()} model with a first order temporal autoregressive structure to the data, details of which are given in Section \ref{section2}. The model can be fitted with the following one-line function call, and we note that all data vectors (response, offset and covariates) have to be ordered so that the first $K$ data points relate to all spatial units at time 1, the next $K$ data points to all spatial units at time 2 and so on. Here we fit the model 3 times which gives results from 3 independent Markov chains.
 
 
 \begin{CodeInput}
 R>  library("CARBayesST")
 R>  chain1 <- ST.CARar(formula = formula, family = "poisson", 
 +       data = pollutionhealthdata, W = W, burnin = 20000, n.sample = 220000, 
-+       thin = 100)
++       thin = 100, AR=1)
 R>  chain2 <- ST.CARar(formula = formula, family = "poisson", 
 +       data = pollutionhealthdata, W = W, burnin = 20000, n.sample = 220000, 
-+       thin = 100)
++       thin = 100, AR=1)
 R>  chain3 <- ST.CARar(formula = formula, family = "poisson", 
 +       data = pollutionhealthdata, W = W, burnin = 20000, n.sample = 220000, 
-+       thin = 100)
++       thin = 100, AR=1)
 \end{CodeInput}
 
 
@@ -728,9 +751,9 @@ The output above shows that the posterior median and 95\% credible interval for 
 
 
 %%%%%%%%%%%%%%
-%%%% Section 5
+%%%% Section 6
 %%%%%%%%%%%%%%
-\section{Example 2 - Monitoring the changing state of the housing market}\label{section5}
+\section{Example 2 - Monitoring the changing state of the housing market}\label{section6}
 This second example focuses on the state of the housing market, specifically property sales, and aims to quantify its changing trend over time in an era that encompassed the global financial crisis that began in late 2007. 
 
 \subsection{Data and exploratory analysis}
@@ -919,10 +942,10 @@ The figure shows that both the region-wide average (panel (a)) and the level of 
 
 
 %%%%%%%%%%%%%%
-%%%% Section 6
+%%%% Section 7
 %%%%%%%%%%%%%%
-\section{Discussion}\label{section6}
-\pkg{CARBayesST} is the first software package dedicated to fitting spatio-temporal CAR type models to areal unit data, with inference in a Bayesian setting using MCMC simulation. Future development of the software will be in two main directions. First, as the literature on spatio-temporal modelling advances we aim to increase the number of spatio-temporal models that can be implemented, giving the user an even wider set of modelling tools. Second, with the rapid increase in the availability of small-area data, we aim to develop a suite of multivariate space-time models (MVST). The development of MVST methodology for areal unit data is in its infancy, and the ability to jointly examine the spatio-temporal patterns in multiple response variables simultaneously allows one to address questions that cannot be addressed by single variable models. For example, in a public health context it allows one to estimate overall and disease specific spatio-temporal  patterns in disease risk, allowing one to see which areas repeatedly signal at high risk for all diseases, and which exhibit elevated risks for only one disease. In the housing context of Example 2, an MVST approach would allow one to extend the analysis carried out by different property types, e.g., flats, terraced houses, etc, which would allow more insight to be gained about the exact nature of the housing market.  
+\section{Discussion}\label{section7}
+\pkg{CARBayesST} is the first software package dedicated to fitting spatio-temporal CAR type models to areal unit data, with inference in a Bayesian setting using MCMC simulation. Future development of the software will focus on extending the number of spatio-temporal models that can be implemented, giving the user an even wider set of modelling tools, for both univariate and multivariate spatio-temporal data. 
 
 
 

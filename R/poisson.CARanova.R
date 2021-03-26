@@ -316,13 +316,7 @@ n.islands <- max(W.islands$nc)
     ## Sample from phi
     ####################
     phi.offset <- offset.mat + regression.mat + delta.mat + gamma.mat
-        if(MALA)
-        {
-        temp1 <- poissoncarupdateMALA(W.triplet, W.begfin, W.triplet.sum, K, phi, tau2.phi, Y.DA.mat, proposal.sd.phi, rho, phi.offset, N, rep(1,N))
-        }else
-        {
-        temp1 <- poissoncarupdateRW(W.triplet, W.begfin, W.triplet.sum, K, phi, tau2.phi, Y.DA.mat, proposal.sd.phi, rho, phi.offset, N, rep(1,N))
-        }
+    temp1 <- poissoncarupdateRW(W.triplet, W.begfin, W.triplet.sum, K, phi, tau2.phi, Y.DA.mat, proposal.sd.phi, rho, phi.offset, N, rep(1,N))
     phi <- temp1[[1]]
         if(rho<1)
         {
@@ -341,13 +335,7 @@ n.islands <- max(W.islands$nc)
     ## Sample from delta
     ####################
     delta.offset <- t(offset.mat + regression.mat + phi.mat + gamma.mat)
-        if(MALA)
-        {
-        temp2 <- poissoncarupdateMALA(D.triplet, D.begfin, D.triplet.sum, N, delta, tau2.delta, t(Y.DA.mat), proposal.sd.delta, lambda, delta.offset, K, rep(1,K))
-        }else
-        {
-        temp2 <- poissoncarupdateRW(D.triplet, D.begfin, D.triplet.sum, N, delta, tau2.delta, t(Y.DA.mat), proposal.sd.delta, lambda, delta.offset, K, rep(1,K))
-        }
+    temp2 <- poissoncarupdateRW(D.triplet, D.begfin, D.triplet.sum, N, delta, tau2.delta, t(Y.DA.mat), proposal.sd.delta, lambda, delta.offset, K, rep(1,K))
     delta <- temp2[[1]]
     delta <- delta - mean(delta)
     delta.mat <- matrix(rep(delta, K), byrow=T, nrow=K)
@@ -363,13 +351,7 @@ n.islands <- max(W.islands$nc)
         ####################
         gamma.offset <- offset.mat + regression.mat + phi.mat +  delta.mat
         gamma.offset.vec <- as.numeric(gamma.offset)
-            if(MALA)
-            {
-            temp5 <- poissonindepupdateMALA(N.all, gamma, tau2.gamma, Y.DA, proposal.sd.gamma, gamma.offset.vec)
-            }else
-            {
-            temp5 <- poissonindepupdateRW(N.all, gamma, tau2.gamma, Y.DA, proposal.sd.gamma, gamma.offset.vec)
-            }
+        temp5 <- poissonindepupdateRW(N.all, gamma, tau2.gamma, Y.DA, proposal.sd.gamma, gamma.offset.vec)
         gamma <- temp5[[1]]
         gamma <- gamma - mean(gamma)
         gamma.mat <- matrix(gamma, byrow=F, nrow=K)

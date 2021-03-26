@@ -324,17 +324,9 @@ a <- common.verbose(verbose)
     # update PHI using one at a time M-H sampling
     nneighbours   <- diag.spam(Q.space)
     W_current     <- diag(nneighbours) - as.matrix(Q.space)
-        if(MALA)
-        {
-            phi_update    <- SPTICARphiVarbMALA(W = W_current, nsites = n.sites, ntimes = n.time, phiVarb = phi, 
-                                                nneighbours = nneighbours, tau = tau, y = y,  E = offset, 
-                                                phiVarb_tune = phi_tune, alpha = alpha, XB = XB)        
-        }else
-        {
-            phi_update    <- SPTICARphiVarb(W = W_current, nsites = n.sites, ntimes = n.time, phiVarb = phi, 
+    phi_update    <- SPTICARphiVarb(W = W_current, nsites = n.sites, ntimes = n.time, phiVarb = phi, 
                                             nneighbours = nneighbours, tau = tau, y = y,  E = offset, 
                                             phiVarb_tune = phi_tune, alpha = alpha, XB = XB)    
-        }
     phi       <- phi_update[[2]]
     phi       <- phi - mean(phi)
     accept[3] <- accept[3] + phi_update[[1]][2]
@@ -546,7 +538,7 @@ samples.beta.orig <- common.betatransform(samples.beta, X.indicator, X.mean, X.s
   
 #### Compile and return the results
 model.string    <- c("Likelihood model - Poisson (log link function)", 
-                       "\nLatent structure model - Adaptive autoregressive CAR model\n")
+                       "\nLatent structure model - Adaptive autoregressive order 1 CAR model\n")
   samples.tau2all <- cbind(samples.tau2, samples.vtau2)
   colnames(samples.tau2all) <- c("tau2", "tau2.w")
   if(is.null(rhofix))

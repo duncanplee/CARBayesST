@@ -244,13 +244,7 @@ sig2 <- var(delta)/10
     ####################
     phi.offset <- offset.mat + regression.mat + delta.mat
     den.offset <- rho * W.triplet.sum + 1 - rho
-    if(MALA==TRUE)
-    {
-      temp1 <- poissonsrecarupdateMALA(W.triplet, W.begfin, W.triplet.sum, K, N, phi.mat, rho, Y.mat, proposal.sd.phi, phi.offset, den.offset, tau2)
-    }else
-    {
-      temp1 <- poissonsrecarupdateRW(W.triplet, W.begfin, W.triplet.sum, K, N, phi.mat, rho, Y.mat, proposal.sd.phi, phi.offset, den.offset, tau2)
-    }
+    temp1 <- poissonsrecarupdateRW(W.triplet, W.begfin, W.triplet.sum, K, N, phi.mat, rho, Y.mat, proposal.sd.phi, phi.offset, den.offset, tau2)
     phi.temp <- temp1[[1]]
     phi.mean <- apply(phi.temp,2,mean)
     if(rho<1)
@@ -269,13 +263,7 @@ sig2 <- var(delta)/10
     ## Samples from delta
     #####################
     delta.offset <- t(offset.mat + regression.mat + phi.mat)
-    if(MALA==TRUE)
-    {
-      temp2 <- poissoncarupdateMALA(D.triplet, D.begfin, D.triplet.sum, N, delta, sig2, t(Y.mat), proposal.sd.delta, lambda, delta.offset, K, rep(1,K))
-    }else
-    {
-      temp2 <- poissoncarupdateRW(D.triplet, D.begfin, D.triplet.sum, N, delta, sig2, t(Y.mat), proposal.sd.delta, lambda, delta.offset, K, rep(1,K))
-    }
+    temp2 <- poissoncarupdateRW(D.triplet, D.begfin, D.triplet.sum, N, delta, sig2, t(Y.mat), proposal.sd.delta, lambda, delta.offset, K, rep(1,K))
     delta <- temp2[[1]]
     delta <- delta - mean(delta)
     delta.mat <- matrix(delta, nrow = K, ncol = N, byrow = TRUE)

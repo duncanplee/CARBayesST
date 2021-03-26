@@ -265,13 +265,7 @@ n.islands <- max(W.islands$nc)
     ## Sample from phi
     ####################
     phi.offset <- offset.mat + regression.mat + delta.time.mat + alpha * time.mat
-        if(MALA)
-        {
-        temp1 <- poissoncarupdateMALA(W.triplet, W.begfin, W.triplet.sum, K, phi, tau2.phi, Y.DA.mat, proposal.sd.phi, rho, phi.offset, N, rep(1,N))
-        }else
-        {
-        temp1 <- poissoncarupdateRW(W.triplet, W.begfin, W.triplet.sum, K, phi, tau2.phi, Y.DA.mat, proposal.sd.phi, rho, phi.offset, N, rep(1,N))
-        }
+    temp1 <- poissoncarupdateRW(W.triplet, W.begfin, W.triplet.sum, K, phi, tau2.phi, Y.DA.mat, proposal.sd.phi, rho, phi.offset, N, rep(1,N))
     phi <- temp1[[1]]
         if(rho<1)
         {
@@ -290,13 +284,7 @@ n.islands <- max(W.islands$nc)
     ## Sample from delta
     ####################
     delta.offset <- offset.mat + regression.mat + phi.mat +  alpha * time.mat
-        if(MALA)
-        {
-        temp2 <- poissoncarupdateMALA(W.triplet, W.begfin, W.triplet.sum, K, delta, tau2.delta,Y.DA.mat, proposal.sd.delta, lambda, delta.offset, N, time)
-        }else
-        {
-        temp2 <- poissoncarupdateRW(W.triplet, W.begfin, W.triplet.sum, K, delta, tau2.delta,Y.DA.mat, proposal.sd.delta, lambda, delta.offset, N, time)
-        }
+    temp2 <- poissoncarupdateRW(W.triplet, W.begfin, W.triplet.sum, K, delta, tau2.delta,Y.DA.mat, proposal.sd.delta, lambda, delta.offset, N, time)
     delta <- temp2[[1]]
         if(lambda <1)
         {

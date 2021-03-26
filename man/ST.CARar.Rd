@@ -10,13 +10,14 @@ autoregressive process.
 \description{
 Fit a spatio-temporal generalised linear mixed model to areal unit data, where the 
 response variable can be binomial, Gaussian or Poisson. The linear predictor is 
-modelled by known covariates and a vector of random effects. The latter follows a 
-multivariate first order autoregressive time series process, where spatial 
-autocorrelation is modelled via the precision matrix. This precision matrix comes 
-from the conditional autoregressive (CAR) prior proposed by Leroux et al. (2000), 
-and the full model was proposed by Rushworth et al. (2014).  Missing values are 
+modelled by known covariates and a vector of random effects. The latter follows either 
+a multivariate first order autoregressive time series process or a multivariate
+second order autoregressive time series process. In both cases the spatial 
+autocorrelation is modelled via the precision matrix corresponding to the conditional 
+autoregressive (CAR) prior proposed by Leroux et al. (2000), and the initial 
+AR(1) model was proposed by Rushworth et al. (2014).  Missing values are 
 allowed in the response in this model, and are sampled from in the model using 
-data augmentation.. Further details are given in the vignette accompanying this 
+data augmentation. Further details are given in the vignette accompanying this 
 package. Inference is conducted in a Bayesian setting using Markov chain Monte 
 Carlo (MCMC) simulation. 
 }
@@ -26,7 +27,7 @@ Carlo (MCMC) simulation.
 \usage{
 ST.CARar(formula, family, data=NULL,  trials=NULL, W, burnin, n.sample, thin=1, 
 prior.mean.beta=NULL, prior.var.beta=NULL, prior.nu2=NULL, prior.tau2=NULL,
-rho.S=NULL, rho.T=NULL, MALA=FALSE, verbose=TRUE)
+AR=NULL, rho.S=NULL, rho.T=NULL, MALA=FALSE, verbose=TRUE)
 }
 
 
@@ -86,20 +87,24 @@ prior for nu2. Defaults to c(1, 0.01) and only used if family="Gaussian".
 The prior shape and scale in the form of c(shape, scale) for an Inverse-Gamma(shape, scale) 
 prior for tau2. Defaults to c(1, 0.01).  
 }
+\item{AR}{
+The order of the autoregressive time series process, and must be either 1 or 2. 
+}
 \item{rho.S}{
 The value in the interval [0, 1] that the spatial dependence parameter rho.S is 
 fixed at if it should not be estimated. If this arugment is NULL then rho.S is
 estimated in the model. 
 }
 \item{rho.T}{
-The value in the interval [0, 1] that the temporal dependence parameter rho.T is 
-fixed at if it should not be estimated. If this arugment is NULL then rho.T is
-estimated in the model. 
+Whether to fix or estimate the temporal dependence parameters rho.T in the model. 
+If this arugment is NULL then they are estimated in the model. If you want to fix
+them and AR=1 then it must be a value in the interval [0, 1]. If  AR=2 then it must be
+a vector of length two with the first and second order autoregressive coefficients.
 }
 \item{MALA}{
 Logical, should the function use Metropolis adjusted Langevin algorithm (MALA)
-updates (TRUE) or simple random walk (FALSE, default) updates for the random 
-effects and the regression parameters. Not applicable if family="gaussian".    
+updates (TRUE) or simple random walk (FALSE, default) updates for the regression 
+parameters. Not applicable if family="gaussian".    
 }
 \item{verbose}{
 Logical, should the function update the user on its progress.  
@@ -182,10 +187,10 @@ Y <- rpois(n=N.all, lambda=mean)
 
 #### Run the model
 \dontrun{model <- ST.CARar(formula=Y~x, family="poisson",  W=W, burnin=10000,
-    n.sample=50000)}
+    n.sample=50000, AR=1)}
     
     
 #### Toy example for checking  
 model <- ST.CARar(formula=Y~x, family="poisson",  W=W, burnin=10,
-    n.sample=50)
+    n.sample=50, AR=1)
 }

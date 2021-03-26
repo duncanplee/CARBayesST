@@ -8,16 +8,17 @@ Spatio-Temporal Generalised Linear Mixed Models For Areal Unit Data
 }
 
 \description{
-Implements a class of spatio-temporal generalised linear mixed models for areal 
-unit data, with inference in a Bayesian setting using Markov chain Monte Carlo 
-(MCMC) simulation. The response variable can be binomial, Gaussian or Poisson,
-but for some models only the binomial and Poisson data likelihoods are available. 
-The spatio-temporal autocorrelation is modelled by random effects,  which are 
-assigned conditional autoregressive (CAR) style prior distributions. A number of 
-different random effects structures are available, and full details are given in 
-the vignette accompanying this package and the references below. The creation of 
-this package was supported by the Engineering and Physical Sciences Research Council 
-(EPSRC) grant EP/J017442/1 and the Medical Research Council (MRC) grant MR/L022184/1.
+Implements a class of sunivariate and multivariate patio-temporal generalised 
+linear mixed models for areal unit data, with inference in a Bayesian setting 
+using Markov chain Monte Carlo (MCMC) simulation. The response variable can be 
+binomial, Gaussian or Poisson, but for some models only the binomial and Poisson 
+data likelihoods are available. The spatio-temporal autocorrelation is modelled 
+by random effects,  which are assigned conditional autoregressive (CAR) style 
+prior distributions. A number of different random effects structures are available, 
+and full details are given in the vignette accompanying this package and the 
+references below. The creation of this package was supported by the Engineering and 
+Physical Sciences Research Council  (EPSRC) grant EP/J017442/1 and the Medical Research 
+Council (MRC) grant MR/L022184/1.
 }
 
 \details{
@@ -25,7 +26,7 @@ this package was supported by the Engineering and Physical Sciences Research Cou
 Package: \tab CARBayesST\cr
 Type: \tab Package\cr
 Version: \tab 3.2\cr
-Date: \tab 2021-03-24\cr
+Date: \tab 2021-03-30\cr
 License: \tab GPL (>= 2)\cr
 }
 }

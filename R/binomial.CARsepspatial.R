@@ -252,13 +252,7 @@ binomial.CARsepspatial <- function(formula, data=NULL, trials, W, burnin, n.samp
     ####################
     phi.offset <- offset.mat + regression.mat + delta.mat
     den.offset <- rho * W.triplet.sum + 1 - rho
-    if(MALA==TRUE)
-    {
-      temp1 <- binomialsrecarupdateMALA(W.triplet, W.begfin, W.triplet.sum, K, N, phi.mat, rho, Y.mat, failures.mat, trials.mat, proposal.sd.phi, phi.offset, den.offset, tau2)
-    }else
-    {
-      temp1 <- binomialsrecarupdateRW(W.triplet, W.begfin, W.triplet.sum, K, N, phi.mat, rho, Y.mat, failures.mat, proposal.sd.phi, phi.offset, den.offset, tau2)
-    }
+    temp1 <- binomialsrecarupdateRW(W.triplet, W.begfin, W.triplet.sum, K, N, phi.mat, rho, Y.mat, failures.mat, proposal.sd.phi, phi.offset, den.offset, tau2)
     phi.temp <- temp1[[1]]
     phi.mean <- apply(phi.temp,2,mean)
     if(rho<1)
@@ -278,13 +272,7 @@ binomial.CARsepspatial <- function(formula, data=NULL, trials, W, burnin, n.samp
     ## Samples from delta
     #####################
     delta.offset <- t(offset.mat + phi.mat + regression.mat)
-    if(MALA==TRUE)
-    {
-      temp2 <- binomialcarupdateMALA(D.triplet, D.begfin, D.triplet.sum, N, delta, sig2, t(Y.mat), t(failures.mat), t(trials.mat), proposal.sd.delta, lambda, delta.offset, K, rep(1,K))
-    }else
-    {
-      temp2 <- binomialcarupdateRW(D.triplet, D.begfin, D.triplet.sum, N, delta, sig2, t(Y.mat), t(failures.mat), proposal.sd.delta, lambda, delta.offset, K, rep(1,K))
-    }
+    temp2 <- binomialcarupdateRW(D.triplet, D.begfin, D.triplet.sum, N, delta, sig2, t(Y.mat), t(failures.mat), proposal.sd.delta, lambda, delta.offset, K, rep(1,K))
     delta <- temp2[[1]]
     delta <- delta - mean(delta)
     delta.mat <- matrix(rep(delta, K), byrow=T, nrow=K)

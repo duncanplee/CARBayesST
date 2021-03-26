@@ -104,8 +104,8 @@ estimated. If this arugment is NULL then rho.int is estimated in the model.
 }
 \item{MALA}{
 Logical, should the function use Metropolis adjusted Langevin algorithm (MALA)
-updates (TRUE) or simple random walk (FALSE, default) updates for the random 
-effects and the regression parameters. Not applicable if family="gaussian".   
+updates (TRUE) or simple random walk (FALSE, default) updates for the regression 
+parameters. Not applicable if family="gaussian".    
 }
 \item{verbose}{
 Logical, should the function update the user on its progress.  

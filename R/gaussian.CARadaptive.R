@@ -508,7 +508,7 @@ samples.beta.orig <- common.betatransform(samples.beta, X.indicator, X.mean, X.s
   
 #### Compile and return the results
 model.string    <- c("Likelihood model - Gaussian (identity link function)", 
-                       "\nLatent structure model - Adaptive autoregressive CAR model\n")
+                       "\nLatent structure model - Adaptive autoregressive order 1 CAR model\n")
   samples.tau2all <- cbind(samples.tau2, samples.vtau2)
   colnames(samples.tau2all) <- c("tau2", "tau2.w")
   if(is.null(rhofix))
