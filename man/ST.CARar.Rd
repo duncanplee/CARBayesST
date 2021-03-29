@@ -98,7 +98,7 @@ estimated in the model.
 \item{rho.T}{
 Whether to fix or estimate the temporal dependence parameter(s) rho.T in the model. 
 If this arugment is NULL then they are estimated in the model. If you want to fix
-them and AR=1 then it must be a value in the interval [0, 1]. If  AR=2 then it must be
+them and AR=1 then it must be a single value. If  AR=2 then it must be
 a vector of length two with the first and second order autoregressive coefficients.
 }
 \item{MALA}{

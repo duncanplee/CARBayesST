@@ -22,10 +22,12 @@ MVST.CARar <- function(formula, family, data=NULL,  trials=NULL, W, burnin, n.sa
     model <- binomial.MVCARar2(formula=formula, data=data,  trials=trials, W=W, burnin=burnin, n.sample=n.sample, thin=thin, prior.mean.beta=prior.mean.beta, prior.var.beta=prior.var.beta, prior.Sigma.df=prior.Sigma.df, prior.Sigma.scale=prior.Sigma.scale, rho.S=rho.S, rho.T=rho.T, MALA=MALA, verbose=verbose)
     }else if(family=="gaussian" & AR==1)
     {
-    model <- gaussian.MVCARar1(formula=formula, data=data,  W=W, burnin=burnin, n.sample=n.sample, thin=thin, prior.mean.beta=prior.mean.beta, prior.var.beta=prior.var.beta, prior.nu2=prior.nu2, prior.Sigma.df=prior.Sigma.df, prior.Sigma.scale=prior.Sigma.scale,  rho.S=rho.S, rho.T=rho.T, verbose=verbose)          
+    #model <- gaussian.MVCARar1(formula=formula, data=data,  W=W, burnin=burnin, n.sample=n.sample, thin=thin, prior.mean.beta=prior.mean.beta, prior.var.beta=prior.var.beta, prior.nu2=prior.nu2, prior.Sigma.df=prior.Sigma.df, prior.Sigma.scale=prior.Sigma.scale,  rho.S=rho.S, rho.T=rho.T, verbose=verbose)          
+    model <- NULL
     }else if(family=="gaussian" & AR==2)
     {
-    model <- gaussian.MVCARar2(formula=formula, data=data,  W=W, burnin=burnin, n.sample=n.sample, thin=thin, prior.mean.beta=prior.mean.beta, prior.var.beta=prior.var.beta, prior.nu2=prior.nu2, prior.Sigma.df=prior.Sigma.df, prior.Sigma.scale=prior.Sigma.scale,  rho.S=rho.S, rho.T=rho.T, verbose=verbose)          
+    #model <- gaussian.MVCARar2(formula=formula, data=data,  W=W, burnin=burnin, n.sample=n.sample, thin=thin, prior.mean.beta=prior.mean.beta, prior.var.beta=prior.var.beta, prior.nu2=prior.nu2, prior.Sigma.df=prior.Sigma.df, prior.Sigma.scale=prior.Sigma.scale,  rho.S=rho.S, rho.T=rho.T, verbose=verbose)          
+    model <- NULL
     }else if(family=="poisson" & AR==1)
     {
     model <- poisson.MVCARar1(formula=formula, data=data,  W=W, burnin=burnin, n.sample=n.sample, thin=thin, prior.mean.beta=prior.mean.beta, prior.var.beta=prior.var.beta, prior.Sigma.df=prior.Sigma.df, prior.Sigma.scale=prior.Sigma.scale,  rho.S=rho.S, rho.T=rho.T, MALA=MALA, verbose=verbose)          

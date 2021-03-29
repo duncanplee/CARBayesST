@@ -18,7 +18,7 @@ process or a multivariate second order autoregressive time series process.
 In both cases the spatial and between outcome correlation is modelled via the 
 precision matrix, and the spatial correlation is represented by the 
 conditional autoregressive (CAR) prior proposed by Leroux et al. (2000). In 
-contrast, the between outcome correlation structure is estimated from the data
+contrast, the between outcome correlation structure is estimated from the data,
 and no prior form is assumed. Missing values are allowed in the response in this 
 model, and are sampled from in the model using data augmentation. Further details are 
 given in the vignette accompanying this package. Inference is conducted in a 
@@ -27,7 +27,7 @@ Bayesian setting using Markov chain Monte Carlo (MCMC) simulation.
 
 
 \usage{
-ST.CARar(formula, family, data=NULL,  trials=NULL, W, burnin, n.sample, thin=1, 
+MVST.CARar(formula, family, data=NULL,  trials=NULL, W, burnin, n.sample, thin=1, 
 prior.mean.beta=NULL, prior.var.beta=NULL, prior.nu2=NULL, prior.Sigma.df=NULL, 
 prior.Sigma.scale=NULL, AR=NULL, rho.S=NULL, rho.T=NULL, MALA=FALSE, verbose=TRUE)
 }
@@ -44,7 +44,7 @@ a different outcome variable. The values in each column of these matrices should
 ordered so that the first K data points are the set of all K spatial locations at 
 time 1, the next K are the set of spatial locations for time 2 and so on. The 
 covariates should each be a (KN)*1 vector, and different regression parameters are 
-estimated for each of the J variables.The response can contain missing (NA) values. 
+estimated for each of the J variables. The response can contain missing (NA) values. 
 }
 \item{family}{
 One of either "binomial", "gaussian" or "poisson", which respectively specify a 
@@ -106,7 +106,7 @@ estimated in the model.
 \item{rho.T}{
 Whether to fix or estimate the temporal dependence parameter(s) rho.T in the model. 
 If this arugment is NULL then they are estimated in the model. If you want to fix
-them and AR=1 then it must be a value in the interval [0, 1]. If  AR=2 then it must be
+them and AR=1 then it must be a single value. If  AR=2 then it must be
 a vector of length two with the first and second order autoregressive coefficients.
 }
 \item{MALA}{
@@ -124,7 +124,7 @@ Logical, should the function update the user on its progress.
 \item{summary.results }{A summary table of the parameters.}
 \item{samples }{A list containing the MCMC samples from the model.}
 \item{fitted.values }{A matrix of fitted values for each area, time period and response 
-variable.}
+variable in the same order as the response variable.}
 \item{residuals }{A list with 2 elements, where each element is a matrix of a type  
 of residual. Each row of a matrix relates to an area and time period and each column to a 
 response (category). The types of residual are "response" (raw), and "pearson".
@@ -215,7 +215,7 @@ trials.mat <- matrix(trials, nrow=(K*N), ncol=J, byrow=TRUE)
 formula <- Y.mat~x1
 
 #### Run the model
-formula <- Y ~ x1 + x2
+formula <- Y.mat ~ x1
 \dontrun{mod <- MVST.CARar(formula=formula, family="binomial", trials=trials.mat, W=W, 
 burnin=10000, n.sample=50000, prior.Sigma.scale=matrix(c(0.01, 0, 0, 0.01), nrow=2), 
 AR=1, MALA=FALSE)}

@@ -8,7 +8,7 @@ Spatio-Temporal Generalised Linear Mixed Models For Areal Unit Data
 }
 
 \description{
-Implements a class of sunivariate and multivariate patio-temporal generalised 
+Implements a class of univariate and multivariate spatio-temporal generalised 
 linear mixed models for areal unit data, with inference in a Bayesian setting 
 using Markov chain Monte Carlo (MCMC) simulation. The response variable can be 
 binomial, Gaussian or Poisson, but for some models only the binomial and Poisson 
@@ -16,9 +16,9 @@ data likelihoods are available. The spatio-temporal autocorrelation is modelled
 by random effects,  which are assigned conditional autoregressive (CAR) style 
 prior distributions. A number of different random effects structures are available, 
 and full details are given in the vignette accompanying this package and the 
-references below. The creation of this package was supported by the Engineering and 
-Physical Sciences Research Council  (EPSRC) grant EP/J017442/1 and the Medical Research 
-Council (MRC) grant MR/L022184/1.
+references below. The creation and development of this package was supported by the 
+Engineering and Physical Sciences Research Council  (EPSRC) grants EP/J017442/1 and
+EP/T004878/1 and the Medical Research Council (MRC) grant MR/L022184/1.
 }
 
 \details{

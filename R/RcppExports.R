@@ -85,6 +85,42 @@ gaussianar2carupdate <- function(Wtriplet, Wbegfin, Wtripletsum, nsites, ntime, 
     .Call(`_CARBayesST_gaussianar2carupdate`, Wtriplet, Wbegfin, Wtripletsum, nsites, ntime, phi, tau2, nu2, alpha1, alpha2, rho, offset, denoffset)
 }
 
+binomialmvar1carupdateRW <- function(Wtriplet, Wbegfin, Wtripletsum, nsite, ntime, nvar, phi, alpha, rho, Sigmainv, ymat, failuresmat, innovations, offset, denoffset) {
+    .Call(`_CARBayesST_binomialmvar1carupdateRW`, Wtriplet, Wbegfin, Wtripletsum, nsite, ntime, nvar, phi, alpha, rho, Sigmainv, ymat, failuresmat, innovations, offset, denoffset)
+}
+
+binomialmvar2carupdateRW <- function(Wtriplet, Wbegfin, Wtripletsum, nsite, ntime, nvar, phi, alpha1, alpha2, rho, Sigmainv, ymat, failuresmat, innovations, offset, denoffset) {
+    .Call(`_CARBayesST_binomialmvar2carupdateRW`, Wtriplet, Wbegfin, Wtripletsum, nsite, ntime, nvar, phi, alpha1, alpha2, rho, Sigmainv, ymat, failuresmat, innovations, offset, denoffset)
+}
+
+poissonmvar1carupdateRW <- function(Wtriplet, Wbegfin, Wtripletsum, nsite, ntime, nvar, phi, alpha, rho, Sigmainv, ymat, innovations, offset, denoffset) {
+    .Call(`_CARBayesST_poissonmvar1carupdateRW`, Wtriplet, Wbegfin, Wtripletsum, nsite, ntime, nvar, phi, alpha, rho, Sigmainv, ymat, innovations, offset, denoffset)
+}
+
+poissonmvar2carupdateRW <- function(Wtriplet, Wbegfin, Wtripletsum, nsite, ntime, nvar, phi, alpha1, alpha2, rho, Sigmainv, ymat, innovations, offset, denoffset) {
+    .Call(`_CARBayesST_poissonmvar2carupdateRW`, Wtriplet, Wbegfin, Wtripletsum, nsite, ntime, nvar, phi, alpha1, alpha2, rho, Sigmainv, ymat, innovations, offset, denoffset)
+}
+
+MVSTquadformcompute <- function(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phit, phij, rho, Sigmainv) {
+    .Call(`_CARBayesST_MVSTquadformcompute`, Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phit, phij, rho, Sigmainv)
+}
+
+MVSTrhoTAR1compute <- function(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, ntime, nvar, phi, rho, Sigmainv) {
+    .Call(`_CARBayesST_MVSTrhoTAR1compute`, Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, ntime, nvar, phi, rho, Sigmainv)
+}
+
+MVSTrhoTAR2compute <- function(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, ntime, nvar, phi, rho, Sigmainv) {
+    .Call(`_CARBayesST_MVSTrhoTAR2compute`, Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, ntime, nvar, phi, rho, Sigmainv)
+}
+
+MVSTrhoSAR1compute <- function(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, ntime, nvar, phi, rho, alpha, Sigmainv) {
+    .Call(`_CARBayesST_MVSTrhoSAR1compute`, Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, ntime, nvar, phi, rho, alpha, Sigmainv)
+}
+
+MVSTrhoSAR2compute <- function(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, ntime, nvar, phi, rho, alpha1, alpha2, Sigmainv) {
+    .Call(`_CARBayesST_MVSTrhoSAR2compute`, Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, ntime, nvar, phi, rho, alpha1, alpha2, Sigmainv)
+}
+
 qform <- function(Qtrip, phi) {
     .Call(`_CARBayesST_qform`, Qtrip, phi)
 }

@@ -18,13 +18,13 @@ W.estimate(W, spdata, add=FALSE, remove=TRUE, remove_first=FALSE)
 
 
 \arguments{
-   \item{W}{A binary K by K neighbourhood matrix, where K is the number of 
+   \item{W}{A binary K * K neighbourhood matrix, where K is the number of 
    spatial units. A typical specification would have the jkth element 
    equalling one if areas (j, k) are spatially close (e.g. share a common 
    border) and  zero otherwise. Each row must contain at least one non-zero entry.
 }
   \item{spdata}{
-A K by 1 vector of spatial data that you wish to optimise the neighbourhood matrix
+A K * 1 vector of spatial data that you wish to optimise the neighbourhood matrix
 for. The kth element of this vector must correspond to the area represented
 by the kth row of the W matrix.
 }
@@ -38,7 +38,7 @@ Allow the optimiser to remove edges from the graph if they have previously been 
 }
 
   \item{remove_first}{
-If only one of add or remove are TRUE, then this option has no effect. If both add and remove are TRUE, then this option determines whether the optimiser tries to add or remove edges (before alternating between the two phases). Defaults to FALSE, meaning that the optimiser tries to add edges first.
+If only one of add or remove are TRUE, then this option has no effect. If both add and remove are TRUE, then this option determines whether the optimiser first tries to add or remove edges (before alternating between the two phases). Defaults to FALSE, meaning that the optimiser tries to add edges first.
 } 
 }
 
