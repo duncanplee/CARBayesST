@@ -2,92 +2,6 @@
 using namespace Rcpp;
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// This file contains the following functions for CARBayesST package and are grouped into categories
-////////////////////////////////////////////////////////////////////////////////////////////////////
-// General functions for most models
-// linpredcompute - computing the linear predictor for covariates.
-// quadform - computing quadratic forms phi %*% Q %*% theta.
-// poissoncarupdateMALA - for updating spatial CAR effects based on a poisson likelihood using MALA.
-// poissoncarupdateRW - for updating spatial CAR effects based on a poisson likelihood using RW metropolis.
-// poissonindepupdateMALA - for updating independent effects based on a poisson likelihood using MALA.
-// poissonindepupdateRW - for updating independent effects based on a poisson likelihood using RW metropolis.
-// poissonbetaupdate - for updating covariate effects based on a poisson likelihood.
-// zipcarupdateMALA - for updating spatial CAR effects based on a zip likelihood using MALA.
-// zipcarupdateRW - for updating spatial CAR effects based on a zip likelihood using RW metropolis.
-// zipindepupdateMALA - for updating independent effects based on a zip likelihood using MALA.
-// zipindepupdateRW - for updating independent effects based on a zip likelihood using RW metropolis.
-// binomialbetaupdate - for updating covariate effects based on a binomial likelihood.
-// binomialindepupdateMALA - for updating independent effects based on a binomial likelihood using MALA.
-// binomialindepupdateRW - for updating independent effects based on a binomial likelihood using RW metropolis.
-// binomialcarupdateMALA - for updating spatial CAR effects based on a binomial likelihood using MALA.
-// binomialcarupdateRW - for updating spatial CAR effects based on a binomial likelihood using RW metropolis.
-// gaussiancarupdate - for updating spatial CAR effects based on a gaussian likelihood.
-// poissonarcarupdateMALA - for updating spatio-temporal ARCAR effects based on a poisson likelihood using MALA.
-// poissonarcarupdateRW - for updating spatio-temporal ARCAR effects based on a poisson likelihood using RW metropolis.
-// gammaquadformcompute - for computing the sum of quadratic forms for updating gamma in the ST.CARar model.
-// tauquadformcompute - for computing the sum of quadratic forms for updating tau2 in the ST.CARar model.
-// biomialarcarupdateMALA - for updating spatio-temporal ARCAR effects based on a binomial likelihood using MALA.
-// biomialarcarupdateRW - for updating spatio-temporal ARCAR effects based on a binomial likelihood using RW metropolis.
-// gaussianarcarupdate - for updating spatio-temporal ARCAR effects based on a gaussian likelihood.
-
-// adaptive model functions
-// qform - computing a quadratic form from a triplet phi %*% Q %*% phi.
-// qform_asym - computing a quadratic form from a triplet of the form phi %*% Q %*% theta.
-// qformSPACETIME - computing a quadratic form in space nad time.
-// SPTICARphiVarb - update space time ARCAR random effects from a varying non-binary W and a Poisson likelihood.
-// updatetripList - update the triplet form of W based on a new estimate of W.
-// SPTICARphiBinomial - update space time ARCAR random effects from a varying non-binary W and a binomial likelihood.
-// SPTICARphiGaussian - update space time ARCAR random effects from a varying non-binary W and a gaussian likelihood.
-// qform_difference_ST - this function works out the difference between two quadratic forms (x'Qx - y'Qy) where Q is a kronecker product of Q.space and Q.time
-// qform_ST            - this function works out the quadratic forms phi'Qphi where Q is a kronecker product of Q.space and Q.time
-// qform_ST_asym       - this function works out the quadratic forms phi1'Qphi2 where Q is a kronecker product of Q.space and Q.time
-// update_Qtime        - this function updates the temporal precision matrix given an update of alpha, the temporal dependence par
-// updatetriplets_rho  - updates the triplet form of Q.space given an update of the leroux parameter, rho
-// updatetripList2     - updates the triplet form of Q.space given an update of the adjacency parameters, v
-
-// Localised model functions
-// Zupdatesqbin - updates the Z allocation parameters in the binomial cluster model.
-// Zupdatesqpoi - updates the Z allocation parameters in the poisson cluster model.
-// Zupdatesqgau - updates the Z allocation parameters in the gaussian cluster model.
-
-
-// Sepspatial model functions
-// poissonsrecarupdateMALA - for updating spatial random effects based on a poisson likelihood in the sepspatial model using MALA.
-// poissonsrecarupdateRW - for updating spatial random effects based on a poisson likelihood in the sepspatial model using RW metropolis.
-// biomialsrecarupdate - for updating spatial random effects based on a binomial likelihood in the sepspatial model.
-// tauquadformcompute2 - for computing quadratic forms in the sepspatial model.
-// rhoquadformcompute - for computing the sum of quadratic forms for updating rho in the sepspatial model.
-// tau2compute - computes the full conditional of tau2 at each time period in the sepspatial model.
-
-// clustrends model functions
-// tempupdate - updates the geometrically spaced temperatures
-// matcomp - computes proposal values for the beta's
-// offsetcompute - computes the part of the offset containing the trends information
-// matN - takes a vector and creates a matrix across number of time points/number of chains
-// linpredcomputeNchains - computing the linear predictor for covariates for multiple chains
-// gammaproposal - for proposing new candidate values for the gamma's
-// lambdaupdate - updates the lambda parameters
-// tau2quadform - for computing the sum of quadratic forms for updating tau2
-// tau2computeNchains - computes the full conditional of tau2 and updates tau2 for multiple chains
-// rhoquadformcomputeNchains - for computing the sum of quadratic forms for updating rho for multiple chains
-// Qdet - computes determinant of precision matrix Q
-// poissondevfit - computes deviance for poisson
-// poissonbetablockupdate - for updating covariate effects based on a poisson likelihood
-// poissongammaupdate - updates the gamma parameters for the poisson
-// poissonwupdate - updates the trend indicator variables (omega's) for the poisson
-// poissonphiupdate - updates the spatial random effects phi for the poisson
-// poissoncouplingAllupdate - performs the coupling step for mixing chains for the poisson
-// binomialdevfit - computes deviance for binomial
-// binomialbetablockupdate - for updating covariate effects based on a binomial likelihood
-// binomialgammaupdate - updates the gamma parameters for the binomial
-// binomialwupdate - updates the trend indicator variables (omega's) for the binomial
-// binomialphiupdate - updates the spatial random effects phi for the binomial
-// binomialcouplingAllupdate - performs the coupling step for mixing chains for the binomial
-
-
-
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////// General helper functions   //////////////////////////////////////////
@@ -2027,6 +1941,1511 @@ NumericMatrix  gaussianar2carupdate(NumericMatrix Wtriplet, NumericMatrix Wbegfi
 
 
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// MVARCAR functions   /////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// [[Rcpp::export]]
+List binomialmvar1carupdateRW(NumericMatrix Wtriplet, NumericMatrix Wbegfin, 
+                              NumericVector Wtripletsum, const int nsite, const int ntime, const int nvar,
+                              NumericMatrix phi, double alpha, double rho, NumericMatrix Sigmainv,
+                              const NumericMatrix ymat, const NumericMatrix failuresmat, NumericMatrix innovations, NumericMatrix offset,
+                              NumericVector denoffset)
+{    
+  ///////////////////////////////////////////    
+  // Specify variables needed in the function
+  ///////////////////////////////////////////
+  int NK = ntime * nsite, accept=0;
+  int row_W, row1, row_phi1, row_phi2, row_phi3, rowstart, rowend;
+  NumericMatrix fcprec(nvar, nvar);
+  NumericVector priormeantemp1(nvar), priormeantemp2(nvar), priormeantemp3(nvar), temp(nvar), fcmean(nvar), propphi(nvar);
+  NumericVector quadcurrent(nvar), quadprop(nvar), diffcurrent(nvar), diffprop(nvar), pold(nvar), pnew(nvar);  
+  NumericMatrix phinew(NK, nvar);
+  double oldpriorbit, newpriorbit, oldlikebit, newlikebit, acceptance;
+  phinew = clone(phi);
+  
+  
+  //////////////////////////////////////////////
+  // Update the random effects at time 1 in turn
+  //////////////////////////////////////////////
+  int t = 0;
+  for(int j = 0; j < nsite; j++)
+  {
+    // Calculate the prior precision
+    for(int r=0; r<nvar; r++)
+    {
+      fcprec(_,r) = (1 + pow(alpha,2)) * denoffset[j] * Sigmainv(_,r);  
+    }
+    
+    // calculate prior mean
+    row1 = (t+1) * nsite + j;
+    priormeantemp1 = - alpha * denoffset[j] *  phinew(row1,_);
+    rowstart = Wbegfin(j,0) - 1;
+    rowend = Wbegfin(j,1);
+    priormeantemp2 = rep(0,nvar);
+    for(int l = rowstart; l < rowend; l++)
+    {
+      row_W = Wtriplet(l,1) - 1;
+      row_phi1 = row_W + nsite * t;
+      row_phi2 = row_W + nsite * (t+1);
+      temp = (1 + pow(alpha,2)) * phinew(row_phi1,_) - alpha * phinew(row_phi2, _);
+      priormeantemp2 = priormeantemp2 + temp; 
+    }
+    fcmean = (rho * priormeantemp2 - priormeantemp1) / ((1 + pow(alpha,2)) * denoffset[j]); 
+    
+    // Generate the proposal distribution mean and propose a value
+    row1 = t * nsite + j;
+    for(int r=0; r<nvar; r++)
+    {
+      propphi[r] = phinew(row1,r) + innovations(row1, r);
+    }
+    
+    // Compute the prior ratio
+    diffcurrent = phinew(row1,_) - fcmean;
+    diffprop = propphi - fcmean;
+    for(int r=0; r<nvar; r++)
+    {
+      quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+      quadprop[r] = sum(diffprop * fcprec(_,r));  
+    }
+    oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+    newpriorbit = 0.5 * sum(quadprop * diffprop);      
+    
+    // Likelihood ratio
+    pold = exp(offset(row1,_) + phinew(row1,_)) / (1 + exp(offset(row1,_) + phinew(row1,_)));
+    pnew = exp(offset(row1,_) + propphi) / (1 + exp(offset(row1,_) + propphi));
+    oldlikebit = sum(ymat(row1,_) * log(pold) + failuresmat(row1,_) * log(1-pold));
+    newlikebit = sum(ymat(row1,_) * log(pnew) + failuresmat(row1,_) * log(1-pnew));
+    
+    
+    // Accept or reject the value
+    acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+    if(runif(1)[0] <= acceptance) 
+    {
+      phinew(row1,_) = propphi;
+      accept = accept + 1;
+    }
+    else
+    {  
+    }
+  }
+  
+  
+  
+  //////////////////////////////////////////////////////
+  // Update the random effects at times 2 to N-1 in turn
+  //////////////////////////////////////////////////////
+  for(int t = 1; t < (ntime-1); t++)
+  {
+    for(int j = 0; j < nsite; j++)
+    {
+      // Calculate the prior precision
+      for(int r=0; r<nvar; r++)
+      {
+        fcprec(_,r) = (1 + pow(alpha,2)) * denoffset[j] * Sigmainv(_,r);  
+      }
+      
+      // calculate prior mean
+      row1 = (t-1) * nsite + j;
+      priormeantemp1 = - alpha * denoffset[j] *  phinew(row1,_);
+      row1 = (t+1) * nsite + j;
+      priormeantemp2 = - alpha * denoffset[j] *  phinew(row1,_);
+      rowstart = Wbegfin(j,0) - 1;
+      rowend = Wbegfin(j,1);
+      priormeantemp3 = rep(0,nvar);
+      for(int l = rowstart; l < rowend; l++)
+      {
+        row_W = Wtriplet(l,1) - 1;
+        row_phi1 = row_W + nsite * t;
+        row_phi2 = row_W + nsite * (t-1);
+        row_phi3 = row_W + nsite * (t+1);
+        temp = (1 + pow(alpha,2)) * phinew(row_phi1,_) - alpha * phinew(row_phi2, _) - alpha * phinew(row_phi3, _);
+        priormeantemp3 = priormeantemp3 + temp; 
+      }
+      fcmean = (rho * priormeantemp3 - priormeantemp1 - priormeantemp2) / ((1 + pow(alpha,2)) * denoffset[j]); 
+      
+      // Generate the proposal distribution mean and propose a value
+      row1 = t * nsite + j;
+      for(int r=0; r<nvar; r++)
+      {
+        propphi[r] = phinew(row1,r) + innovations(row1, r);
+      }
+      
+      // Compute the prior ratio
+      diffcurrent = phinew(row1,_) - fcmean;
+      diffprop = propphi - fcmean;
+      for(int r=0; r<nvar; r++)
+      {
+        quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+        quadprop[r] = sum(diffprop * fcprec(_,r));  
+      }
+      oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+      newpriorbit = 0.5 * sum(quadprop * diffprop);      
+      
+      // Likelihood ratio
+      pold = exp(offset(row1,_) + phinew(row1,_)) / (1 + exp(offset(row1,_) + phinew(row1,_)));
+      pnew = exp(offset(row1,_) + propphi) / (1 + exp(offset(row1,_) + propphi));
+      oldlikebit = sum(ymat(row1,_) * log(pold) + failuresmat(row1,_) * log(1-pold));
+      newlikebit = sum(ymat(row1,_) * log(pnew) + failuresmat(row1,_) * log(1-pnew));
+      
+      
+      // Accept or reject the value
+      acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+      if(runif(1)[0] <= acceptance) 
+      {
+        phinew(row1,_) = propphi;
+        accept = accept + 1;
+      }
+      else
+      {  
+      }
+    }
+  }
+  
+  
+  
+  //////////////////////////////////////////////
+  // Update the random effects at time N in turn
+  //////////////////////////////////////////////
+  t = ntime-1;
+  for(int j = 0; j < nsite; j++)
+  {
+    // Calculate the prior precision
+    for(int r=0; r<nvar; r++)
+    {
+      fcprec(_,r) = denoffset[j] * Sigmainv(_,r);  
+    }
+    
+    // calculate prior mean
+    row1 = (t-1) * nsite + j;
+    priormeantemp1 = - alpha * denoffset[j] *  phinew(row1,_);
+    rowstart = Wbegfin(j,0) - 1;
+    rowend = Wbegfin(j,1);
+    priormeantemp2 = rep(0,nvar);
+    for(int l = rowstart; l < rowend; l++)
+    {
+      row_W = Wtriplet(l,1) - 1;
+      row_phi1 = row_W + nsite * t;
+      row_phi2 = row_W + nsite * (t-1);
+      temp = phinew(row_phi1,_) - alpha * phinew(row_phi2, _);
+      priormeantemp2 = priormeantemp2 + temp; 
+    }
+    fcmean = (rho * priormeantemp2 - priormeantemp1) / (denoffset[j]); 
+    
+    // Generate the proposal distribution mean and propose a value
+    row1 = t * nsite + j;
+    for(int r=0; r<nvar; r++)
+    {
+      propphi[r] = phinew(row1,r) + innovations(row1, r);
+    }
+    
+    // Compute the prior ratio
+    diffcurrent = phinew(row1,_) - fcmean;
+    diffprop = propphi - fcmean;
+    for(int r=0; r<nvar; r++)
+    {
+      quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+      quadprop[r] = sum(diffprop * fcprec(_,r));  
+    }
+    oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+    newpriorbit = 0.5 * sum(quadprop * diffprop);      
+    
+    // Likelihood ratio
+    pold = exp(offset(row1,_) + phinew(row1,_)) / (1 + exp(offset(row1,_) + phinew(row1,_)));
+    pnew = exp(offset(row1,_) + propphi) / (1 + exp(offset(row1,_) + propphi));
+    oldlikebit = sum(ymat(row1,_) * log(pold) + failuresmat(row1,_) * log(1-pold));
+    newlikebit = sum(ymat(row1,_) * log(pnew) + failuresmat(row1,_) * log(1-pnew));
+    
+    // Accept or reject the value
+    acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+    if(runif(1)[0] <= acceptance) 
+    {
+      phinew(row1,_) = propphi;
+      accept = accept + 1;
+    }
+    else
+    {  
+    }
+  }
+  
+  
+  
+  /////////////////////
+  // Return the results
+  /////////////////////
+  List out(2);
+  out[0] = phinew;
+  out[1] = accept;
+  return out;
+}
+
+
+
+
+
+// [[Rcpp::export]]
+List binomialmvar2carupdateRW(NumericMatrix Wtriplet, NumericMatrix Wbegfin, 
+                              NumericVector Wtripletsum, const int nsite, const int ntime, const int nvar,
+                              NumericMatrix phi, double alpha1, double alpha2, double rho, NumericMatrix Sigmainv,
+                              const NumericMatrix ymat,  const NumericMatrix failuresmat, NumericMatrix innovations, NumericMatrix offset,
+                              NumericVector denoffset)
+{    
+  ///////////////////////////////////////////    
+  // Specify variables needed in the function
+  ///////////////////////////////////////////
+  int NK = ntime * nsite, accept=0;
+  int row_W, row1, row_phi1, row_phi2, row_phi3, row_phi4, row_phi5, rowstart, rowend;
+  NumericMatrix fcprec(nvar, nvar);
+  NumericVector priormeantemp1(nvar), priormeantemp2(nvar), priormeantemp3(nvar), priormeantemp4(nvar), priormeantemp5(nvar), temp(nvar), fcmean(nvar), propphi(nvar);
+  NumericVector quadcurrent(nvar), quadprop(nvar), diffcurrent(nvar), diffprop(nvar), pold(nvar), pnew(nvar);  
+  NumericMatrix phinew(NK, nvar);
+  double oldpriorbit, newpriorbit, oldlikebit, newlikebit, acceptance;
+  phinew = clone(phi);
+  
+  
+  //////////////////////////////////////////////
+  // Update the random effects at time 1 in turn
+  //////////////////////////////////////////////
+  int t = 0;
+  for(int j = 0; j < nsite; j++)
+  {
+    // Calculate the prior precision
+    for(int r=0; r<nvar; r++)
+    {
+      fcprec(_,r) = (1 + pow(alpha2,2)) * denoffset[j] * Sigmainv(_,r);  
+    }
+    
+    // calculate prior mean
+    row1 = (t+1) * nsite + j;
+    priormeantemp1 = alpha1 * alpha2 * denoffset[j] *  phinew(row1,_);
+    row1 = (t+2) * nsite + j;
+    priormeantemp2 = - alpha2 * denoffset[j] *  phinew(row1,_);
+    rowstart = Wbegfin(j,0) - 1;
+    rowend = Wbegfin(j,1);
+    priormeantemp3 = rep(0,nvar);
+    for(int l = rowstart; l < rowend; l++)
+    {
+      row_W = Wtriplet(l,1) - 1;
+      row_phi1 = row_W + nsite * t;
+      row_phi2 = row_W + nsite * (t+1);
+      row_phi3 = row_W + nsite * (t+2);
+      temp = (1 + pow(alpha2,2)) * phinew(row_phi1,_) + alpha1 * alpha2 * phinew(row_phi2, _) - alpha2 * phinew(row_phi3, _);
+      priormeantemp3 = priormeantemp3 + temp; 
+    }
+    fcmean = (rho * priormeantemp3 - priormeantemp1 - priormeantemp2) / ((1 + pow(alpha2,2)) * denoffset[j]); 
+    
+    // Generate the proposal distribution mean and propose a value
+    row1 = t * nsite + j;
+    for(int r=0; r<nvar; r++)
+    {
+      propphi[r] = phinew(row1,r) + innovations(row1, r);
+    }
+    
+    // Compute the prior ratio
+    diffcurrent = phinew(row1,_) - fcmean;
+    diffprop = propphi - fcmean;
+    for(int r=0; r<nvar; r++)
+    {
+      quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+      quadprop[r] = sum(diffprop * fcprec(_,r));  
+    }
+    oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+    newpriorbit = 0.5 * sum(quadprop * diffprop);      
+    
+    // Likelihood ratio
+    pold = exp(offset(row1,_) + phinew(row1,_)) / (1 + exp(offset(row1,_) + phinew(row1,_)));
+    pnew = exp(offset(row1,_) + propphi) / (1 + exp(offset(row1,_) + propphi));
+    oldlikebit = sum(ymat(row1,_) * log(pold) + failuresmat(row1,_) * log(1-pold));
+    newlikebit = sum(ymat(row1,_) * log(pnew) + failuresmat(row1,_) * log(1-pnew));
+    
+    
+    // Accept or reject the value
+    acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+    if(runif(1)[0] <= acceptance) 
+    {
+      phinew(row1,_) = propphi;
+      accept = accept + 1;
+    }
+    else
+    {  
+    }
+  }
+  
+  
+  //////////////////////////////////////////////
+  // Update the random effects at time 2 in turn
+  //////////////////////////////////////////////
+  t = 1;
+  for(int j = 0; j < nsite; j++)
+  {
+    // Calculate the prior precision
+    for(int r=0; r<nvar; r++)
+    {
+      fcprec(_,r) = (1 + pow(alpha1,2) + pow(alpha2,2)) * denoffset[j] * Sigmainv(_,r);  
+    }
+    
+    // calculate prior mean
+    row1 = (t-1) * nsite + j;
+    priormeantemp2 =  alpha1 * alpha2 * denoffset[j] *  phinew(row1,_);
+    row1 = (t+1) * nsite + j;
+    priormeantemp3 = (alpha1 * alpha2 - alpha1) * denoffset[j] *  phinew(row1,_);
+    row1 = (t+2) * nsite + j;
+    priormeantemp4 = - alpha2 * denoffset[j] *  phinew(row1,_);
+    
+    rowstart = Wbegfin(j,0) - 1;
+    rowend = Wbegfin(j,1);
+    priormeantemp5 = rep(0,nvar);
+    for(int l = rowstart; l < rowend; l++)
+    {
+      row_W = Wtriplet(l,1) - 1;
+      row_phi2 = row_W + nsite * (t-1);
+      row_phi3 = row_W + nsite * t;
+      row_phi4 = row_W + nsite * (t+1);
+      row_phi5 = row_W + nsite * (t+2);
+      temp = (1 + pow(alpha1,2) + pow(alpha2,2))  * phinew(row_phi3,_) - alpha2 * phinew(row_phi5, _) + alpha1 * alpha2 * phinew(row_phi2, _) + (alpha1 * alpha2 - alpha1) * phinew(row_phi4, _);       
+      priormeantemp5 = priormeantemp5 + temp; 
+    }
+    fcmean = (rho * priormeantemp5 - priormeantemp2 - priormeantemp3 - priormeantemp4) / ((1 + pow(alpha1,2) + pow(alpha2,2)) * denoffset[j]); 
+    
+    // Generate the proposal distribution mean and propose a value
+    row1 = t * nsite + j;
+    for(int r=0; r<nvar; r++)
+    {
+      propphi[r] = phinew(row1,r) + innovations(row1, r);
+    }
+    
+    // Compute the prior ratio
+    diffcurrent = phinew(row1,_) - fcmean;
+    diffprop = propphi - fcmean;
+    for(int r=0; r<nvar; r++)
+    {
+      quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+      quadprop[r] = sum(diffprop * fcprec(_,r));  
+    }
+    oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+    newpriorbit = 0.5 * sum(quadprop * diffprop);      
+    
+    // Likelihood ratio
+    pold = exp(offset(row1,_) + phinew(row1,_)) / (1 + exp(offset(row1,_) + phinew(row1,_)));
+    pnew = exp(offset(row1,_) + propphi) / (1 + exp(offset(row1,_) + propphi));
+    oldlikebit = sum(ymat(row1,_) * log(pold) + failuresmat(row1,_) * log(1-pold));
+    newlikebit = sum(ymat(row1,_) * log(pnew) + failuresmat(row1,_) * log(1-pnew));
+    
+    
+    // Accept or reject the value
+    acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+    if(runif(1)[0] <= acceptance) 
+    {
+      phinew(row1,_) = propphi;
+      accept = accept + 1;
+    }
+    else
+    {  
+    }
+  }
+  
+  
+  //////////////////////////////////////////////////////
+  // Update the random effects at times 3 to N-2 in turn
+  //////////////////////////////////////////////////////
+  for(int t = 2; t < (ntime-2); t++)
+  {
+    for(int j = 0; j < nsite; j++)
+    {
+      // Calculate the prior precision
+      for(int r=0; r<nvar; r++)
+      {
+        fcprec(_,r) = (1 + pow(alpha1,2) + pow(alpha2,2)) * denoffset[j] * Sigmainv(_,r);  
+      }
+      
+      // calculate prior mean
+      row1 = (t-2) * nsite + j;
+      priormeantemp1 = - alpha2 * denoffset[j] *  phinew(row1,_);
+      row1 = (t-1) * nsite + j;
+      priormeantemp2 =  (alpha1 * alpha2 - alpha1) * denoffset[j] *  phinew(row1,_);
+      row1 = (t+1) * nsite + j;
+      priormeantemp3 = (alpha1 * alpha2 - alpha1) * denoffset[j] *  phinew(row1,_);
+      row1 = (t+2) * nsite + j;
+      priormeantemp4 = - alpha2 * denoffset[j] *  phinew(row1,_);
+      
+      rowstart = Wbegfin(j,0) - 1;
+      rowend = Wbegfin(j,1);
+      priormeantemp5 = rep(0,nvar);
+      for(int l = rowstart; l < rowend; l++)
+      {
+        row_W = Wtriplet(l,1) - 1;
+        row_phi1 = row_W + nsite * (t-2);
+        row_phi2 = row_W + nsite * (t-1);
+        row_phi3 = row_W + nsite * t;
+        row_phi4 = row_W + nsite * (t+1);
+        row_phi5 = row_W + nsite * (t+2);
+        temp = (1 + pow(alpha1,2) + pow(alpha2,2))  * phinew(row_phi3,_) - alpha2 * phinew(row_phi1, _) - alpha2 * phinew(row_phi5, _) + (alpha1 * alpha2 - alpha1) * phinew(row_phi2, _) + (alpha1 * alpha2 - alpha1) * phinew(row_phi4, _);       
+        priormeantemp5 = priormeantemp5 + temp; 
+      }
+      fcmean = (rho * priormeantemp5 - priormeantemp1 - priormeantemp2 - priormeantemp3 - priormeantemp4) / ((1 + pow(alpha1,2) + pow(alpha2,2)) * denoffset[j]); 
+      
+      // Generate the proposal distribution mean and propose a value
+      row1 = t * nsite + j;
+      for(int r=0; r<nvar; r++)
+      {
+        propphi[r] = phinew(row1,r) + innovations(row1, r);
+      }
+      
+      // Compute the prior ratio
+      diffcurrent = phinew(row1,_) - fcmean;
+      diffprop = propphi - fcmean;
+      for(int r=0; r<nvar; r++)
+      {
+        quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+        quadprop[r] = sum(diffprop * fcprec(_,r));  
+      }
+      oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+      newpriorbit = 0.5 * sum(quadprop * diffprop);      
+      
+      // Likelihood ratio
+      pold = exp(offset(row1,_) + phinew(row1,_)) / (1 + exp(offset(row1,_) + phinew(row1,_)));
+      pnew = exp(offset(row1,_) + propphi) / (1 + exp(offset(row1,_) + propphi));
+      oldlikebit = sum(ymat(row1,_) * log(pold) + failuresmat(row1,_) * log(1-pold));
+      newlikebit = sum(ymat(row1,_) * log(pnew) + failuresmat(row1,_) * log(1-pnew));
+      
+      
+      // Accept or reject the value
+      acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+      if(runif(1)[0] <= acceptance) 
+      {
+        phinew(row1,_) = propphi;
+        accept = accept + 1;
+      }
+      else
+      {  
+      }
+    }
+  }
+  
+  
+  //////////////////////////////////////////////////
+  // Update the random effects at time N - 1 in turn
+  //////////////////////////////////////////////////
+  t = ntime - 2;
+  for(int j = 0; j < nsite; j++)
+  {
+    // Calculate the prior precision
+    for(int r=0; r<nvar; r++)
+    {
+      fcprec(_,r) = (1 + pow(alpha1,2)) * denoffset[j] * Sigmainv(_,r);  
+    }
+    
+    // calculate prior mean
+    row1 = (t-2) * nsite + j;
+    priormeantemp1 = - alpha2 * denoffset[j] *  phinew(row1,_);
+    row1 = (t-1) * nsite + j;
+    priormeantemp2 =  (alpha1 * alpha2 - alpha1) * denoffset[j] *  phinew(row1,_);
+    row1 = (t+1) * nsite + j;
+    priormeantemp3 = - alpha1 * denoffset[j] *  phinew(row1,_);
+    
+    rowstart = Wbegfin(j,0) - 1;
+    rowend = Wbegfin(j,1);
+    priormeantemp5 = rep(0,nvar);
+    for(int l = rowstart; l < rowend; l++)
+    {
+      row_W = Wtriplet(l,1) - 1;
+      row_phi1 = row_W + nsite * (t-2);
+      row_phi2 = row_W + nsite * (t-1);
+      row_phi3 = row_W + nsite * t;
+      row_phi4 = row_W + nsite * (t+1);
+      temp = (1 + pow(alpha1,2))  * phinew(row_phi3,_) - alpha2 * phinew(row_phi1, _) + (alpha1 * alpha2 - alpha1) * phinew(row_phi2, _) - alpha1 * phinew(row_phi4, _);       
+      priormeantemp5 = priormeantemp5 + temp; 
+    }
+    fcmean = (rho * priormeantemp5 - priormeantemp1 - priormeantemp2 - priormeantemp3) / ((1 + pow(alpha1,2)) * denoffset[j]); 
+    
+    // Generate the proposal distribution mean and propose a value
+    row1 = t * nsite + j;
+    for(int r=0; r<nvar; r++)
+    {
+      propphi[r] = phinew(row1,r) + innovations(row1, r);
+    }
+    
+    // Compute the prior ratio
+    diffcurrent = phinew(row1,_) - fcmean;
+    diffprop = propphi - fcmean;
+    for(int r=0; r<nvar; r++)
+    {
+      quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+      quadprop[r] = sum(diffprop * fcprec(_,r));  
+    }
+    oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+    newpriorbit = 0.5 * sum(quadprop * diffprop);      
+    
+    // Likelihood ratio
+    pold = exp(offset(row1,_) + phinew(row1,_)) / (1 + exp(offset(row1,_) + phinew(row1,_)));
+    pnew = exp(offset(row1,_) + propphi) / (1 + exp(offset(row1,_) + propphi));
+    oldlikebit = sum(ymat(row1,_) * log(pold) + failuresmat(row1,_) * log(1-pold));
+    newlikebit = sum(ymat(row1,_) * log(pnew) + failuresmat(row1,_) * log(1-pnew));
+    
+    
+    // Accept or reject the value
+    acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+    if(runif(1)[0] <= acceptance) 
+    {
+      phinew(row1,_) = propphi;
+      accept = accept + 1;
+    }
+    else
+    {  
+    }
+  }
+  
+  
+  //////////////////////////////////////////////
+  // Update the random effects at time N in turn
+  //////////////////////////////////////////////
+  t = ntime - 1;
+  for(int j = 0; j < nsite; j++)
+  {
+    // Calculate the prior precision
+    for(int r=0; r<nvar; r++)
+    {
+      fcprec(_,r) = denoffset[j] * Sigmainv(_,r);  
+    }
+    
+    // calculate prior mean
+    row1 = (t-2) * nsite + j;
+    priormeantemp1 = - alpha2 * denoffset[j] *  phinew(row1,_);
+    row1 = (t-1) * nsite + j;
+    priormeantemp2 =  - alpha1 * denoffset[j] *  phinew(row1,_);
+    
+    rowstart = Wbegfin(j,0) - 1;
+    rowend = Wbegfin(j,1);
+    priormeantemp5 = rep(0,nvar);
+    for(int l = rowstart; l < rowend; l++)
+    {
+      row_W = Wtriplet(l,1) - 1;
+      row_phi1 = row_W + nsite * (t-2);
+      row_phi2 = row_W + nsite * (t-1);
+      row_phi3 = row_W + nsite * t;
+      temp = phinew(row_phi3,_) - alpha2 * phinew(row_phi1, _)  - alpha1 * phinew(row_phi2, _);       
+      priormeantemp5 = priormeantemp5 + temp; 
+    }
+    fcmean = (rho * priormeantemp5 - priormeantemp1 - priormeantemp2) / denoffset[j]; 
+    
+    // Generate the proposal distribution mean and propose a value
+    row1 = t * nsite + j;
+    for(int r=0; r<nvar; r++)
+    {
+      propphi[r] = phinew(row1,r) + innovations(row1, r);
+    }
+    
+    // Compute the prior ratio
+    diffcurrent = phinew(row1,_) - fcmean;
+    diffprop = propphi - fcmean;
+    for(int r=0; r<nvar; r++)
+    {
+      quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+      quadprop[r] = sum(diffprop * fcprec(_,r));  
+    }
+    oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+    newpriorbit = 0.5 * sum(quadprop * diffprop);      
+    
+    // Likelihood ratio
+    pold = exp(offset(row1,_) + phinew(row1,_)) / (1 + exp(offset(row1,_) + phinew(row1,_)));
+    pnew = exp(offset(row1,_) + propphi) / (1 + exp(offset(row1,_) + propphi));
+    oldlikebit = sum(ymat(row1,_) * log(pold) + failuresmat(row1,_) * log(1-pold));
+    newlikebit = sum(ymat(row1,_) * log(pnew) + failuresmat(row1,_) * log(1-pnew));
+    
+    
+    // Accept or reject the value
+    acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+    if(runif(1)[0] <= acceptance) 
+    {
+      phinew(row1,_) = propphi;
+      accept = accept + 1;
+    }
+    else
+    {  
+    }
+  }
+  
+  
+  /////////////////////
+  // Return the results
+  /////////////////////
+  List out(2);
+  out[0] = phinew;
+  out[1] = accept;
+  return out;
+}
+
+
+
+
+
+// [[Rcpp::export]]
+List poissonmvar1carupdateRW(NumericMatrix Wtriplet, NumericMatrix Wbegfin, 
+                             NumericVector Wtripletsum, const int nsite, const int ntime, const int nvar,
+                             NumericMatrix phi, double alpha, double rho, NumericMatrix Sigmainv,
+                             const NumericMatrix ymat, NumericMatrix innovations, NumericMatrix offset,
+                             NumericVector denoffset)
+{    
+  ///////////////////////////////////////////    
+  // Specify variables needed in the function
+  ///////////////////////////////////////////
+  int NK = ntime * nsite, accept=0;
+  int row_W, row1, row_phi1, row_phi2, row_phi3, rowstart, rowend;
+  NumericMatrix fcprec(nvar, nvar);
+  NumericVector priormeantemp1(nvar), priormeantemp2(nvar), priormeantemp3(nvar), temp(nvar), fcmean(nvar), propphi(nvar);
+  NumericVector quadcurrent(nvar), quadprop(nvar), diffcurrent(nvar), diffprop(nvar), lpold(nvar), lpnew(nvar);  
+  NumericMatrix phinew(NK, nvar);
+  double oldpriorbit, newpriorbit, oldlikebit, newlikebit, acceptance;
+  phinew = clone(phi);
+  
+  
+  //////////////////////////////////////////////
+  // Update the random effects at time 1 in turn
+  //////////////////////////////////////////////
+  int t = 0;
+  for(int j = 0; j < nsite; j++)
+  {
+    // Calculate the prior precision
+    for(int r=0; r<nvar; r++)
+    {
+      fcprec(_,r) = (1 + pow(alpha,2)) * denoffset[j] * Sigmainv(_,r);  
+    }
+    
+    // calculate prior mean
+    row1 = (t+1) * nsite + j;
+    priormeantemp1 = - alpha * denoffset[j] *  phinew(row1,_);
+    rowstart = Wbegfin(j,0) - 1;
+    rowend = Wbegfin(j,1);
+    priormeantemp2 = rep(0,nvar);
+    for(int l = rowstart; l < rowend; l++)
+    {
+      row_W = Wtriplet(l,1) - 1;
+      row_phi1 = row_W + nsite * t;
+      row_phi2 = row_W + nsite * (t+1);
+      temp = (1 + pow(alpha,2)) * phinew(row_phi1,_) - alpha * phinew(row_phi2, _);
+      priormeantemp2 = priormeantemp2 + temp; 
+    }
+    fcmean = (rho * priormeantemp2 - priormeantemp1) / ((1 + pow(alpha,2)) * denoffset[j]); 
+    
+    // Generate the proposal distribution mean and propose a value
+    row1 = t * nsite + j;
+    for(int r=0; r<nvar; r++)
+    {
+      propphi[r] = phinew(row1,r) + innovations(row1, r);
+    }
+    
+    // Compute the prior ratio
+    diffcurrent = phinew(row1,_) - fcmean;
+    diffprop = propphi - fcmean;
+    for(int r=0; r<nvar; r++)
+    {
+      quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+      quadprop[r] = sum(diffprop * fcprec(_,r));  
+    }
+    oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+    newpriorbit = 0.5 * sum(quadprop * diffprop);      
+    
+    // Likelihood ratio
+    lpold = offset(row1,_) + phinew(row1,_);
+    lpnew = offset(row1,_) + propphi;
+    oldlikebit = sum(ymat(row1,_) * lpold - exp(lpold));
+    newlikebit = sum(ymat(row1,_) * lpnew - exp(lpnew));
+    
+    
+    // Accept or reject the value
+    acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+    if(runif(1)[0] <= acceptance) 
+    {
+      phinew(row1,_) = propphi;
+      accept = accept + 1;
+    }
+    else
+    {  
+    }
+  }
+  
+  
+  
+  //////////////////////////////////////////////////////
+  // Update the random effects at times 2 to N-1 in turn
+  //////////////////////////////////////////////////////
+  for(int t = 1; t < (ntime-1); t++)
+  {
+    for(int j = 0; j < nsite; j++)
+    {
+      // Calculate the prior precision
+      for(int r=0; r<nvar; r++)
+      {
+        fcprec(_,r) = (1 + pow(alpha,2)) * denoffset[j] * Sigmainv(_,r);  
+      }
+      
+      // calculate prior mean
+      row1 = (t-1) * nsite + j;
+      priormeantemp1 = - alpha * denoffset[j] *  phinew(row1,_);
+      row1 = (t+1) * nsite + j;
+      priormeantemp2 = - alpha * denoffset[j] *  phinew(row1,_);
+      rowstart = Wbegfin(j,0) - 1;
+      rowend = Wbegfin(j,1);
+      priormeantemp3 = rep(0,nvar);
+      for(int l = rowstart; l < rowend; l++)
+      {
+        row_W = Wtriplet(l,1) - 1;
+        row_phi1 = row_W + nsite * t;
+        row_phi2 = row_W + nsite * (t-1);
+        row_phi3 = row_W + nsite * (t+1);
+        temp = (1 + pow(alpha,2)) * phinew(row_phi1,_) - alpha * phinew(row_phi2, _) - alpha * phinew(row_phi3, _);
+        priormeantemp3 = priormeantemp3 + temp; 
+      }
+      fcmean = (rho * priormeantemp3 - priormeantemp1 - priormeantemp2) / ((1 + pow(alpha,2)) * denoffset[j]); 
+      
+      // Generate the proposal distribution mean and propose a value
+      row1 = t * nsite + j;
+      for(int r=0; r<nvar; r++)
+      {
+        propphi[r] = phinew(row1,r) + innovations(row1, r);
+      }
+      
+      // Compute the prior ratio
+      diffcurrent = phinew(row1,_) - fcmean;
+      diffprop = propphi - fcmean;
+      for(int r=0; r<nvar; r++)
+      {
+        quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+        quadprop[r] = sum(diffprop * fcprec(_,r));  
+      }
+      oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+      newpriorbit = 0.5 * sum(quadprop * diffprop);      
+      
+      // Likelihood ratio
+      lpold = offset(row1,_) + phinew(row1,_);
+      lpnew = offset(row1,_) + propphi;
+      oldlikebit = sum(ymat(row1,_) * lpold - exp(lpold));
+      newlikebit = sum(ymat(row1,_) * lpnew - exp(lpnew));
+      
+      
+      // Accept or reject the value
+      acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+      if(runif(1)[0] <= acceptance) 
+      {
+        phinew(row1,_) = propphi;
+        accept = accept + 1;
+      }
+      else
+      {  
+      }
+    }
+  }
+  
+  
+  
+  //////////////////////////////////////////////
+  // Update the random effects at time N in turn
+  //////////////////////////////////////////////
+  t = ntime-1;
+  for(int j = 0; j < nsite; j++)
+  {
+    // Calculate the prior precision
+    for(int r=0; r<nvar; r++)
+    {
+      fcprec(_,r) = denoffset[j] * Sigmainv(_,r);  
+    }
+    
+    // calculate prior mean
+    row1 = (t-1) * nsite + j;
+    priormeantemp1 = - alpha * denoffset[j] *  phinew(row1,_);
+    rowstart = Wbegfin(j,0) - 1;
+    rowend = Wbegfin(j,1);
+    priormeantemp2 = rep(0,nvar);
+    for(int l = rowstart; l < rowend; l++)
+    {
+      row_W = Wtriplet(l,1) - 1;
+      row_phi1 = row_W + nsite * t;
+      row_phi2 = row_W + nsite * (t-1);
+      temp = phinew(row_phi1,_) - alpha * phinew(row_phi2, _);
+      priormeantemp2 = priormeantemp2 + temp; 
+    }
+    fcmean = (rho * priormeantemp2 - priormeantemp1) / (denoffset[j]); 
+    
+    // Generate the proposal distribution mean and propose a value
+    row1 = t * nsite + j;
+    for(int r=0; r<nvar; r++)
+    {
+      propphi[r] = phinew(row1,r) + innovations(row1, r);
+    }
+    
+    // Compute the prior ratio
+    diffcurrent = phinew(row1,_) - fcmean;
+    diffprop = propphi - fcmean;
+    for(int r=0; r<nvar; r++)
+    {
+      quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+      quadprop[r] = sum(diffprop * fcprec(_,r));  
+    }
+    oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+    newpriorbit = 0.5 * sum(quadprop * diffprop);      
+    
+    // Likelihood ratio
+    lpold = offset(row1,_) + phinew(row1,_);
+    lpnew = offset(row1,_) + propphi;
+    oldlikebit = sum(ymat(row1,_) * lpold - exp(lpold));
+    newlikebit = sum(ymat(row1,_) * lpnew - exp(lpnew));
+    
+    
+    // Accept or reject the value
+    acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+    if(runif(1)[0] <= acceptance) 
+    {
+      phinew(row1,_) = propphi;
+      accept = accept + 1;
+    }
+    else
+    {  
+    }
+  }
+  
+  /////////////////////
+  // Return the results
+  /////////////////////
+  List out(2);
+  out[0] = phinew;
+  out[1] = accept;
+  return out;
+}
+
+
+
+
+// [[Rcpp::export]]
+List poissonmvar2carupdateRW(NumericMatrix Wtriplet, NumericMatrix Wbegfin, 
+                             NumericVector Wtripletsum, const int nsite, const int ntime, const int nvar,
+                             NumericMatrix phi, double alpha1, double alpha2, double rho, NumericMatrix Sigmainv,
+                             const NumericMatrix ymat, NumericMatrix innovations, NumericMatrix offset,
+                             NumericVector denoffset)
+{    
+  ///////////////////////////////////////////    
+  // Specify variables needed in the function
+  ///////////////////////////////////////////
+  int NK = ntime * nsite, accept=0;
+  int row_W, row1, row_phi1, row_phi2, row_phi3, row_phi4, row_phi5, rowstart, rowend;
+  NumericMatrix fcprec(nvar, nvar);
+  NumericVector priormeantemp1(nvar), priormeantemp2(nvar), priormeantemp3(nvar), priormeantemp4(nvar), priormeantemp5(nvar), temp(nvar), fcmean(nvar), propphi(nvar);
+  NumericVector quadcurrent(nvar), quadprop(nvar), diffcurrent(nvar), diffprop(nvar), lpold(nvar), lpnew(nvar);  
+  NumericMatrix phinew(NK, nvar);
+  double oldpriorbit, newpriorbit, oldlikebit, newlikebit, acceptance;
+  phinew = clone(phi);
+  
+  
+  //////////////////////////////////////////////
+  // Update the random effects at time 1 in turn
+  //////////////////////////////////////////////
+  int t = 0;
+  for(int j = 0; j < nsite; j++)
+  {
+    // Calculate the prior precision
+    for(int r=0; r<nvar; r++)
+    {
+      fcprec(_,r) = (1 + pow(alpha2,2)) * denoffset[j] * Sigmainv(_,r);  
+    }
+    
+    // calculate prior mean
+    row1 = (t+1) * nsite + j;
+    priormeantemp1 = alpha1 * alpha2 * denoffset[j] *  phinew(row1,_);
+    row1 = (t+2) * nsite + j;
+    priormeantemp2 = - alpha2 * denoffset[j] *  phinew(row1,_);
+    rowstart = Wbegfin(j,0) - 1;
+    rowend = Wbegfin(j,1);
+    priormeantemp3 = rep(0,nvar);
+    for(int l = rowstart; l < rowend; l++)
+    {
+      row_W = Wtriplet(l,1) - 1;
+      row_phi1 = row_W + nsite * t;
+      row_phi2 = row_W + nsite * (t+1);
+      row_phi3 = row_W + nsite * (t+2);
+      temp = (1 + pow(alpha2,2)) * phinew(row_phi1,_) + alpha1 * alpha2 * phinew(row_phi2, _) - alpha2 * phinew(row_phi3, _);
+      priormeantemp3 = priormeantemp3 + temp; 
+    }
+    fcmean = (rho * priormeantemp3 - priormeantemp1 - priormeantemp2) / ((1 + pow(alpha2,2)) * denoffset[j]); 
+    
+    // Generate the proposal distribution mean and propose a value
+    row1 = t * nsite + j;
+    for(int r=0; r<nvar; r++)
+    {
+      propphi[r] = phinew(row1,r) + innovations(row1, r);
+    }
+    
+    // Compute the prior ratio
+    diffcurrent = phinew(row1,_) - fcmean;
+    diffprop = propphi - fcmean;
+    for(int r=0; r<nvar; r++)
+    {
+      quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+      quadprop[r] = sum(diffprop * fcprec(_,r));  
+    }
+    oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+    newpriorbit = 0.5 * sum(quadprop * diffprop);      
+    
+    // Likelihood ratio
+    lpold = offset(row1,_) + phinew(row1,_);
+    lpnew = offset(row1,_) + propphi;
+    oldlikebit = sum(ymat(row1,_) * lpold - exp(lpold));
+    newlikebit = sum(ymat(row1,_) * lpnew - exp(lpnew));
+    
+    
+    // Accept or reject the value
+    acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+    if(runif(1)[0] <= acceptance) 
+    {
+      phinew(row1,_) = propphi;
+      accept = accept + 1;
+    }
+    else
+    {  
+    }
+  }
+  
+  
+  //////////////////////////////////////////////
+  // Update the random effects at time 2 in turn
+  //////////////////////////////////////////////
+  t = 1;
+  for(int j = 0; j < nsite; j++)
+  {
+    // Calculate the prior precision
+    for(int r=0; r<nvar; r++)
+    {
+      fcprec(_,r) = (1 + pow(alpha1,2) + pow(alpha2,2)) * denoffset[j] * Sigmainv(_,r);  
+    }
+    
+    // calculate prior mean
+    row1 = (t-1) * nsite + j;
+    priormeantemp2 =  alpha1 * alpha2 * denoffset[j] *  phinew(row1,_);
+    row1 = (t+1) * nsite + j;
+    priormeantemp3 = (alpha1 * alpha2 - alpha1) * denoffset[j] *  phinew(row1,_);
+    row1 = (t+2) * nsite + j;
+    priormeantemp4 = - alpha2 * denoffset[j] *  phinew(row1,_);
+    
+    rowstart = Wbegfin(j,0) - 1;
+    rowend = Wbegfin(j,1);
+    priormeantemp5 = rep(0,nvar);
+    for(int l = rowstart; l < rowend; l++)
+    {
+      row_W = Wtriplet(l,1) - 1;
+      row_phi2 = row_W + nsite * (t-1);
+      row_phi3 = row_W + nsite * t;
+      row_phi4 = row_W + nsite * (t+1);
+      row_phi5 = row_W + nsite * (t+2);
+      temp = (1 + pow(alpha1,2) + pow(alpha2,2))  * phinew(row_phi3,_) - alpha2 * phinew(row_phi5, _) + alpha1 * alpha2 * phinew(row_phi2, _) + (alpha1 * alpha2 - alpha1) * phinew(row_phi4, _);       
+      priormeantemp5 = priormeantemp5 + temp; 
+    }
+    fcmean = (rho * priormeantemp5 - priormeantemp2 - priormeantemp3 - priormeantemp4) / ((1 + pow(alpha1,2) + pow(alpha2,2)) * denoffset[j]); 
+    
+    // Generate the proposal distribution mean and propose a value
+    row1 = t * nsite + j;
+    for(int r=0; r<nvar; r++)
+    {
+      propphi[r] = phinew(row1,r) + innovations(row1, r);
+    }
+    
+    // Compute the prior ratio
+    diffcurrent = phinew(row1,_) - fcmean;
+    diffprop = propphi - fcmean;
+    for(int r=0; r<nvar; r++)
+    {
+      quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+      quadprop[r] = sum(diffprop * fcprec(_,r));  
+    }
+    oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+    newpriorbit = 0.5 * sum(quadprop * diffprop);      
+    
+    // Likelihood ratio
+    lpold = offset(row1,_) + phinew(row1,_);
+    lpnew = offset(row1,_) + propphi;
+    oldlikebit = sum(ymat(row1,_) * lpold - exp(lpold));
+    newlikebit = sum(ymat(row1,_) * lpnew - exp(lpnew));
+    
+    
+    // Accept or reject the value
+    acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+    if(runif(1)[0] <= acceptance) 
+    {
+      phinew(row1,_) = propphi;
+      accept = accept + 1;
+    }
+    else
+    {  
+    }
+  }
+  
+  
+  //////////////////////////////////////////////////////
+  // Update the random effects at times 3 to N-2 in turn
+  //////////////////////////////////////////////////////
+  for(int t = 2; t < (ntime-2); t++)
+  {
+    for(int j = 0; j < nsite; j++)
+    {
+      // Calculate the prior precision
+      for(int r=0; r<nvar; r++)
+      {
+        fcprec(_,r) = (1 + pow(alpha1,2) + pow(alpha2,2)) * denoffset[j] * Sigmainv(_,r);  
+      }
+      
+      // calculate prior mean
+      row1 = (t-2) * nsite + j;
+      priormeantemp1 = - alpha2 * denoffset[j] *  phinew(row1,_);
+      row1 = (t-1) * nsite + j;
+      priormeantemp2 =  (alpha1 * alpha2 - alpha1) * denoffset[j] *  phinew(row1,_);
+      row1 = (t+1) * nsite + j;
+      priormeantemp3 = (alpha1 * alpha2 - alpha1) * denoffset[j] *  phinew(row1,_);
+      row1 = (t+2) * nsite + j;
+      priormeantemp4 = - alpha2 * denoffset[j] *  phinew(row1,_);
+      
+      rowstart = Wbegfin(j,0) - 1;
+      rowend = Wbegfin(j,1);
+      priormeantemp5 = rep(0,nvar);
+      for(int l = rowstart; l < rowend; l++)
+      {
+        row_W = Wtriplet(l,1) - 1;
+        row_phi1 = row_W + nsite * (t-2);
+        row_phi2 = row_W + nsite * (t-1);
+        row_phi3 = row_W + nsite * t;
+        row_phi4 = row_W + nsite * (t+1);
+        row_phi5 = row_W + nsite * (t+2);
+        temp = (1 + pow(alpha1,2) + pow(alpha2,2))  * phinew(row_phi3,_) - alpha2 * phinew(row_phi1, _) - alpha2 * phinew(row_phi5, _) + (alpha1 * alpha2 - alpha1) * phinew(row_phi2, _) + (alpha1 * alpha2 - alpha1) * phinew(row_phi4, _);       
+        priormeantemp5 = priormeantemp5 + temp; 
+      }
+      fcmean = (rho * priormeantemp5 - priormeantemp1 - priormeantemp2 - priormeantemp3 - priormeantemp4) / ((1 + pow(alpha1,2) + pow(alpha2,2)) * denoffset[j]); 
+      
+      // Generate the proposal distribution mean and propose a value
+      row1 = t * nsite + j;
+      for(int r=0; r<nvar; r++)
+      {
+        propphi[r] = phinew(row1,r) + innovations(row1, r);
+      }
+      
+      // Compute the prior ratio
+      diffcurrent = phinew(row1,_) - fcmean;
+      diffprop = propphi - fcmean;
+      for(int r=0; r<nvar; r++)
+      {
+        quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+        quadprop[r] = sum(diffprop * fcprec(_,r));  
+      }
+      oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+      newpriorbit = 0.5 * sum(quadprop * diffprop);      
+      
+      // Likelihood ratio
+      lpold = offset(row1,_) + phinew(row1,_);
+      lpnew = offset(row1,_) + propphi;
+      oldlikebit = sum(ymat(row1,_) * lpold - exp(lpold));
+      newlikebit = sum(ymat(row1,_) * lpnew - exp(lpnew));
+      
+      
+      // Accept or reject the value
+      acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+      if(runif(1)[0] <= acceptance) 
+      {
+        phinew(row1,_) = propphi;
+        accept = accept + 1;
+      }
+      else
+      {  
+      }
+    }
+  }
+  
+  
+  //////////////////////////////////////////////////
+  // Update the random effects at time N - 1 in turn
+  //////////////////////////////////////////////////
+  t = ntime - 2;
+  for(int j = 0; j < nsite; j++)
+  {
+    // Calculate the prior precision
+    for(int r=0; r<nvar; r++)
+    {
+      fcprec(_,r) = (1 + pow(alpha1,2)) * denoffset[j] * Sigmainv(_,r);  
+    }
+    
+    // calculate prior mean
+    row1 = (t-2) * nsite + j;
+    priormeantemp1 = - alpha2 * denoffset[j] *  phinew(row1,_);
+    row1 = (t-1) * nsite + j;
+    priormeantemp2 =  (alpha1 * alpha2 - alpha1) * denoffset[j] *  phinew(row1,_);
+    row1 = (t+1) * nsite + j;
+    priormeantemp3 = - alpha1 * denoffset[j] *  phinew(row1,_);
+    
+    rowstart = Wbegfin(j,0) - 1;
+    rowend = Wbegfin(j,1);
+    priormeantemp5 = rep(0,nvar);
+    for(int l = rowstart; l < rowend; l++)
+    {
+      row_W = Wtriplet(l,1) - 1;
+      row_phi1 = row_W + nsite * (t-2);
+      row_phi2 = row_W + nsite * (t-1);
+      row_phi3 = row_W + nsite * t;
+      row_phi4 = row_W + nsite * (t+1);
+      temp = (1 + pow(alpha1,2))  * phinew(row_phi3,_) - alpha2 * phinew(row_phi1, _) + (alpha1 * alpha2 - alpha1) * phinew(row_phi2, _) - alpha1 * phinew(row_phi4, _);       
+      priormeantemp5 = priormeantemp5 + temp; 
+    }
+    fcmean = (rho * priormeantemp5 - priormeantemp1 - priormeantemp2 - priormeantemp3) / ((1 + pow(alpha1,2)) * denoffset[j]); 
+    
+    // Generate the proposal distribution mean and propose a value
+    row1 = t * nsite + j;
+    for(int r=0; r<nvar; r++)
+    {
+      propphi[r] = phinew(row1,r) + innovations(row1, r);
+    }
+    
+    // Compute the prior ratio
+    diffcurrent = phinew(row1,_) - fcmean;
+    diffprop = propphi - fcmean;
+    for(int r=0; r<nvar; r++)
+    {
+      quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+      quadprop[r] = sum(diffprop * fcprec(_,r));  
+    }
+    oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+    newpriorbit = 0.5 * sum(quadprop * diffprop);      
+    
+    // Likelihood ratio
+    lpold = offset(row1,_) + phinew(row1,_);
+    lpnew = offset(row1,_) + propphi;
+    oldlikebit = sum(ymat(row1,_) * lpold - exp(lpold));
+    newlikebit = sum(ymat(row1,_) * lpnew - exp(lpnew));
+    
+    
+    // Accept or reject the value
+    acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+    if(runif(1)[0] <= acceptance) 
+    {
+      phinew(row1,_) = propphi;
+      accept = accept + 1;
+    }
+    else
+    {  
+    }
+  }
+  
+  
+  //////////////////////////////////////////////
+  // Update the random effects at time N in turn
+  //////////////////////////////////////////////
+  t = ntime - 1;
+  for(int j = 0; j < nsite; j++)
+  {
+    // Calculate the prior precision
+    for(int r=0; r<nvar; r++)
+    {
+      fcprec(_,r) = denoffset[j] * Sigmainv(_,r);  
+    }
+    
+    // calculate prior mean
+    row1 = (t-2) * nsite + j;
+    priormeantemp1 = - alpha2 * denoffset[j] *  phinew(row1,_);
+    row1 = (t-1) * nsite + j;
+    priormeantemp2 =  - alpha1 * denoffset[j] *  phinew(row1,_);
+    
+    rowstart = Wbegfin(j,0) - 1;
+    rowend = Wbegfin(j,1);
+    priormeantemp5 = rep(0,nvar);
+    for(int l = rowstart; l < rowend; l++)
+    {
+      row_W = Wtriplet(l,1) - 1;
+      row_phi1 = row_W + nsite * (t-2);
+      row_phi2 = row_W + nsite * (t-1);
+      row_phi3 = row_W + nsite * t;
+      temp = phinew(row_phi3,_) - alpha2 * phinew(row_phi1, _)  - alpha1 * phinew(row_phi2, _);       
+      priormeantemp5 = priormeantemp5 + temp; 
+    }
+    fcmean = (rho * priormeantemp5 - priormeantemp1 - priormeantemp2) / denoffset[j]; 
+    
+    // Generate the proposal distribution mean and propose a value
+    row1 = t * nsite + j;
+    for(int r=0; r<nvar; r++)
+    {
+      propphi[r] = phinew(row1,r) + innovations(row1, r);
+    }
+    
+    // Compute the prior ratio
+    diffcurrent = phinew(row1,_) - fcmean;
+    diffprop = propphi - fcmean;
+    for(int r=0; r<nvar; r++)
+    {
+      quadcurrent[r] = sum(diffcurrent * fcprec(_,r));  
+      quadprop[r] = sum(diffprop * fcprec(_,r));  
+    }
+    oldpriorbit = 0.5 * sum(quadcurrent * diffcurrent);
+    newpriorbit = 0.5 * sum(quadprop * diffprop);      
+    
+    // Likelihood ratio
+    lpold = offset(row1,_) + phinew(row1,_);
+    lpnew = offset(row1,_) + propphi;
+    oldlikebit = sum(ymat(row1,_) * lpold - exp(lpold));
+    newlikebit = sum(ymat(row1,_) * lpnew - exp(lpnew));
+    
+    
+    // Accept or reject the value
+    acceptance = exp(oldpriorbit - newpriorbit - oldlikebit + newlikebit);
+    if(runif(1)[0] <= acceptance) 
+    {
+      phinew(row1,_) = propphi;
+      accept = accept + 1;
+    }
+    else
+    {  
+    }
+  }
+  
+  
+  /////////////////////
+  // Return the results
+  /////////////////////
+  List out(2);
+  out[0] = phinew;
+  out[1] = accept;
+  return out;
+}
+
+
+
+// [[Rcpp::export]]
+double MVSTquadformcompute(NumericMatrix Wtriplet, NumericVector Wtripletsum, const int n_triplet, NumericVector den_offset,
+                           const int nsite, const int nvar, NumericMatrix phit, NumericMatrix phij, double rho, NumericMatrix Sigmainv)
+{    
+  // Computes phi_t %*% Q kronecker Sigma.inv %*% phi_j
+  double quadform_diag= 0, quadform_offdiag = 0, QF=0;
+  int row, col;
+  NumericVector temp(nvar);
+  
+  // Compute the off diagonal elements of the quadratic form
+  for(int l = 0; l < n_triplet; l++)
+  {
+    row = Wtriplet(l,0) - 1;
+    col = Wtriplet(l,1) - 1;
+    for(int r=0; r<nvar; r++)
+    {
+      temp[r] = sum(phit(row,_) * Sigmainv(_,r));  
+    }
+    quadform_offdiag = quadform_offdiag + sum(temp * phij(col,_));
+  }
+  
+  // Compute the diagonal elements of the quadratic form          
+  for(int l = 0; l < nsite; l++)
+  {
+    for(int r=0; r<nvar; r++)
+    {
+      temp[r] = den_offset[l] * sum(phit(l,_) * Sigmainv(_,r));  
+    }
+    quadform_diag = quadform_diag + sum(temp * phij(l,_));
+  }
+  
+  
+  // Compute the final quadratic form
+  QF = -rho * quadform_offdiag + quadform_diag;
+  
+  
+  // Return the result
+  return QF;
+}
+
+
+
+
+
+
+// [[Rcpp::export]]
+List MVSTrhoTAR1compute(NumericMatrix Wtriplet, NumericVector Wtripletsum, const int n_triplet, NumericVector den_offset,
+                        const int nsite, const int ntime, const int nvar, NumericMatrix phi, double rho, NumericMatrix Sigmainv)
+{    
+  // Computes the numerator and denominator for the temporal AR(1) parameter full conditional
+  double num=0, denom=0;
+  int range_min, range_max;
+  NumericMatrix phi_A(nsite,nvar), phi_B(nsite,nvar);
+  
+  // Iterate over t=2,...,N-1 as C++ starts loops at zero.
+  for(int t=1; t < ntime; t++)
+  {
+    // Extract phi_t-1
+    range_min = (t-1) * nsite;
+    range_max = t * nsite - 1;
+    phi_A = phi(Range(range_min, range_max),_);
+    
+    // Extract phi_t
+    range_min = t * nsite;
+    range_max = (t+1) * nsite - 1;
+    phi_B = phi(Range(range_min, range_max),_);
+    
+    // Compute the quadratic forms
+    num = num + MVSTquadformcompute(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phi_A, phi_B, rho, Sigmainv);
+    denom = denom + MVSTquadformcompute(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phi_A, phi_A, rho, Sigmainv);
+  }
+  
+  
+  // Save the results
+  List out(2);
+  out[0] = num;
+  out[1] = denom;
+  return out;
+} 
+
+
+
+// [[Rcpp::export]]
+List MVSTrhoTAR2compute(NumericMatrix Wtriplet, NumericVector Wtripletsum, const int n_triplet, NumericVector den_offset,
+                        const int nsite, const int ntime, const int nvar, NumericMatrix phi, double rho, NumericMatrix Sigmainv)
+{    
+  // Computes the 5 different quadratic forms for the full conditional of alpha
+  double V11=0, V12=0, V22=0, C=0, D=0;
+  int range_min, range_max;
+  NumericMatrix phi_A(nsite,nvar), phi_B(nsite,nvar), phi_C(nsite,nvar);
+  
+  // Iterate over t=2,...,N-1 as C++ starts loops at zero.
+  for(int t=2; t < ntime; t++)
+  {
+    // Extract phi_t
+    range_min = t * nsite;
+    range_max = (t+1) * nsite - 1;
+    phi_A = phi(Range(range_min, range_max),_);
+    
+    // Extract phi_t-1
+    range_min = (t-1) * nsite;
+    range_max = t * nsite - 1;
+    phi_B = phi(Range(range_min, range_max),_);
+    
+    // Extract phi_t-2
+    range_min = (t-2) * nsite;
+    range_max = (t-1) * nsite - 1;
+    phi_C = phi(Range(range_min, range_max),_);    
+    
+    // Compute the quadratic forms
+    V11 = V11 + MVSTquadformcompute(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phi_B, phi_B, rho, Sigmainv);
+    V12 = V12 + MVSTquadformcompute(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phi_B, phi_C, rho, Sigmainv);
+    V22 = V22 + MVSTquadformcompute(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phi_C, phi_C, rho, Sigmainv);  
+    C = C + MVSTquadformcompute(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phi_A, phi_B, rho, Sigmainv);
+    D = D + MVSTquadformcompute(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phi_A, phi_C, rho, Sigmainv);
+  }
+  
+  
+  // Save the results
+  List out(5);
+  out[0] = V11;
+  out[1] = V12;
+  out[2] = V22;
+  out[3] = C;
+  out[4] = D;
+  return out;
+} 
+
+
+
+
+// [[Rcpp::export]]
+double MVSTrhoSAR1compute(NumericMatrix Wtriplet, NumericVector Wtripletsum, const int n_triplet, NumericVector den_offset,
+                          const int nsite, const int ntime, const int nvar, NumericMatrix phi, double rho, double alpha, NumericMatrix Sigmainv)
+{    
+  // Computes the quadratic form for the rho update
+  double QF=0;
+  int range_min, range_max;
+  NumericMatrix phi_A(nsite,nvar), phi_B(nsite,nvar), phi_diff(nsite, nvar);
+  
+  // Compute phi+_1^T %*% Q Kronecker Sigma.inv %*% phi_1
+  int t=1;
+  range_min = (t-1) * nsite;
+  range_max = t * nsite - 1;
+  phi_A = phi(Range(range_min, range_max),_);
+  QF = MVSTquadformcompute(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phi_A, phi_A, rho, Sigmainv);
+  
+  // Iterate over t=2,...,N-1 as C++ starts loops at zero.
+  for(int t=1; t < ntime; t++)
+  {
+    // Extract phi_t-1
+    range_min = (t-1) * nsite;
+    range_max = t * nsite - 1;
+    phi_A = phi(Range(range_min, range_max),_);
+    
+    // Extract phi_t
+    range_min = t * nsite;
+    range_max = (t+1) * nsite - 1;
+    phi_B = phi(Range(range_min, range_max),_);
+    
+    // Compute the AR(1) difference
+    for(int r=0; r<nvar; r++)
+    {
+      phi_diff(_,r) = phi_B(_,r) - alpha * phi_A(_,r); 
+    }
+    
+    // Compute the QF
+    QF = QF + MVSTquadformcompute(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phi_diff, phi_diff, rho, Sigmainv);
+  }
+  
+  
+  // Save the results
+  return QF;
+} 
+
+
+
+
+// [[Rcpp::export]]
+double MVSTrhoSAR2compute(NumericMatrix Wtriplet, NumericVector Wtripletsum, const int n_triplet, NumericVector den_offset,
+                          const int nsite, const int ntime, const int nvar, NumericMatrix phi, double rho, double alpha1, double alpha2, NumericMatrix Sigmainv)
+{    
+  // Computes the quadratic form for the rho update
+  double QF=0;
+  int range_min, range_max;
+  NumericMatrix phi_A(nsite,nvar), phi_B(nsite,nvar), phi_C(nsite, nvar), phi_diff(nsite, nvar);
+  
+  // Compute phi+_1^T %*% Q Kronecker Sigma.inv %*% phi_1
+  int t=1;
+  range_min = (t-1) * nsite;
+  range_max = t * nsite - 1;
+  phi_A = phi(Range(range_min, range_max),_);
+  QF = MVSTquadformcompute(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phi_A, phi_A, rho, Sigmainv);
+  
+  // Compute phi+_2^T %*% Q Kronecker Sigma.inv %*% phi_2
+  t=2;
+  range_min = (t-1) * nsite;
+  range_max = t * nsite - 1;
+  phi_A = phi(Range(range_min, range_max),_);
+  QF = QF + MVSTquadformcompute(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phi_A, phi_A, rho, Sigmainv);
+  
+  // Iterate over t=2,...,N-1 as C++ starts loops at zero.
+  for(int t=2; t < ntime; t++)
+  {
+    // Extract phi_t
+    range_min = t * nsite;
+    range_max = (t+1) * nsite - 1;
+    phi_A = phi(Range(range_min, range_max),_);
+    
+    // Extract phi_t-1
+    range_min = (t-1) * nsite;
+    range_max = t * nsite - 1;
+    phi_B = phi(Range(range_min, range_max),_);
+    
+    
+    // Extract phi_t-2
+    range_min = (t-2) * nsite;
+    range_max = (t-1) * nsite - 1;
+    phi_C = phi(Range(range_min, range_max),_);
+    
+    
+    // Compute the AR(1) difference
+    for(int r=0; r<nvar; r++)
+    {
+      phi_diff(_,r) = phi_A(_,r) - alpha1 * phi_B(_,r) - alpha2 * phi_C(_,r); 
+    }
+    
+    // Compute the QF
+    QF = QF + MVSTquadformcompute(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phi_diff, phi_diff, rho, Sigmainv);
+  }
+  
+  
+  // Save the results
+  return QF;
+} 
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////

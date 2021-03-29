@@ -88,7 +88,7 @@ The prior shape and scale in the form of c(shape, scale) for an Inverse-Gamma(sh
 prior for tau2. Defaults to c(1, 0.01).  
 }
 \item{AR}{
-The order of the autoregressive time series process, and must be either 1 or 2. 
+The order of the autoregressive time series process that must be either 1 or 2. 
 }
 \item{rho.S}{
 The value in the interval [0, 1] that the spatial dependence parameter rho.S is 
@@ -96,7 +96,7 @@ fixed at if it should not be estimated. If this arugment is NULL then rho.S is
 estimated in the model. 
 }
 \item{rho.T}{
-Whether to fix or estimate the temporal dependence parameters rho.T in the model. 
+Whether to fix or estimate the temporal dependence parameter(s) rho.T in the model. 
 If this arugment is NULL then they are estimated in the model. If you want to fix
 them and AR=1 then it must be a value in the interval [0, 1]. If  AR=2 then it must be
 a vector of length two with the first and second order autoregressive coefficients.

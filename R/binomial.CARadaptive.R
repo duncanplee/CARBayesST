@@ -457,8 +457,12 @@ binomial.CARadaptive <- function(formula, data = NULL, trials, W, burnin, n.samp
   }
   
   # end timer
-  if(verbose) cat("\nSummarising results."); close(progressBar)  
-  
+  if(verbose)
+  {
+    cat("\nSummarising results.")
+    close(progressBar)
+  }else
+  {}
   
 ###################################
 #### Summarise and save the results 

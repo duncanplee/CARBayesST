@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.24)  25 MAR 2021 15:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.1.24)  29 MAR 2021 14:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -589,11 +589,7 @@ File: t1enc.def 2018/08/11 v2.0j Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
 ))
 Environment Schunk is already defined, stay with former definition)
-(./CARBayesST.aux
-
-LaTeX Warning: Label `carar' multiply defined.
-
-)
+(./CARBayesST.aux)
 \openout1 = `CARBayesST.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 86.
@@ -617,8 +613,7 @@ LaTeX Font Info:    ... okay on input line 86.
 LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 86.
 LaTeX Font Info:    ... okay on input line 86.
 LaTeX Font Info:    Try loading font information for T1+lmr on input line 86.
-
-(/usr/local/texlive/2019/texmf-dist/tex/latex/lm/t1lmr.fd
+ (/usr/local/texlive/2019/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 (/usr/local/texlive/2019/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -835,9 +830,6 @@ Underfull \hbox (badness 10000) in paragraph at lines 299--300
  []
 
 
-Underfull \vbox (badness 5939) has occurred while \output is active []
-
-
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 10 []
  []
@@ -848,19 +840,28 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [11]
+Underfull \hbox (badness 10000) in paragraph at lines 373--374
+
+ []
+
+
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 12 []
  []
 
 [12]
+Underfull \hbox (badness 10000) in paragraph at lines 395--397
+
+ []
+
+
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 13
  []
 
 [13]
-Overfull \hbox (2.25026pt too wide) in paragraph at lines 411--412
-[]\T1/lmtt/m/n/10.95 modelfit \T1/lmr/m/n/10.95 - Model fit cri-te-ria in-clud-
-ing the De-viance In-for-ma-tion Cri-te-rion (DIC, [][]Spiegel-
+Underfull \hbox (badness 10000) in paragraph at lines 398--399
+
  []
 
 
@@ -874,17 +875,11 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [15]
-Overfull \hbox (21.3951pt too wide) in paragraph at lines 445--446
-[]  \T1/lmr/m/n/10.95 These data are avail-able in the \T1/lmr/b/n/10.95 CAR-Ba
-yes-data \T1/lmr/m/n/10.95 pack-age in the ob-ject \T1/lmtt/m/n/10.95 pollution
-healthdata\T1/lmr/m/n/10.95 ,
+Overfull \hbox (2.25026pt too wide) in paragraph at lines 476--477
+[]\T1/lmtt/m/n/10.95 modelfit \T1/lmr/m/n/10.95 - Model fit cri-te-ria in-clud-
+ing the De-viance In-for-ma-tion Cri-te-rion (DIC, [][]Spiegel-
  []
 
-<pollutionscatterplot.png, id=398, 1237.62375pt x 907.39pt>
-File: pollutionscatterplot.png Graphic file (type png)
-<use pollutionscatterplot.png>
-Package pdftex.def Info: pollutionscatterplot.png  used on input line 502.
-(pdftex.def)             Requested size: 354.12434pt x 259.6334pt.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 16 []
@@ -895,110 +890,128 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 17
  []
 
-[17 <./pollutionscatterplot.png>]
-<SMRmap.pdf, id=412, 1304.875pt x 1073.00874pt>
-File: SMRmap.pdf Graphic file (type pdf)
-<use SMRmap.pdf>
-Package pdftex.def Info: SMRmap.pdf  used on input line 551.
-(pdftex.def)             Requested size: 354.12434pt x 291.18977pt.
+[17]
+Overfull \hbox (21.3951pt too wide) in paragraph at lines 510--511
+[]  \T1/lmr/m/n/10.95 These data are avail-able in the \T1/lmr/b/n/10.95 CAR-Ba
+yes-data \T1/lmr/m/n/10.95 pack-age in the ob-ject \T1/lmtt/m/n/10.95 pollution
+healthdata\T1/lmr/m/n/10.95 ,
+ []
+
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 18 []
  []
 
-[18 <./SMRmap.pdf>]
+[18]
+<pollutionscatterplot.png, id=422, 1237.62375pt x 907.39pt>
+File: pollutionscatterplot.png Graphic file (type png)
+<use pollutionscatterplot.png>
+Package pdftex.def Info: pollutionscatterplot.png  used on input line 567.
+(pdftex.def)             Requested size: 354.12434pt x 259.6334pt.
+
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 19
  []
 
-[19]
+[19 <./pollutionscatterplot.png>]
+<SMRmap.pdf, id=432, 1304.875pt x 1073.00874pt>
+File: SMRmap.pdf Graphic file (type pdf)
+<use SMRmap.pdf>
+Package pdftex.def Info: SMRmap.pdf  used on input line 616.
+(pdftex.def)             Requested size: 354.12434pt x 291.18977pt.
+
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 20 []
  []
 
-[20]
+[20 <./SMRmap.pdf>]
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 21
  []
 
 [21]
-<pollution_mcmc.png, id=451, 1306.8825pt x 1085.05376pt>
-File: pollution_mcmc.png Graphic file (type png)
-<use pollution_mcmc.png>
-Package pdftex.def Info: pollution_mcmc.png  used on input line 704.
-(pdftex.def)             Requested size: 354.12434pt x 294.01149pt.
-
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 22 []
  []
 
-[22 <./pollution_mcmc.png>]
+[22]
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 23
  []
 
 [23]
-<salesboxplot.png, id=465, 1306.8825pt x 731.73375pt>
-File: salesboxplot.png Graphic file (type png)
-<use salesboxplot.png>
-Package pdftex.def Info: salesboxplot.png  used on input line 801.
-(pdftex.def)             Requested size: 354.12434pt x 198.27417pt.
+<pollution_mcmc.png, id=469, 1306.8825pt x 1085.05376pt>
+File: pollution_mcmc.png Graphic file (type png)
+<use pollution_mcmc.png>
+Package pdftex.def Info: pollution_mcmc.png  used on input line 769.
+(pdftex.def)             Requested size: 354.12434pt x 294.01149pt.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 24 []
  []
 
-[24 <./salesboxplot.png>]
-<salesmap.pdf, id=474, 1304.875pt x 1092.08pt>
-File: salesmap.pdf Graphic file (type pdf)
-<use salesmap.pdf>
-Package pdftex.def Info: salesmap.pdf  used on input line 840.
-(pdftex.def)             Requested size: 354.12434pt x 296.36528pt.
-
+[24 <./pollution_mcmc.png>]
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 25
  []
 
 [25]
+<salesboxplot.png, id=484, 1306.8825pt x 731.73375pt>
+File: salesboxplot.png Graphic file (type png)
+<use salesboxplot.png>
+Package pdftex.def Info: salesboxplot.png  used on input line 866.
+(pdftex.def)             Requested size: 354.12434pt x 198.27417pt.
+
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 26 []
  []
 
-[26 <./salesmap.pdf>]
-<salestrend.png, id=501, 1306.8825pt x 1096.095pt>
-File: salestrend.png Graphic file (type png)
-<use salestrend.png>
-Package pdftex.def Info: salestrend.png  used on input line 935.
-(pdftex.def)             Requested size: 354.12434pt x 297.00328pt.
+[26]
+<salesmap.pdf, id=492, 1304.875pt x 1092.08pt>
+File: salesmap.pdf Graphic file (type pdf)
+<use salesmap.pdf>
+Package pdftex.def Info: salesmap.pdf  used on input line 905.
+(pdftex.def)             Requested size: 354.12434pt x 296.36528pt.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 27
  []
 
-[27]
+[27 <./salesboxplot.png>]
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 28 []
  []
 
-[28 <./salestrend.png>] (./CARBayesST.bbl
-LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10.95> not available
-(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 35.
-
+[28 <./salesmap.pdf>]
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 29
  []
 
 [29]
-
-LaTeX Font Warning: Font shape `T1/lmr/b/it' in size <10.95> not available
-(Font)              Font shape `T1/lmr/b/sl' tried instead on input line 103.
-
+<salestrend.png, id=524, 1306.8825pt x 1096.095pt>
+File: salestrend.png Graphic file (type png)
+<use salestrend.png>
+Package pdftex.def Info: salestrend.png  used on input line 1000.
+(pdftex.def)             Requested size: 354.12434pt x 297.00328pt.
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 30 []
  []
 
-[30]
+[30 <./salestrend.png>] (./CARBayesST.bbl
+LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10.95> not available
+(Font)              Font shape `T1/lmss/m/sl' tried instead on input line 35.
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 31
+ []
+
+[31]
+
+LaTeX Font Warning: Font shape `T1/lmr/b/it' in size <10.95> not available
+(Font)              Font shape `T1/lmr/b/sl' tried instead on input line 103.
+
+
 Underfull \hbox (badness 3601) in paragraph at lines 189--195
 []\T1/lmr/m/n/10.95 Ricardo-AEA (2015).  ``Tech-ni-cal Re-port on UK Sup-ple-me
 n-tary As-sess-ment un-
@@ -1006,37 +1019,39 @@ n-tary As-sess-ment un-
 
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
-[] \T1/lmr/m/n/10.95 31
- []
-
-[31])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 959.
-
-Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 32 []
  []
 
 [32]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 959.
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 33
+ []
+
+[33])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1024.
+
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 34 []
+ []
+
+[34]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1024.
  (./CARBayesST.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 959.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 959.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1024.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1024.
+
 Package rerunfilecheck Info: File `CARBayesST.out' has not changed.
 (rerunfilecheck)             Checksum: 19917826548AAB1B2F2DEF304F924D1D;2849.
-
-
-LaTeX Warning: There were multiply-defined labels.
-
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 959.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1024.
  ) 
 Here is how much of TeX's memory you used:
- 9711 strings out of 492616
- 142350 string characters out of 6129481
- 239619 words of memory out of 5000000
- 13315 multiletter control sequences out of 15000+600000
+ 9723 strings out of 492616
+ 142490 string characters out of 6129481
+ 239660 words of memory out of 5000000
+ 13319 multiletter control sequences out of 15000+600000
  89917 words of font info for 64 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 35i,14n,34p,2116b,494s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 35i,14n,34p,2116b,498s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2019/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
 texlive/2019/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2019/t
 exmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2019/texmf-dist/
@@ -1063,10 +1078,10 @@ xmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2019/texmf-dist/fo
 nts/type1/public/lm/lmtt10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/
 public/lm/lmtto10.pfb></usr/local/texlive/2019/texmf-dist/fonts/type1/public/am
 sfonts/symbols/msbm10.pfb>
-Output written on CARBayesST.pdf (32 pages, 3386843 bytes).
+Output written on CARBayesST.pdf (34 pages, 3398068 bytes).
 PDF statistics:
- 665 PDF objects out of 1000 (max. 8388607)
- 585 compressed objects within 6 object streams
- 134 named destinations out of 1000 (max. 500000)
+ 684 PDF objects out of 1000 (max. 8388607)
+ 601 compressed objects within 7 object streams
+ 142 named destinations out of 1000 (max. 500000)
  187 words of extra memory for PDF output out of 10000 (max. 10000000)
 

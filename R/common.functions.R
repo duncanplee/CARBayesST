@@ -268,6 +268,101 @@ common.frame <- function(formula, data, family)
 
 
 
+#### Read in and format the frame argument
+common.frame.MVST <- function(formula, data, family)
+{
+    #### Overall formula object
+    frame <- try(suppressWarnings(model.frame(formula, data=data, na.action=na.pass)), silent=TRUE)
+    if(class(frame)=="try-error") stop("the formula inputted contains an error, e.g the variables may be different lengths.", call.=FALSE)
+    
+    
+    #### Design matrix
+    ## Create the matrix
+    X <- try(suppressWarnings(model.matrix(object=attr(frame, "terms"), data=frame)), silent=TRUE)
+    #if(class(X)=="try-error") stop("the covariate matrix contains inappropriate values.", call.=FALSE)
+    if(sum(is.na(X))>0) stop("the covariate matrix contains missing 'NA' values.", call.=FALSE)
+    
+    n <- nrow(X)
+    p <- ncol(X)
+    
+    ## Check for linearly related columns
+    cor.X <- suppressWarnings(cor(X))
+    diag(cor.X) <- 0
+    if(max(cor.X, na.rm=TRUE)==1) stop("the covariate matrix has two exactly linearly related columns.", call.=FALSE)
+    if(min(cor.X, na.rm=TRUE)==-1) stop("the covariate matrix has two exactly linearly related columns.", call.=FALSE)
+    if(p>1)
+    {
+        if(sort(apply(X, 2, sd))[2]==0) stop("the covariate matrix has two intercept terms.", call.=FALSE)
+    }else
+    {
+    }
+    
+    ## Standardise the matrix
+    X.standardised <- X
+    X.sd <- apply(X, 2, sd)
+    X.mean <- apply(X, 2, mean)
+    X.indicator <- rep(NA, p)       # To determine which parameter estimates to transform back
+    
+    for(j in 1:p)
+    {
+        if(length(table(X[ ,j]))>2)
+        {
+            X.indicator[j] <- 1
+            X.standardised[ ,j] <- (X[ ,j] - mean(X[ ,j])) / sd(X[ ,j])
+        }else if(length(table(X[ ,j]))==1)
+        {
+            X.indicator[j] <- 2
+        }else
+        {
+            X.indicator[j] <- 0
+        }
+    }
+    
+    
+    #### Response variable
+    ## Create the response
+    Y <- model.response(frame)
+    J <- ncol(Y)
+    which.miss <- as.numeric(!is.na(t(Y)))
+    n.miss <- n*J - sum(which.miss)
+    
+    
+    #### Offset variable
+    offset <- try(model.offset(frame), silent=TRUE)
+    
+    #if(class(offset)=="try-error")   stop("the offset is not numeric.", call.=FALSE)
+    if(is.null(offset))  offset <- array(0, c(n, J))
+    if(sum(is.na(offset))>0) stop("the offset has missing 'NA' values.", call.=FALSE)
+    if(!is.numeric(offset)) stop("the offset variable has non-numeric values.", call.=FALSE)
+    
+    
+    ## Check for errors
+    if(family=="binomial")
+    {
+        if(!is.numeric(Y)) stop("the response variable has non-numeric values.", call.=FALSE)
+        int.check <- n*J - n.miss - sum(ceiling(Y)==floor(Y), na.rm=TRUE)
+        if(int.check > 0) stop("the respons variable has non-integer values.", call.=FALSE)
+        if(min(Y, na.rm=TRUE)<0) stop("the response variable has negative values.", call.=FALSE)
+    }else if(family=="gaussian")
+    {
+        if(!is.numeric(Y)) stop("the response variable has non-numeric values.", call.=FALSE)    
+    }else
+    {
+        if(!is.numeric(Y)) stop("the response variable has non-numeric values.", call.=FALSE)
+        int.check <- n*J - n.miss - sum(ceiling(Y)==floor(Y), na.rm=TRUE)
+        if(int.check > 0) stop("the response variable has non-integer values.", call.=FALSE)
+        if(min(Y, na.rm=TRUE)<0) stop("the response variable has negative values.", call.=FALSE)
+    }
+    
+    
+    #### Return the values needed
+    results <- list(n=n, p=p, X=X, X.standardised=X.standardised, X.sd=X.sd, X.mean=X.mean, X.indicator=X.indicator, 
+                    offset=offset, Y=Y, which.miss=which.miss, n.miss=n.miss)
+    return(results)
+}
+
+
+
 
 #### Read in and format the frame argument from the localised model
 common.frame.localised <- function(formula, data, family)
@@ -429,6 +524,19 @@ prior.var.check <- function(prior.var)
     if(length(prior.var)!=2) stop("the prior values for a variance parameter are the wrong length.", call.=FALSE)    
     if(!is.numeric(prior.var)) stop("the prior values for a variance parameter are not numeric.", call.=FALSE)    
     if(sum(is.na(prior.var))!=0) stop("the prior values for a variance parameter have missing values.", call.=FALSE) 
+}
+
+
+
+#### Check variance matrix prior arguments
+common.prior.varmat.check <- function(prior.varmat, J)
+{
+    if(nrow(prior.varmat)!=J) stop("prior.Sigma.scale is the wrong dimension.", call.=FALSE)    
+    if(ncol(prior.varmat)!=J) stop("prior.Sigma.scale is the wrong dimension.", call.=FALSE)    
+    if(!is.numeric(prior.varmat)) stop("prior.Sigma.scale has non-numeric values.", call.=FALSE)    
+    if(sum(is.na(prior.varmat))!=0) stop("prior.Sigma.scale has missing values.", call.=FALSE)    
+    if(!is.positive.definite(prior.varmat)) stop("prior.Sigma.scale is not a positive definite matrix.", call.=FALSE)
+    if(!is.symmetric.matrix(prior.varmat)) stop("prior.Sigma.scale is not symmetric.", call.=FALSE)
 }
 
 

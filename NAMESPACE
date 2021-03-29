@@ -1,5 +1,6 @@
 useDynLib(CARBayesST, .registration = TRUE)
 export(
+     MVST.CARar,
      ST.CARlinear,
      ST.CARar,
      ST.CARanova,
@@ -18,7 +19,6 @@ S3method(residuals, CARBayesST)
 S3method(logLik, CARBayesST)
 import(spam)
 import(MASS)
-import(testthat)
 importFrom(truncnorm, rtruncnorm, dtruncnorm)
 import(Rcpp)
 importFrom(truncdist, rtrunc)
@@ -37,6 +37,7 @@ importFrom(sp, spplot)
 importFrom(dplyr, summarise, mutate, group_by)
 importFrom(GGally, ggpairs)
 importFrom(gridExtra, grid.arrange)
+importFrom(MCMCpack, riwish)
 
 
 

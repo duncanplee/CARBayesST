@@ -413,8 +413,12 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
   }
   
   # end timer
-  if(verbose) cat("\nSummarising results."); close(progressBar)  
-  
+  if(verbose)
+  {
+  cat("\nSummarising results.")
+  close(progressBar)
+  }else
+  {}
   
 ###################################
 #### Summarise and save the results 

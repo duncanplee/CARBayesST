@@ -49,7 +49,7 @@
 
 %% an abstract and keywords
 \Abstract{
-This is a vignette for the \proglang{R} package \pkg{CARBayesST} version 3.2, and is an updated version of a paper in the Journal of Statistical Software in 2018 Volume 84 Issue 9 by the same authors. The package has been developed to model spatio-temporal data relating to a set of non-overlapping areal units that are observed over multiple time periods. These data typically contain spatio-temporal autocorrelation, and this package provides a suite of models for capturing this autocorrelation via random effects that are assigned spatio-temporal extensions of conditional autoregressive (CAR) priors within a hierarchical Bayesian model. \pkg{CARBayesST} is the first dedicated \proglang{R} package for modelling these data in a Bayesian setting using Markov chain Monte carlo (MCMC) simulation. The software can fit a range of models that estimate different aspects of the data, including the estimation of average spatial and temporal trends, and the identification of clusters of areal units that exhibit elevated values. This vignette outlines the class of models that the software can implement, before applying them to exemplar case studies.
+This is a vignette for the \proglang{R} package \pkg{CARBayesST} version 3.2, and is an updated version of a paper in the Journal of Statistical Software in 2018, Volume 84, Issue 9. The package has been developed to model spatio-temporal data relating to a set of non-overlapping areal units that are observed over multiple time periods. These data typically contain spatio-temporal autocorrelation, and this package provides a suite of models for capturing this autocorrelation via random effects that are assigned spatio-temporal extensions of conditional autoregressive (CAR) priors within a hierarchical Bayesian model. \pkg{CARBayesST} is the first dedicated \proglang{R} package for modelling these data in a Bayesian setting using Markov chain Monte carlo (MCMC) simulation. The software can fit a range of models that estimate different aspects of the data, including the estimation of average spatial and temporal trends, and the identification of clusters of areal units that exhibit elevated values. This vignette outlines the class of models that the software can implement, before applying them to exemplar case studies.
 
 }
 \Keywords{Bayesian inference, conditional autoregressive priors, spatio-temporal areal unit modelling}
@@ -207,7 +207,7 @@ where $\bd{\phi}_{-k,t}=(\phi_{1,t},\ldots,\phi_{k-1,t}, \phi_{k+1,t},\ldots,\ph
 
 
 \code{ST.CARar()}\\
-There are two versions of this model, which are based on either a first (AR(1)) or a second (AR(2)) order temporal autoregressive process. The first order model is that proposed by \cite{rushworth2014}, and represents the spatio-temporal structure with a multivariate first order autoregressive process with a spatially autocorrelated precision matrix. The second model extends this by using a multivariate second order autoregressive process with a spatially autocorrelated precision matrix. These models are appropriate if one wishes to estimate the  evolution of the spatial fitted value surface over time. The model specifications in both cases are given below.\vspace{0.5cm}
+There are two versions of this model, which are based on either a first (AR(1)) or a second (AR(2)) order temporal autoregressive process. The first order model is that proposed by \cite{rushworth2014}, and represents the spatio-temporal structure with a multivariate first order autoregressive process with a spatially autocorrelated precision matrix. The second model extends this by using a multivariate second order autoregressive process with a spatially autocorrelated precision matrix. These models are appropriate if one wishes to estimate the  evolution of the spatial random effects surface over time. The model specifications in both cases are given below.\vspace{0.5cm}
 
 
 \textbf{AR(1) model}
@@ -226,7 +226,7 @@ There are two versions of this model, which are based on either a first (AR(1)) 
 
 
 \begin{eqnarray}
-\psi_{kt}&=&\phi_{kt},\label{carar}\\
+\psi_{kt}&=&\phi_{kt},\label{carar2}\\
 \bd{\phi}_t|\bd{\phi}_{t-1}, \bd{\phi}_{t-2} & \sim & \mbox{N}\left(\rho_{T_1}\bd{\phi}_{t-1}+\rho_{T_2}\bd{\phi}_{t-2}, \tau^{2} \mathbf{Q}(\mathbf{W},\rho_S)^{-1}\right)\hspace{1cm} t=3,\ldots,N,\nonumber\\
 \bd{\phi}_1, \bd{\phi}_2 & \sim & \mbox{N}\left(\mathbf{0}, \tau^{2} \mathbf{Q}(\mathbf{W},\rho_S)^{-1}\right),\nonumber\\
 \tau^2&\sim&\mbox{Inverse-Gamma}(a,b),\nonumber\\
@@ -241,7 +241,7 @@ Here $\bd{\phi}_{t}=(\phi_{1t},\ldots,\phi_{Kt})$ is the vector of random effect
 \mathbf{Q}(\mathbf{W},\rho_S)=\rho_S[\mbox{diag}(\mathbf{W}\mathbf{1}) - \mathbf{W}] + (1-\rho_S)\mathbf{I},\label{Lerouxjoint}
 \end{equation}
 
-where $\mathbf{1}$ is the $K\times 1$ vector of ones while $\mathbf{I}$ is the $K\times K$ identity matrix. In common with all other models the random effects are zero-mean centred, while flat and conjugate priors are specified for $(\rho_S, \rho_T, \rho_{T_1}, \rho_{T_2})$ and $\tau^2$ respectively, with $(a=1, b=0.01)$ being the default values for the latter. The  dependence parameters $(\rho_{S}, \rho_{T})$ can be fixed at values in the unit interval $[0,1]$ rather than being estimated in the model, while $(\rho_{T_1}, \rho_{T_2})$ can also be fixed if required. Finally, missing (\code{NA}) values are allowed in the response data $\mathbf{Y}$ for this model.\vspace{1cm}
+where $\mathbf{1}$ is the $K\times 1$ vector of ones while $\mathbf{I}$ is the $K\times K$ identity matrix. In common with all other models the random effects are zero-mean centred, while flat and conjugate inverse-gamma priors are specified for $(\rho_S, \rho_T, \rho_{T_1}, \rho_{T_2})$ and $\tau^2$ respectively, with $(a=1, b=0.01)$ being the default hyperparameter values for the latter. The  dependence parameters $(\rho_{S}, \rho_{T})$ can be fixed at values in the unit interval $[0,1]$ rather than being estimated in the model, while $(\rho_{T_1}, \rho_{T_2})$ can also be fixed if required. Finally, missing (\code{NA}) values are allowed in the response data $\mathbf{Y}$ for this model.\vspace{1cm}
 
 
 \code{ST.CARadaptive()}\\
@@ -351,8 +351,73 @@ All models in this package are fitted in a Bayesian setting using Markov chain M
 %%%% Section 3
 %%%%%%%%%%%%%%
 \section{Spatio-temporal models for multivariate areal unit data}\label{section3}
+This section extends the previous one by outlining the class of multivariate spatio-temporal models that \pkg{CARBayesST} can implement. The study region and time frame comprising $K$ areal units for $N$ consecutive time periods is the same as in the previous section. The extension considered here is to model $J>1$ outcome variables simultaneously, yielding a multivariate spatio-temporal data structure. Let $Y_{ktj}$ denote the outcome (response) variable for the $k$th areal unit ($k=1,\ldots,K$) in the $t$th time period ($t=1,\ldots,N$) for the $j$th outcome ($j=1,\ldots,J$), while $O_{ktj}$ is a corresponding offset variable if required. Then letting $\mathbf{x}_{kt}=(x_{kt1},\ldots, x_{ktp})$ be a vector of $p$ known covariates for areal unit $k$ and time period $t$ that is common to all responses $j=1,\ldots,J$, \pkg{CARBayesST} can fit the following generalised linear mixed model to these data.
+
+\begin{eqnarray}
+Y_{ktj}|\mu_{ktj}&\sim&f(y_{ktj}|\mu_{ktj},\nu^{2})~~~~\mbox{for }k=1,\ldots,K,~~t=1,\ldots,N,~~j=1,\ldots,J,\label{equation likelihood2}\\
+g(\mu_{ktj})&=&\mathbf{x}_{kt}^{\top}\bd{\beta}_j + O_{ktj} + \psi_{ktj},\nonumber\\
+\bd{\beta}&\sim&\mbox{N}(\bd{\mu}_{\beta}, \bd{\Sigma}_{\beta}).\nonumber
+\end{eqnarray}
+
+The regression coefficients $\bd{\beta}_j$ vary by response variable $j$, and Gaussian priors are assumed for the regression parameters $\bd{\beta}_j$ as before. The following data likelihood models are allowed:
+
+\begin{itemize}
+\item \textbf{Binomial - } $Y_{ktj}~\sim~\mbox{Binomial}(n_{ktj}, \theta_{ktj})$ and $\ln(\theta_{ktj}/(1-\theta_{ktj}))~=~\mathbf{x}_{kt}^{\top}\bd{\beta}_j + O_{ktj} + \psi_{ktj}$. 
+
+\item \textbf{Gaussian - } $Y_{ktj}~\sim~\mbox{N}(\mu_{ktj}, \nu^2)$ and $\mu_{ktj}~=~\mathbf{x}_{kt}^{\top}\bd{\beta}_j + O_{ktj} + \psi_{ktj}$.
+
+\item \textbf{Poisson - } $Y_{ktj}~\sim~\mbox{Poisson}(\mu_{ktj})$ and $\ln(\mu_{ktj})~=~\mathbf{x}_{kt}^{\top}\bd{\beta}_j + O_{ktj} + \psi_{ktj}$. 
+\end{itemize}
 
 
+As before, in the binomial model $(n_{ktj}, \theta_{ktj})$ respectively denote the number of trials and the probability of success in each trial in area $k$, time period $t$ and outcome $j$, while in the Gaussian model $\nu^2$ is the observation variance. An inverse-gamma($a,b$) prior is specified for the Gaussian variance $\nu^2$, and default hyperparameter values of $(a=1,~ b=0.01)$  are specified by the software but can be changed by the user. Currently, \pkg{CARBayesST} can fit the following multivariate spatio-temporal random effects model.\\ 
+
+
+\code{MVST.CARar()}\\
+This model represents the random effects $\{\psi_{ktj}\}$ with a single set of random effects $\{\phi_{ktj}\}$ that are modelled as jointly correlated over time, space and outcome, so that $\psi_{ktj}=\phi_{ktj}$. These random effects must therefore induce (auto)correlations in time, space and between outcomes. The entire set of random effects are denoted by $\boldsymbol{\phi}=(\boldsymbol{\phi}_1,\ldots, \boldsymbol{\phi}_N)$, where $\boldsymbol{\phi}_t=(\boldsymbol{\phi}_{1t}, \ldots, \boldsymbol{\phi}_{Kt})$ denotes the set of $K\times J$ random effects at time $t$, while $\boldsymbol{\phi}_{kt}=(\phi_{kt1},\ldots, \phi_{tkJ})$ denotes the subset of these effects at the $k$th areal unit for all $J$ outcomes. The general form of the model is given by
+
+\begin{eqnarray}
+\boldsymbol{\phi} &\sim& \mbox{N}\left(\mathbf{0}, \left[\mathbf{D}(\boldsymbol{\alpha}) \otimes \mathbf{Q}(\mathbf{W}, \rho)\otimes \boldsymbol{\Sigma}^{-1}\right]^{-1} \right),\label{eq_joint}
+\end{eqnarray}
+
+where $\otimes$ denotes a Kronecker product. The precision matrix is given by  $\mathbf{P}(\boldsymbol{\alpha},\rho, \boldsymbol{\Sigma})=\mathbf{D}(\boldsymbol{\alpha}) \otimes \mathbf{Q}(\mathbf{W}, \rho)\otimes \boldsymbol{\Sigma}^{-1}$, where $\mathbf{D}(\boldsymbol{\alpha})_{N\times N}$ controls the temporal autocorrelations, $\mathbf{Q}(\mathbf{W}, \rho)_{K\times K}$ controls the spatial autocorrelations and $\boldsymbol{\Sigma}_{J\times J}$ captures the between outcome correlations. The between outcome covariance matrix  $\boldsymbol{\Sigma}$ is not assigned a specific structure, and is instead assigned the following conjugate Inverse-Wishart prior distribution
+
+\begin{equation}
+    \boldsymbol{\Sigma}\sim\mbox{Inverse-Wishart}(d, \boldsymbol{\Omega}).
+\end{equation}
+
+The default values for the hyperparameters are set at $(d=J+1, \boldsymbol{\Omega}=0.01\mathbf{I})$ where $\mathbf{I}$ is the identity matrix, and are chosen to ensure it is only weakly informative. Spatial autocorrelation is modelled by the conditional autoregressive (CAR) prior proposed by \cite{leroux2000} in common with the univariate models, which corresponds to the following spatial precision matrix
+
+\begin{eqnarray}
+\mathbf{Q}(\mathbf{W}, \rho)&=&\rho_S(\mbox{diag}[\mathbf{W1}] - \mathbf{W}) + (1-\rho_S)\mathbf{I}.\label{leroux}
+\end{eqnarray}
+
+Thus $\rho_S$ is again a global spatial dependence parameter, with a value of 0 corresponding to spatial independence. In contrast, if $\rho_S=1$ the model captures strong spatial autocorrelation and simplifies to the intrinsic CAR model proposed by \cite{besag1991}. We enforce a non-informative uniform prior on the unit interval for $\rho_S$, i.e. $\rho_S\sim\mbox{Uniform}(0,1)$, which provides equal prior weight for all allowable values of $\rho_S$ and allows the data to play the dominant role in estimating its value. Temporal autocorrelation is modelled using either first order or second order autoregressive processes, which can be chosen by specifying \code{AR=1}
+or \code{AR=2} in the function call. The model for $\boldsymbol{\phi}$ from (\ref{eq_joint}) in each case is described below.\\
+
+\newpage\textbf{A - First-order autoregressive process}\\
+
+\begin{eqnarray}
+\psi_{ktj}&=&\phi_{ktj},\\
+\bd{\phi}_t|\bd{\phi}_{t-1} & \sim & \mbox{N}\left(\rho_T\boldsymbol{\phi}_{t-1}, \left[\mathbf{Q}(\mathbf{W}, \rho_S)\otimes \boldsymbol{\Sigma}^{-1}\right]^{-1}\right)~~~~~\mbox{for }t=2,\ldots,N,\nonumber\\
+\bd{\phi}_1 & \sim & \mbox{N}\left(\mathbf{0}, \left[\mathbf{Q}(\mathbf{W}, \rho_S)\otimes \boldsymbol{\Sigma}^{-1}\right]^{-1}\right),\nonumber\\
+\boldsymbol{\Sigma}&\sim&\mbox{Inverse-Wishart}(d, \boldsymbol{\Omega}),\nonumber\\
+\rho_S&\sim&\mbox{Uniform}(0,1),\nonumber\\
+f(\rho_T)&\propto& 1.\nonumber
+\end{eqnarray}
+
+
+
+\noindent\textbf{B - Second-order autoregressive process}
+
+\begin{eqnarray}
+\psi_{ktj}&=&\phi_{ktj},\\
+\bd{\phi}_t|\bd{\phi}_{t-1}, \bd{\phi}_{t-2} & \sim & \mbox{N}\left(\rho_{T_1}\boldsymbol{\phi}_{t-1}+\rho_{T_2}\boldsymbol{\phi}_{t-2}, \left[\mathbf{Q}(\mathbf{W}, \rho_S)\otimes \boldsymbol{\Sigma}^{-1}\right]^{-1}\right)~~~~~\mbox{for }t=3,\ldots,N,\nonumber\\
+\bd{\phi}_1, \bd{\phi}_2 & \sim & \mbox{N}\left(\mathbf{0}, \left[\mathbf{Q}(\mathbf{W}, \rho_S)\otimes \boldsymbol{\Sigma}^{-1}\right]^{-1}\right),\nonumber\\
+\boldsymbol{\Sigma}&\sim&\mbox{Inverse-Wishart}(d, \boldsymbol{\Omega}),\nonumber\\
+\rho_S&\sim&\mbox{Uniform}(0,1),\nonumber\\
+f(\rho_{T_1}, \rho_{T_2})&\propto& 1.\nonumber
+\end{eqnarray}
 
 %%%%%%%%%%%%%%
 %%%% Section 4
@@ -367,12 +432,12 @@ All models in this package are fitted in a Bayesian setting using Markov chain M
 The software can fit  eight classes of model, and the main arguments common to all the models are as follows.
 
 \begin{itemize}
-\item \code{formula} - A formula for the covariate part of the model using the syntax of the \code{lm()} function. Offsets can be included here using the \code{offset()} function. The response and each covariate should be vectors of length $(KN)\times 1$, where $K$ is the number of spatial units and $N$ is the number of time periods. Each vector should be ordered so that the first $K$ data points are the set of all $K$ spatial locations at time $1$, the next $K$ are the set of spatial locations for time $2$ and so on. 
+\item \code{formula} - A formula for the covariate part of the model using the syntax of the \code{lm()} function. Offsets can be included here using the \code{offset()} function. For the univariate models the response and each covariate should be vectors of length $(KN)\times 1$, where $K$ is the number of spatial units and $N$ is the number of time periods. Each vector should be ordered so that the first $K$ data points are the set of all $K$ spatial locations at time $1$, the next $K$ are the set of spatial locations for time $2$ and so on. For the multivariate models the response and the offset (if included) should be matrices of dimension $(KN)\times J$, where $K$ is  the number of spatial units, $N$ is the number of time periods and $J$ is the number  of different variables. Each column of the response and offset matrices relates to a different outcome variable. The  covariates should each be a $(KN)\times 1$ vector, and different regression parameters are  estimated for each of the $J$ variables.
 
 \item \code{family} - One of either \code{"binomial"}, \code{"gaussian"} or \code{"poisson"}.
 
 
-\item \code{trials} - This is a vector the same length and in the same order as the response containing the total number of trials  for each area and time period. This is only needed if  \code{family="binomial"}.
+\item \code{trials} - This is a vector (univariate models) or matrix (multivariate models) the same size and in the same order as the response containing the total number of trials  for each area and time period. This is only needed if  \code{family="binomial"}.
 
 \item \code{W} - A $K \times K$ symmetric and non-negative neighbourhood matrix whose row sums must all be positive.
 
@@ -406,7 +471,7 @@ Additionally, the \pkg{CARBayes} functions \code{summarise.samples()} and \code{
 
 \item \code{fitted.values} - For the univariate models a vector of fitted values based on posterior means for each area and time period in the same order as the data $\mathbf{Y}$. For the multivariate models a matrix of fitted values where each column relates to a single outcome. 
 
-\item \code{residuals} - For the univariate models a matrix of 2 types of residuals in the same order as the response. The 2 columns of this matrix correspond to ``response" (raw), and ``pearson", residuals. For the multivariate models a list of matrices corresponding to  ``response" (raw), and ``pearson", residuals. For each matrix each column relates to a single outcome. 
+\item \code{residuals} - For the univariate models a matrix of 2 types of residuals in the same order as the response. The 2 columns of this matrix correspond to ``respons'' (raw), and ``pearson'', residuals. For the multivariate models a list of matrices corresponding to  ``response'' (raw), and ``pearson'', residuals. For each matrix each column relates to a single outcome. 
 
 \item \code{modelfit} - Model fit criteria including the Deviance Information Criterion (DIC, \citealp{spiegelhalter2002}) and its corresponding estimated effective number of parameters (p.d), the Watanabe-Akaike Information Criterion (WAIC, \citealp{watanabe2010}) and its corresponding estimated number of effective parameters (p.w), the Log Marginal Predictive Likelihood (LMPL, \citealp{congdon2005}) and the loglikelihood. The best fitting model is one that minimises the DIC and WAIC but maximises the LMPL. If the response data contains missing data, the DIC is computed based on only the observed data (see \cite{celeux2006}).
 
@@ -424,7 +489,7 @@ Additionally, the \pkg{CARBayes} functions \code{summarise.samples()} and \code{
 
 
 \subsection{Estimating the neighbourhood matrix}
-The package also contains functionality (\code{W.estimate()}) to estimate an appropriate neighbourhood matrix $\mathbf{W}_E$ for the data being modelled, rather than relying on a purely geographical $\mathbf{W}$ constructed, for example, by the border sharing rule. Using a neighbourhood matrix estimated for the data at hand  will likely lead to improved estimation of covariate effects and fitted values / risks. It will also allow you to identify boundaries in the random effects surface that separate 2 geographically adjacent areas that have very different values. The matrix is estimated using a graph-based optimisation algorithm, and full details can be found in \cite{lee2020improved}. In short, the algorithm uses a vector of spatial data observations and a  binary baseline neighbourhood matrix $\mathbf{W}$, the latter being constructed using the border sharing rule. The estimated neighbourhood matrix is then constructed by removing neighbour relations (i.e. setting $w_{E_{ij}}= w_{E_{ji}} = 0$) if they are not appropriate for the data. Note, new edges not in the initial $\mathbf{W}$ matrix cannot be added when creating $\mathbf{W}_E$.
+The package also contains functionality (\code{W.estimate()}) to estimate an appropriate neighbourhood matrix $\mathbf{W}_E$ for the data being modelled, rather than relying on a purely geographical $\mathbf{W}$ constructed, for example, by the border sharing rule. Using a neighbourhood matrix estimated for the data at hand  will likely lead to improved estimation of covariate effects, random effects and fitted values. It will also allow you to identify boundaries in the random effects surface that separate 2 geographically adjacent areas that have very different values. The matrix is estimated using a graph-based optimisation algorithm, and full details can be found in \cite{lee2020improved}. In short, the algorithm uses a vector of spatial data observations and a  binary baseline neighbourhood matrix $\mathbf{W}$, the latter being constructed using the border sharing rule. The estimated neighbourhood matrix is then constructed by removing neighbour relations (i.e. setting $w_{E_{ij}}= w_{E_{ji}} = 0$) if they are not appropriate for the data. Note, new edges not in the initial $\mathbf{W}$ matrix cannot be added when creating $\mathbf{W}_E$.
 
 
 
@@ -606,7 +671,7 @@ data:  resid.glm[1:271]
 weights: W.list  
 number of simulations + 1: 10001 
 
-statistic = 0.10358, observed rank = 9974, p-value = 0.0027
+statistic = 0.10358, observed rank = 9972, p-value = 0.0029
 alternative hypothesis: greater
 \end{Soutput}
 \end{Schunk}
@@ -945,14 +1010,14 @@ The figure shows that both the region-wide average (panel (a)) and the level of 
 %%%% Section 7
 %%%%%%%%%%%%%%
 \section{Discussion}\label{section7}
-\pkg{CARBayesST} is the first software package dedicated to fitting spatio-temporal CAR type models to areal unit data, with inference in a Bayesian setting using MCMC simulation. Future development of the software will focus on extending the number of spatio-temporal models that can be implemented, giving the user an even wider set of modelling tools, for both univariate and multivariate spatio-temporal data. 
+\pkg{CARBayesST} is the first software package dedicated to fitting spatio-temporal CAR type models to areal unit data, with inference in a Bayesian setting using MCMC simulation. Future development of the software will focus on extending the number of spatio-temporal models that can be implemented, giving the user an even wider set of modelling tools for both univariate and multivariate spatio-temporal data. 
 
 
 
 
 
 \section{Acknowledgements}
-The Development of \pkg{CARBayesST} was supported by the UK Engineering and Physical Sciences Research Council (EPSRC, grant EP/J017442/1) and the UK Medical Research Council (MRC, grant MR/L022184/1). The data and shapefiles used in this vignette were provided by the Scottish Government via their Scottish Statistics website (\url{http://statistics.gov.scot/}).
+The Development of \pkg{CARBayesST} was supported by the UK Engineering and Physical Sciences Research Council (EPSRC, grants EP/J017442/1 and EP/T004878/1) and the UK Medical Research Council (MRC, grant MR/L022184/1). The data and shapefiles used in this vignette were provided by the Scottish Government via their Scottish Statistics website (\url{http://statistics.gov.scot/}).
 
 
 \bibliography{JSS2728}

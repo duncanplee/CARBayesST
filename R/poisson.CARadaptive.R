@@ -449,7 +449,12 @@ a <- common.verbose(verbose)
   }
   
   # end timer
-  if(verbose) cat("\nSummarising results."); close(progressBar)  
+  if(verbose)
+  {
+    cat("\nSummarising results.")
+    close(progressBar)
+  }else
+  {}
   
   
 ###################################
