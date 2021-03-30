@@ -101,6 +101,14 @@ poissonmvar2carupdateRW <- function(Wtriplet, Wbegfin, Wtripletsum, nsite, ntime
     .Call(`_CARBayesST_poissonmvar2carupdateRW`, Wtriplet, Wbegfin, Wtripletsum, nsite, ntime, nvar, phi, alpha1, alpha2, rho, Sigmainv, ymat, innovations, offset, denoffset)
 }
 
+gaussianmvar1carupdateRW <- function(Wtriplet, Wbegfin, Wtripletsum, nsite, ntime, nvar, phi, alpha, rho, Sigmainv, nu2, innovations, offset, denoffset) {
+    .Call(`_CARBayesST_gaussianmvar1carupdateRW`, Wtriplet, Wbegfin, Wtripletsum, nsite, ntime, nvar, phi, alpha, rho, Sigmainv, nu2, innovations, offset, denoffset)
+}
+
+gaussianmvar2carupdateRW <- function(Wtriplet, Wbegfin, Wtripletsum, nsite, ntime, nvar, phi, alpha1, alpha2, rho, Sigmainv, nu2, innovations, offset, denoffset) {
+    .Call(`_CARBayesST_gaussianmvar2carupdateRW`, Wtriplet, Wbegfin, Wtripletsum, nsite, ntime, nvar, phi, alpha1, alpha2, rho, Sigmainv, nu2, innovations, offset, denoffset)
+}
+
 MVSTquadformcompute <- function(Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phit, phij, rho, Sigmainv) {
     .Call(`_CARBayesST_MVSTquadformcompute`, Wtriplet, Wtripletsum, n_triplet, den_offset, nsite, nvar, phit, phij, rho, Sigmainv)
 }

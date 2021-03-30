@@ -356,7 +356,7 @@ All models in this package are fitted in a Bayesian setting using Markov chain M
 This section extends the previous one by outlining the class of multivariate spatio-temporal models that \pkg{CARBayesST} can implement. The study region and time frame comprising $K$ areal units for $N$ consecutive time periods is the same as in the previous section. The extension considered here is to model $J>1$ outcome variables simultaneously, yielding a multivariate spatio-temporal data structure. Let $Y_{ktj}$ denote the outcome (response) variable for the $k$th areal unit ($k=1,\ldots,K$) in the $t$th time period ($t=1,\ldots,N$) for the $j$th outcome ($j=1,\ldots,J$), while $O_{ktj}$ is a corresponding offset variable if required. Then letting $\mathbf{x}_{kt}=(x_{kt1},\ldots, x_{ktp})$ be a vector of $p$ known covariates for areal unit $k$ and time period $t$ that is common to all responses $j=1,\ldots,J$, \pkg{CARBayesST} can fit the following generalised linear mixed model to these data.
 
 \begin{eqnarray}
-Y_{ktj}|\mu_{ktj}&\sim&f(y_{ktj}|\mu_{ktj},\nu^{2})~~~~\mbox{for }k=1,\ldots,K,~~t=1,\ldots,N,~~j=1,\ldots,J,\label{equation likelihood2}\\
+Y_{ktj}|\mu_{ktj}&\sim&f(y_{ktj}|\mu_{ktj},\nu^{2}_j)~~~~\mbox{for }k=1,\ldots,K,~~t=1,\ldots,N,~~j=1,\ldots,J,\label{equation likelihood2}\\
 g(\mu_{ktj})&=&\mathbf{x}_{kt}^{\top}\bd{\beta}_j + O_{ktj} + \psi_{ktj},\nonumber\\
 \bd{\beta}&\sim&\mbox{N}(\bd{\mu}_{\beta}, \bd{\Sigma}_{\beta}).\nonumber
 \end{eqnarray}
@@ -366,13 +366,13 @@ The regression coefficients $\bd{\beta}_j$ vary by response variable $j$, and Ga
 \begin{itemize}
 \item \textbf{Binomial - } $Y_{ktj}~\sim~\mbox{Binomial}(n_{ktj}, \theta_{ktj})$ and $\ln(\theta_{ktj}/(1-\theta_{ktj}))~=~\mathbf{x}_{kt}^{\top}\bd{\beta}_j + O_{ktj} + \psi_{ktj}$. 
 
-\item \textbf{Gaussian - } $Y_{ktj}~\sim~\mbox{N}(\mu_{ktj}, \nu^2)$ and $\mu_{ktj}~=~\mathbf{x}_{kt}^{\top}\bd{\beta}_j + O_{ktj} + \psi_{ktj}$.
+\item \textbf{Gaussian - } $Y_{ktj}~\sim~\mbox{N}(\mu_{ktj}, \nu^2_j)$ and $\mu_{ktj}~=~\mathbf{x}_{kt}^{\top}\bd{\beta}_j + O_{ktj} + \psi_{ktj}$.
 
 \item \textbf{Poisson - } $Y_{ktj}~\sim~\mbox{Poisson}(\mu_{ktj})$ and $\ln(\mu_{ktj})~=~\mathbf{x}_{kt}^{\top}\bd{\beta}_j + O_{ktj} + \psi_{ktj}$. 
 \end{itemize}
 
 
-As before, in the binomial model $(n_{ktj}, \theta_{ktj})$ respectively denote the number of trials and the probability of success in each trial in area $k$, time period $t$ and outcome $j$, while in the Gaussian model $\nu^2$ is the observation variance. An inverse-gamma($a,b$) prior is specified for the Gaussian variance $\nu^2$, and default hyperparameter values of $(a=1,~ b=0.01)$  are specified by the software but can be changed by the user. Currently, \pkg{CARBayesST} can fit the following multivariate spatio-temporal random effects model.\\ 
+As before, in the binomial model $(n_{ktj}, \theta_{ktj})$ respectively denote the number of trials and the probability of success in each trial in area $k$, time period $t$ and outcome $j$, while in the Gaussian model $\nu^2_j$ is the outcome specific observation variance. An inverse-gamma($a,b$) prior is specified for each Gaussian variance $\nu^2_j$, and default hyperparameter values of $(a=1,~ b=0.01)$  are specified by the software but can be changed by the user. Currently, \pkg{CARBayesST} can fit the following multivariate spatio-temporal random effects model.\\ 
 
 
 \code{MVST.CARar()}\\

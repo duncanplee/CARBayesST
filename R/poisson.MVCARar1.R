@@ -74,7 +74,7 @@ N <- NK / K
   fix.rho.T <- TRUE
   }
   if(!is.numeric(alpha)) stop("rho.T is fixed but is not numeric.", call.=FALSE)  
-  if(length(alpha)!=1) stop("rho.T is fixed but is not of length 2.", call.=FALSE)  
+  if(length(alpha)!=1) stop("rho.T is fixed but is not of length 1.", call.=FALSE)  
 
 
 #### Priors
@@ -178,6 +178,25 @@ Q <- rho * Wstar + diag(rep(1-rho,K))
   det.Q <- sum(log((rho * Wstar.val + (1-rho))))    
   }else
   {} 
+
+
+#### Check for islands
+W.list<- mat2listw(W)
+W.nb <- W.list$neighbours
+W.islands <- n.comp.nb(W.nb)
+islands <- W.islands$comp.id
+n.islands <- max(W.islands$nc)
+  if(rho==1 & alpha==1) 
+  {
+  Sigma.post.df <- prior.Sigma.df + ((N-1) * (K-n.islands))/2
+  }else if(rho==1)
+  {
+  Sigma.post.df <- prior.Sigma.df + (N * (K-n.islands))/2        
+  }else if(alpha==1)
+  {
+  Sigma.post.df <- prior.Sigma.df + ((N-1) * K)/2          
+  }else
+  {}
 
 
   

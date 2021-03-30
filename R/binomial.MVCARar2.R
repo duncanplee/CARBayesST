@@ -194,7 +194,25 @@ Q <- rho * Wstar + diag(rep(1-rho,K))
   {} 
  
   
-  
+#### Check for islands
+W.list<- mat2listw(W)
+W.nb <- W.list$neighbours
+W.islands <- n.comp.nb(W.nb)
+islands <- W.islands$comp.id
+n.islands <- max(W.islands$nc)
+  if(rho==1 & alpha[1]==2 & alpha[2]==-1) 
+  {
+  Sigma.post.df <- prior.Sigma.df + ((N-2) * (K-n.islands))/2
+  }else if(rho==1)
+  {
+  Sigma.post.df <- prior.Sigma.df + (N * (K-n.islands))/2        
+  }else if(alpha[1]==2 & alpha[2]==-1)
+  {
+  Sigma.post.df <- prior.Sigma.df + ((N-2) * K)/2          
+  }else
+  {}
+
+
 ###########################
 #### Run the Bayesian model
 ###########################

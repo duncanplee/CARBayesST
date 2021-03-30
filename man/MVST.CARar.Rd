@@ -85,7 +85,7 @@ are assumed). Defaults to a vector with values 100000.
 }   
 \item{prior.nu2}{
 The prior shape and scale in the form of c(shape, scale) for an Inverse-Gamma(shape, scale) 
-prior for nu2. Defaults to c(1, 0.01) and only used if family="Gaussian".   
+prior for nu2_j for each outcome j. Defaults to c(1, 0.01) and only used if family="Gaussian".   
 }
 \item{prior.Sigma.df}{
     The prior degrees of freedom for the Inverse-Wishart prior for Sigma. 

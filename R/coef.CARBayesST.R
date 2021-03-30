@@ -7,7 +7,7 @@ coef.CARBayesST <- function(object,...)
     }else
     {
     beta <- apply(object$samples$beta, 2, median)
-    names(beta) <- colnames(object$X)    
+    names(beta) <- rownames(object$summary.results)[1:length(beta)]
     return(beta)
     }
 }

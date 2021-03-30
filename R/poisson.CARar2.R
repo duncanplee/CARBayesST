@@ -255,16 +255,9 @@ n.islands <- max(W.islands$nc)
     alpha <- mvrnorm(n=1, mu=alpha.mean, Sigma=alpha.var)
     }else
     {}
-    
   
-    #Q.W <- rho * (diag(apply(W, 2, sum)) - W) + (1-rho) * diag(rep(1,K))
-    #test <- 0  
-    #  for(t in 3:N)
-    #  {
-    #  test <- test + phi.mat[ ,(t-1)] %*% Q.W %*% phi.mat[ ,(t-2)]
-    #  }
-    
-    
+  
+  
     ####################
     ## Samples from tau2
     ####################
