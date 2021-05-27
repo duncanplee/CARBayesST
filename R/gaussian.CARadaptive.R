@@ -11,7 +11,7 @@ gaussian.CARadaptive <- function(formula, data = NULL, W, burnin, n.sample, thin
   n.edges        <- nrow(locs)
   
   # convert the supplied adjacency matrix into a spam matrix, if required.
-  if(!is.symmetric.matrix(W)) stop("W is not symmetric.", call.=FALSE)
+  #if(!is.symmetric.matrix(W)) stop("W is not symmetric.", call.=FALSE)
   #if(class(W) == "matrix") W <- as.spam(W)
   #if(!class(W) %in% c("matrix", "spam")) stop("W must be an object with class \"matrix\" or \"spam\"", call.=FALSE)  
 

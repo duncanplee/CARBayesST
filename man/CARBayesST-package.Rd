@@ -25,8 +25,8 @@ EP/T004878/1 and the Medical Research Council (MRC) grant MR/L022184/1.
 \tabular{ll}{
 Package: \tab CARBayesST\cr
 Type: \tab Package\cr
-Version: \tab 3.2\cr
-Date: \tab 2021-03-30\cr
+Version: \tab 3.2.1\cr
+Date: \tab 2021-05-27\cr
 License: \tab GPL (>= 2)\cr
 }
 }
