@@ -6296,9 +6296,9 @@ public:
     this->size_ = adj.size();
     this->nbs_.resize(this->size_);
     int row_id = 0;
-    for(const auto row: this->adj_) {
+    for(const auto& row: this->adj_) {
       int col_id = 0;
-      for(const auto entry: row) {
+      for(const auto& entry: row) {
         if (entry == 1) {
           this->nbs_[row_id].insert(col_id);
         }
@@ -6335,7 +6335,7 @@ public:
   }
   
   void add_edges(const std::list<Edge> & edges) {
-    for(const auto edge: edges) {
+    for(const auto& edge: edges) {
       this->add_edge(edge);
     }
   }
@@ -6365,9 +6365,9 @@ public:
   const std::list<Edge> edges() const {
     std::list<Edge> result;
     int row_id = 0;
-    for(const auto row: this->adj_) {
+    for(const auto& row: this->adj_) {
       int col_id = 0;
-      for(const auto entry: row) {
+      for(const auto& entry: row) {
         if (entry == 1) {
           result.push_back(std::make_tuple(col_id, row_id));
         }
